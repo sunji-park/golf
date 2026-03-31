@@ -1,0 +1,1772 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>⛳ GolfNow — 코스 상태 & 골프 커뮤니티</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════ */
+:root {
+  --nav:220px; --sidebar:288px; --detail:390px; --topbar:54px;
+  --nav-bg:#1c0d68; --nav-hover:#271580; --nav-active-bg:rgba(0,228,201,.13);
+  --nav-txt:rgba(255,255,255,.75); --nav-txt-active:#00E4C9; --nav-border:rgba(255,255,255,.11);
+  --green:#100443; --lg:#1e0c6b; --accent:#00E4C9; --pale:#e0fdfb;
+  --pink:#E40054; --yellow:#f59e0b; --red:#E40054; --dark:#100443;
+  --gray:#6b7280; --light:#f9f8ff; --border:#e4e2f0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;background:#f0f0fb;overflow:hidden;}
+
+/* ═══════════════════════════════════════
+   APP SHELL
+═══════════════════════════════════════ */
+#app{position:fixed;inset:0;display:flex;flex-direction:column;}
+#content-area{flex:1;display:flex;overflow:hidden;min-width:0;}
+
+/* ═══════════════════════════════════════
+   TOP BAR
+═══════════════════════════════════════ */
+#top-bar{
+  height:var(--topbar);background:var(--green);
+  display:flex;align-items:center;padding:0 18px 0 0;
+  z-index:500;flex-shrink:0;gap:14px;
+  box-shadow:0 2px 12px rgba(0,0,0,.25);
+}
+.tb-logo{
+  width:var(--nav);flex-shrink:0;height:100%;
+  display:flex;align-items:center;gap:8px;padding:0 18px;
+  border-right:1px solid rgba(255,255,255,.12);
+  cursor:pointer;user-select:none;transition:opacity .18s;
+}
+.tb-logo:hover{opacity:.82;
+}
+.tb-logo-icon{font-size:22px;line-height:1;}
+.tb-logo-text{font-size:18px;font-weight:900;color:white;letter-spacing:-.6px;}
+.tb-logo-text span{color:var(--accent);}
+.tb-logo-sub{font-size:8.5px;color:rgba(255,255,255,.45);letter-spacing:.4px;margin-top:1px;}
+/* ── 상단바 티커 ── */
+.tb-ticker{flex:1;overflow:hidden;position:relative;height:100%;display:flex;align-items:center;}
+.tb-ticker::before,.tb-ticker::after{
+  content:'';position:absolute;top:0;bottom:0;width:36px;z-index:2;pointer-events:none;
+}
+.tb-ticker::before{left:0;background:linear-gradient(to right,var(--green),transparent);}
+.tb-ticker::after{right:0;background:linear-gradient(to left,var(--green),transparent);}
+.tb-ticker-track{
+  display:flex;align-items:center;white-space:nowrap;
+  animation:ticker-roll 45s linear infinite;
+}
+.tb-ticker-track:hover{animation-play-state:paused;}
+@keyframes ticker-roll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.tb-ticker-item{
+  display:inline-flex;align-items:center;gap:7px;padding:0 22px;
+  font-size:11.5px;font-weight:600;color:rgba(255,255,255,.88);cursor:pointer;
+  transition:color .2s;
+}
+.tb-ticker-item:hover{color:var(--accent);}
+.tb-ticker-sep{color:var(--accent);opacity:.5;font-size:10px;}
+.tb-ticker-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+.tb-ticker-time{font-size:9.5px;color:rgba(255,255,255,.45);font-weight:400;}
+
+/* ── 사이드바 검색 ── */
+.sb-search-row{
+  display:flex;align-items:center;gap:8px;
+  background:#f5f4fc;border-radius:9px;
+  border:1.5px solid var(--border);
+  padding:7px 11px;margin:10px 10px 0;
+  transition:border-color .2s;
+}
+.sb-search-row:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,228,201,.15);}
+.sb-search-icon{font-size:13px;color:var(--gray);}
+.sb-search-input{
+  flex:1;border:none;background:none;outline:none;
+  font-size:12px;color:var(--dark);font-family:'Noto Sans KR',sans-serif;
+}
+.sb-search-input::placeholder{color:var(--gray);}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.tb-notif{
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;font-size:15px;
+  cursor:pointer;transition:background .2s;
+}
+.tb-notif:hover{background:rgba(255,255,255,.2);}
+.tb-user-chip{
+  display:flex;align-items:center;gap:7px;
+  padding:5px 13px 5px 7px;
+  border-radius:20px;background:rgba(255,255,255,.1);
+  border:1.5px solid rgba(255,255,255,.18);cursor:pointer;transition:all .2s;
+}
+.tb-user-chip:hover{background:rgba(255,255,255,.18);}
+.tb-user-av{
+  width:24px;height:24px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),#00c46a);
+  display:flex;align-items:center;justify-content:center;font-size:12px;
+}
+.tb-user-name{font-size:11px;font-weight:700;color:white;}
+.tb-pts-chip{
+  display:flex;align-items:center;gap:7px;
+  padding:5px 12px 5px 9px;border-radius:20px;
+  background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.18);
+}
+.tb-pts-icon{font-size:13px;line-height:1;}
+.tb-pts-info{display:flex;flex-direction:column;}
+.tb-pts-val{font-size:11px;font-weight:700;color:var(--accent);white-space:nowrap;}
+.tb-pts-bar{height:3px;background:rgba(255,255,255,.12);border-radius:2px;margin-top:3px;width:52px;overflow:hidden;}
+.tb-pts-fill{height:100%;background:var(--accent);border-radius:2px;width:68%;}
+.tb-login-btn{
+  padding:8px 18px;border-radius:9px;
+  background:var(--accent);color:var(--green);
+  border:none;font-size:12px;font-weight:800;
+  cursor:pointer;transition:all .2s;font-family:inherit;
+  white-space:nowrap;
+}
+.tb-login-btn:hover{background:#00cdb6;box-shadow:0 3px 14px rgba(0,228,201,.4);transform:translateY(-1px);}
+
+/* ═══════════════════════════════════════
+   LEFT NAV
+═══════════════════════════════════════ */
+#left-nav{
+  width:var(--nav);background:var(--nav-bg);
+  display:flex;flex-direction:column;flex-shrink:0;
+  overflow-y:auto;overflow-x:hidden;z-index:1000;
+  border-right:1px solid rgba(0,0,0,.25);
+}
+#left-nav::-webkit-scrollbar{width:3px;}
+#left-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px;}
+
+/* Logo */
+.nav-logo-area{
+  padding:20px 18px 16px;
+  flex-shrink:0;
+}
+.nav-logo{font-size:18px;font-weight:900;color:#fff;letter-spacing:-.5px;display:flex;align-items:center;gap:6px;}
+.nav-logo span{color:var(--accent);}
+.nav-tagline{font-size:10px;color:rgba(255,255,255,.3);margin-top:3px;letter-spacing:.4px;}
+.nav-version{display:none;}
+
+/* Section label */
+.nav-section{padding:14px 0 6px;}
+.nav-section-label{
+  padding:0 18px 7px;
+  font-size:9.5px;font-weight:800;letter-spacing:1.1px;
+  color:rgba(255,255,255,.32);text-transform:uppercase;
+}
+
+/* Collapsible group */
+.nav-group-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:7px 18px;cursor:pointer;
+  color:rgba(255,255,255,.85);font-size:12px;font-weight:700;
+  transition:background .15s;user-select:none;
+  border-left:3px solid transparent;
+}
+.nav-group-hd:hover{background:var(--nav-hover);}
+.nav-group-hd.open{color:var(--accent);}
+.nav-gcount{
+  font-size:9px;background:rgba(0,228,201,.15);
+  border-radius:10px;padding:1px 6px;color:var(--accent);
+  font-weight:700;
+}
+.nav-arrow{font-size:9px;color:rgba(255,255,255,.3);transition:transform .28s;}
+.nav-arrow.open{transform:rotate(90deg);}
+
+.nav-group-items{max-height:0;overflow:hidden;transition:max-height .32s ease;}
+.nav-group-items.open{max-height:320px;}
+
+/* Nav items */
+.nav-item{
+  display:flex;align-items:center;gap:8px;
+  width:100%;padding:7px 16px 7px 34px;
+  background:none;border:none;border-left:3px solid transparent;
+  color:var(--nav-txt);font-size:12px;font-weight:500;
+  text-align:left;cursor:pointer;transition:all .15s;
+}
+.nav-item:hover{background:var(--nav-hover);color:rgba(255,255,255,.95);}
+.nav-item.active{
+  background:var(--nav-active-bg);color:var(--nav-txt-active);
+  border-left-color:var(--accent);font-weight:700;
+}
+.nav-item-top{padding-left:18px;} /* no indent for community items */
+
+.nav-divider{height:1px;background:var(--nav-border);margin:8px 14px;}
+
+/* Bottom: User card */
+
+/* ═══════════════════════════════════════
+   MAIN AREA
+═══════════════════════════════════════ */
+#main-area{flex:1;display:flex;overflow:hidden;min-width:0;}
+
+/* ═══════════════════════════════════════
+   COURSE SIDEBAR
+═══════════════════════════════════════ */
+#sidebar{
+  width:var(--sidebar);background:white;
+  display:flex;flex-direction:column;
+  border-right:1px solid var(--border);flex-shrink:0;overflow:hidden;
+}
+.sb-head{padding:10px 0 8px;border-bottom:1px solid var(--border);}
+.sb-view-row{padding:0 12px;}
+.sb-view-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.sb-view-toggle{display:flex;background:#f0f4f0;border-radius:7px;overflow:hidden;padding:2px;gap:2px;}
+.sv-btn{
+  padding:5px 11px;border:none;background:none;
+  color:var(--gray);cursor:pointer;font-size:11px;font-weight:600;
+  border-radius:5px;transition:all .2s;display:flex;align-items:center;gap:4px;
+}
+.sv-btn.active{background:white;color:var(--green);box-shadow:0 1px 4px rgba(0,0,0,.1);}
+.sb-region{font-size:12px;font-weight:700;color:var(--dark);}
+.sb-count{font-size:11px;color:var(--gray);}
+.sort-row{display:flex;gap:4px;padding:8px 10px 0;}
+.sort-btn{
+  padding:3px 8px;border-radius:12px;font-size:10px;
+  border:1px solid var(--border);background:white;cursor:pointer;color:var(--gray);transition:all .15s;
+}
+.sort-btn.active{background:#f3e8ff;color:var(--green);border-color:var(--accent);font-weight:700;}
+#course-list{flex:1;overflow-y:auto;padding:6px;}
+#course-list::-webkit-scrollbar{width:3px;}
+#course-list::-webkit-scrollbar-thumb{background:#e0e0e0;border-radius:2px;}
+
+/* Sidebar course card */
+.course-card{
+  border:1.5px solid var(--border);border-radius:11px;
+  padding:10px 11px;margin-bottom:6px;cursor:pointer;
+  transition:all .2s;background:white;
+}
+.course-card:hover{border-color:var(--accent);box-shadow:0 2px 12px rgba(0,228,201,.18);}
+.course-card.selected{border-color:var(--accent);background:rgba(0,228,201,.06);}
+.cc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:6px;}
+.cc-top-left{flex:1;min-width:0;}
+.cc-name{font-size:13px;font-weight:700;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cc-sub{font-size:10px;color:var(--gray);margin-top:2px;}
+.status-badge{padding:2px 9px;border-radius:10px;font-size:9px;font-weight:700;flex-shrink:0;white-space:nowrap;}
+.s-excellent{background:#d4ffed;color:#007a3d;}
+.s-good{background:#e8f5e9;color:#2e7d32;}
+.s-ok{background:#fff8e1;color:#e65100;}
+/* 총점 강조 배지 */
+.cc-score-badge{flex-shrink:0;border-radius:10px;padding:5px 8px;text-align:center;min-width:46px;}
+.cc-score-big{font-size:19px;font-weight:900;line-height:1.1;}
+.cc-score-of{font-size:8px;font-weight:600;opacity:.65;margin-top:1px;}
+/* 방금업데이트 배지 */
+.badge-live{background:#E40054;color:white;font-size:8px;font-weight:800;
+  padding:2px 7px;border-radius:8px;display:inline-flex;align-items:center;gap:3px;
+  animation:pulse-live 1.6s infinite;}
+@keyframes pulse-live{0%,100%{opacity:1;}50%{opacity:.6;}}
+.cc-badge-row{display:flex;align-items:center;gap:5px;margin-top:5px;flex-wrap:wrap;}
+/* 5열 스코어 그리드 */
+.cc-scores{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin-top:7px;}
+.score-box{border-radius:6px;padding:4px 2px;text-align:center;background:#f5f4fc;}
+.score-box.sc-top{background:rgba(0,228,201,.13);}
+.sc-label{font-size:7.5px;color:var(--gray);font-weight:600;}
+.sc-val{font-size:12px;font-weight:900;margin-top:1px;}
+.cc-foot{display:flex;justify-content:space-between;align-items:center;margin-top:7px;}
+.cc-time{font-size:9px;color:var(--gray);}
+.cc-avg{font-size:11px;font-weight:800;}
+.fav-btn{background:none;border:none;cursor:pointer;font-size:13px;color:#ccc;transition:all .2s;}
+.fav-btn.on{color:#f4a261;}
+
+/* ═══════════════════════════════════════
+   MAP
+═══════════════════════════════════════ */
+#map-area{flex:1;position:relative;min-width:0;}
+#map{width:100%;height:100%;}
+#map-legend{
+  position:absolute;top:12px;right:12px;background:white;
+  border-radius:10px;padding:9px 13px;z-index:400;
+  box-shadow:0 2px 12px rgba(0,0,0,.1);font-size:11px;
+}
+.li{display:flex;align-items:center;gap:5px;margin-bottom:3px;}
+.li:last-child{margin-bottom:0;}
+.ld{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+#stat-bar{
+  position:absolute;top:12px;left:50%;transform:translateX(-50%);
+  background:white;border-radius:10px;padding:7px 14px;z-index:400;
+  box-shadow:0 2px 12px rgba(0,0,0,.1);
+  display:flex;gap:14px;font-size:11px;white-space:nowrap;
+}
+.sbi{display:flex;align-items:center;gap:4px;}
+.sbd{width:7px;height:7px;border-radius:50%;}
+.sbn{font-weight:700;}
+.custom-marker{
+  display:flex;align-items:center;justify-content:center;
+  width:38px;height:38px;border-radius:50% 50% 50% 0;
+  transform:rotate(-45deg);border:2.5px solid white;
+  box-shadow:0 2px 10px rgba(0,0,0,.32);cursor:pointer;
+  transition:transform .15s, box-shadow .15s;
+}
+.custom-marker:hover{box-shadow:0 4px 18px rgba(0,0,0,.4);}
+.cm-inner{transform:rotate(45deg);font-size:10.5px;font-weight:900;color:white;letter-spacing:-.3px;}
+.m-excellent{background:#00d872;} .m-good{background:#22c55e;} .m-ok{background:#f59e0b;}
+
+/* ── Map permanent label tooltip ── */
+.leaflet-tooltip.ml-tip{
+  background:white;
+  border:none;
+  border-radius:10px;
+  padding:0;
+  box-shadow:0 3px 14px rgba(0,0,0,.16);
+  pointer-events:auto;
+}
+.leaflet-tooltip.ml-tip::before{
+  display:none;
+}
+.ml-wrap{
+  padding:7px 10px 6px;
+  cursor:pointer;
+  border-radius:10px;
+  min-width:90px;
+}
+.ml-name{
+  font-size:11.5px;font-weight:800;color:#1a1a2e;
+  margin-bottom:3px;white-space:nowrap;
+}
+.ml-row{
+  display:flex;align-items:center;gap:5px;
+  font-size:10px;color:#666;
+}
+.ml-status{font-size:9px;font-weight:700;}
+.ml-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.ml-upd{font-size:9px;color:#bbb;margin-top:2px;}
+
+/* ═══════════════════════════════════════
+   LIST VIEW
+═══════════════════════════════════════ */
+#list-view{flex:1;overflow-y:auto;padding:18px;background:var(--light);display:none;min-width:0;}
+#list-view::-webkit-scrollbar{width:5px;}
+#list-view::-webkit-scrollbar-thumb{background:#ccc;border-radius:3px;}
+.list-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(256px,1fr));gap:14px;max-width:1400px;}
+.list-card{
+  background:white;border-radius:13px;border:1.5px solid var(--border);
+  overflow:hidden;cursor:pointer;transition:all .2s;
+  box-shadow:0 1px 4px rgba(0,0,0,.04);
+}
+.list-card:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(0,0,0,.1);border-color:var(--accent);}
+.lc-thumb{height:96px;display:flex;align-items:center;justify-content:center;font-size:36px;position:relative;}
+.lc-strip{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:4px 10px;font-size:10px;font-weight:700;
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(0,0,0,.34);color:white;
+}
+.lc-body{padding:11px 12px;}
+.lc-name{font-size:13px;font-weight:700;margin-bottom:2px;}
+.lc-meta{font-size:10px;color:var(--gray);margin-bottom:9px;}
+.score-bars{display:flex;flex-direction:column;gap:4px;}
+.sb-row{display:flex;align-items:center;gap:6px;font-size:10px;}
+.sb-lbl{width:40px;color:var(--gray);flex-shrink:0;}
+.sb-track{flex:1;height:5px;background:#eee;border-radius:3px;overflow:hidden;}
+.sb-fill{height:100%;border-radius:3px;}
+.sb-num{width:24px;text-align:right;font-weight:700;font-size:10px;}
+.lc-foot{padding:8px 12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:10px;}
+.avg-circle{
+  width:42px;height:42px;border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  color:white;font-weight:800;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+.av{font-size:14px;line-height:1;}
+.av-lbl{font-size:8px;opacity:.9;margin-top:1px;}
+
+/* ═══════════════════════════════════════
+   COMMUNITY VIEW
+═══════════════════════════════════════ */
+#community-view{flex:1;overflow-y:auto;padding:20px 22px;background:#f4f6f4;display:none;min-width:0;}
+#community-view::-webkit-scrollbar{width:5px;}
+#community-view::-webkit-scrollbar-thumb{background:#ccc;border-radius:3px;}
+.comm-layout{display:grid;grid-template-columns:1fr 272px;gap:20px;max-width:1060px;}
+.cat-tabs{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;}
+.cat-tab{
+  padding:5px 13px;border-radius:18px;font-size:11px;font-weight:600;
+  border:1.5px solid var(--border);background:white;cursor:pointer;
+  color:var(--gray);transition:all .2s;
+}
+.cat-tab.active{background:var(--green);color:white;border-color:var(--green);}
+.post-card{
+  background:white;border-radius:12px;border:1.5px solid var(--border);
+  padding:14px 16px;margin-bottom:9px;cursor:pointer;transition:all .2s;
+}
+.post-card:hover{border-color:var(--accent);box-shadow:0 2px 12px rgba(0,228,201,.14);}
+.post-cat-badge{padding:2px 8px;border-radius:9px;font-size:10px;font-weight:700;margin-bottom:5px;display:inline-block;}
+.post-title{font-size:14px;font-weight:700;margin-bottom:5px;line-height:1.4;}
+.post-preview{font-size:12px;color:#666;margin-bottom:8px;line-height:1.55;}
+.post-foot{display:flex;gap:12px;font-size:11px;color:var(--gray);align-items:center;}
+.pf-item{display:flex;align-items:center;gap:3px;}
+.post-hot{background:#fff0f6;border-radius:4px;padding:1px 5px;font-size:9px;font-weight:700;color:#E40054;}
+.widget{background:white;border-radius:12px;border:1.5px solid var(--border);padding:14px;margin-bottom:13px;}
+.widget-title{font-size:11px;font-weight:700;color:var(--green);margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border);}
+.rank-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12px;}
+.rank-no{width:20px;font-weight:800;color:var(--gray);text-align:center;}
+.rank-no.gold{color:#f4a261;} .rank-no.silver{color:#aaa;} .rank-no.bronze{color:#cd7f32;}
+.rank-name{flex:1;font-weight:600;} .rank-pt{font-size:11px;color:var(--accent);font-weight:700;} .rank-badge{font-size:12px;}
+.hot-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:12px;border-bottom:1px solid #f5f5f5;}
+.hot-row:last-child{border-bottom:none;}
+.hc-name{font-weight:600;} .hc-score{font-weight:800;color:var(--accent);}
+.jp-widget{background:linear-gradient(135deg,#fff5f9,#ffe6f0);border:1.5px solid #ffb3cc;}
+.jp-widget .widget-title{color:#E40054;}
+.comm-write-btn{
+  width:100%;padding:10px;border-radius:9px;margin-bottom:14px;
+  background:var(--green);color:white;border:none;font-size:13px;font-weight:700;
+  cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.comm-write-btn:hover{background:var(--lg);}
+
+/* ═══════════════════════════════════════
+   DETAIL OVERLAY
+═══════════════════════════════════════ */
+#detail-overlay{
+  position:fixed;
+  top:var(--topbar);left:0;right:0;bottom:0;
+  background:rgba(0,0,0,0);
+  z-index:800;
+  pointer-events:none;
+  transition:background .38s cubic-bezier(.4,0,.2,1);
+  cursor:pointer;
+}
+#detail-overlay.active{
+  background:rgba(0,0,0,.48);
+  pointer-events:auto;
+}
+
+/* ═══════════════════════════════════════
+   RIGHT DETAIL PANEL
+═══════════════════════════════════════ */
+#detail-panel{
+  width:0;min-width:0;overflow:hidden;
+  background:white;border-left:1px solid var(--border);
+  flex-shrink:0;position:relative;z-index:900;
+  transition:width .38s cubic-bezier(.4,0,.2,1), min-width .38s;
+}
+#detail-panel.open{width:var(--detail);min-width:var(--detail);}
+#dp-inner{width:var(--detail);height:100%;overflow-y:auto;display:flex;flex-direction:column;}
+#dp-inner::-webkit-scrollbar{width:4px;}
+#dp-inner::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px;}
+
+/* Carousel */
+.dp-carousel{position:relative;height:210px;overflow:hidden;flex-shrink:0;background:#1a1a2e;}
+.dp-slides{display:flex;height:100%;transition:transform .55s cubic-bezier(.4,0,.2,1);}
+.dp-slide{
+  min-width:100%;height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;color:white;text-shadow:0 1px 6px rgba(0,0,0,.3);
+}
+.dp-slide-icon{font-size:52px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.25));}
+.dp-slide-label{font-size:13px;font-weight:700;letter-spacing:.8px;opacity:.95;}
+.dc-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);
+  background:rgba(255,255,255,.2);border:none;color:white;
+  font-size:20px;font-weight:900;width:32px;height:32px;border-radius:50%;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);transition:background .2s;z-index:5;
+}
+.dc-arrow:hover{background:rgba(255,255,255,.4);}
+.dc-prev{left:10px;} .dc-next{right:10px;}
+.dc-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:5;}
+.dc-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.42);cursor:pointer;transition:all .25s;}
+.dc-dot.active{background:white;width:20px;border-radius:4px;}
+.dp-logo-badge{
+  position:absolute;bottom:-26px;left:18px;
+  width:56px;height:56px;border-radius:50%;border:3.5px solid white;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:900;color:white;
+  box-shadow:0 4px 18px rgba(0,0,0,.28);z-index:10;letter-spacing:-1px;
+}
+
+/* Detail head */
+.dp-head{padding:36px 16px 13px;border-bottom:1px solid var(--border);}
+.dp-name-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+.dp-name{font-size:15px;font-weight:800;line-height:1.3;flex:1;}
+.dp-close-btn{
+  background:none;border:none;cursor:pointer;font-size:15px;color:var(--gray);
+  width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  transition:background .2s;flex-shrink:0;
+}
+.dp-close-btn:hover{background:#f0f0f0;}
+.dp-sub-info{font-size:11px;color:var(--gray);margin-top:5px;line-height:1.7;}
+
+/* Gauge + bars */
+.dp-metrics-row{display:flex;align-items:center;gap:12px;padding:15px 16px 13px;border-bottom:1px solid var(--border);}
+.dp-gauge-wrap{flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.dp-gauge-wrap svg{display:block;}
+.dp-bar-section{flex:1;}
+.dp-bar-title{font-size:9.5px;font-weight:700;color:var(--gray);margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px;}
+.dp-bar-row{display:flex;align-items:center;gap:6px;margin-bottom:7px;}
+.dp-bar-row:last-child{margin-bottom:0;}
+.dp-bar-lbl{width:44px;color:var(--gray);flex-shrink:0;font-size:10px;font-weight:600;}
+.dp-bar-track{flex:1;height:8px;background:#f0f4f0;border-radius:5px;overflow:hidden;}
+.dp-bar-fill{height:100%;border-radius:5px;width:0%;transition:width 1.1s cubic-bezier(.4,0,.2,1);}
+.dp-bar-num{width:28px;text-align:right;font-weight:800;font-size:11px;}
+
+/* Radar */
+.dp-radar-section{padding:13px 16px 8px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;align-items:center;}
+.dp-section-title{font-size:9.5px;font-weight:700;color:var(--gray);margin-bottom:8px;text-transform:uppercase;letter-spacing:.6px;align-self:flex-start;}
+
+/* Tabs */
+.dp-tabs{display:flex;border-bottom:2px solid var(--border);background:white;flex-shrink:0;}
+.dp-tab{
+  flex:1;padding:10px 0;font-size:11px;font-weight:700;
+  border:none;background:none;cursor:pointer;color:var(--gray);
+  border-bottom:2.5px solid transparent;margin-bottom:-2px;transition:all .2s;
+}
+.dp-tab.active{color:var(--green);border-bottom-color:var(--green);}
+.dp-tab:hover:not(.active){color:var(--dark);}
+.dp-tab-body{padding:13px 16px;}
+
+/* Review */
+.rv{padding:10px 0;border-bottom:1px solid var(--border);}
+.rv:last-child{border:none;}
+.rv-top{display:flex;justify-content:space-between;margin-bottom:4px;}
+.rv-user{font-size:12px;font-weight:700;}
+.rv-time{font-size:10px;color:var(--gray);}
+.rv-text{font-size:12px;color:#444;line-height:1.6;}
+
+/* Course info */
+.ci-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f5f5f5;font-size:12px;}
+.ci-row:last-child{border:none;}
+.ci-label{color:var(--gray);}
+.ci-value{font-weight:700;}
+
+/* Gallery */
+.gal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.gal-thumb{
+  height:88px;border-radius:9px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;cursor:pointer;transition:transform .2s;
+}
+.gal-thumb:hover{transform:scale(1.04);}
+.gal-thumb>span:first-child{font-size:26px;}
+.gal-thumb>span:last-child{font-size:9px;font-weight:700;color:rgba(255,255,255,.88);text-shadow:0 1px 3px rgba(0,0,0,.3);}
+
+/* Course Status tab sub-sections */
+.dp-sub-heading{font-size:10px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.6px;margin:0 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.dp-status-block{padding:14px 16px;border-bottom:1px solid var(--border);}
+.dp-status-block:last-child{border-bottom:none;}
+.dp-status-inner{display:flex;align-items:center;gap:12px;}
+.dp-radar-wrap{display:flex;flex-direction:column;align-items:center;}
+
+/* Difficulty section */
+.diff-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:800;margin-bottom:13px;}
+.diff-상급{background:#fce8ef;color:#E40054;}
+.diff-중급{background:#e0fdfb;color:#0a9e8a;}
+.diff-초급{background:#eef6ff;color:#2563eb;}
+.diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.diff-item{background:#f9f8ff;border-radius:10px;padding:10px 8px;text-align:center;}
+.diff-label{font-size:9.5px;color:var(--gray);font-weight:600;margin-bottom:4px;}
+.diff-value{font-size:15px;font-weight:900;color:var(--dark);}
+.diff-unit{font-size:10px;font-weight:600;color:var(--gray);}
+.naver-score-row{display:flex;align-items:baseline;gap:3px;justify-content:center;}
+.naver-score-row .diff-value{font-size:22px;color:var(--accent);}
+
+/* Actions */
+.dp-actions{padding:13px 16px;display:flex;gap:8px;border-top:1px solid var(--border);background:white;flex-shrink:0;}
+.dp-btn{flex:1;padding:11px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .2s;}
+.dp-pri{background:var(--green);color:white;}
+.dp-sec{background:var(--pale);color:var(--green);}
+.dp-btn:hover{opacity:.9;transform:translateY(-1px);}
+
+/* Misc */
+.jp-flag{
+  display:inline-block;background:#fff0f6;color:#E40054;
+  border-radius:4px;font-size:9px;font-weight:700;padding:1px 5px;margin-left:4px;vertical-align:middle;
+}
+
+/* ═══════════════════════════════════════
+   MODAL
+═══════════════════════════════════════ */
+.modal-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.48);z-index:2000;
+  backdrop-filter:blur(4px);
+  align-items:center;justify-content:center;
+}
+.modal-overlay.open{display:flex;}
+.modal-box{
+  background:white;border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 24px 64px rgba(0,0,0,.28);
+  width:460px;max-width:calc(100vw - 40px);
+  max-height:calc(100vh - 60px);overflow-y:auto;
+  animation:modalIn .28s cubic-bezier(.34,1.25,.64,1);
+}
+@keyframes modalIn{from{opacity:0;transform:scale(.91)}to{opacity:1;transform:scale(1)}}
+.modal-header{
+  padding:20px 22px 16px;
+  border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:flex-start;
+  position:sticky;top:0;background:white;z-index:1;
+}
+.modal-title{font-size:16px;font-weight:800;line-height:1.3;}
+.modal-subtitle{font-size:11px;color:var(--gray);margin-top:3px;}
+.modal-close{
+  background:none;border:none;cursor:pointer;font-size:16px;color:var(--gray);
+  width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  transition:background .2s;flex-shrink:0;margin-top:-2px;
+}
+.modal-close:hover{background:#f0f0f0;}
+.modal-body{padding:20px 22px;}
+.modal-footer{
+  padding:12px 22px 20px;display:flex;gap:10px;
+  border-top:1px solid var(--border);
+  position:sticky;bottom:0;background:white;
+}
+.modal-cancel-btn{
+  flex:1;padding:11px;border-radius:10px;
+  border:1.5px solid var(--border);background:white;
+  font-size:13px;font-weight:700;cursor:pointer;color:var(--gray);
+  transition:all .2s;font-family:inherit;
+}
+.modal-cancel-btn:hover{background:#f8f8f8;}
+.modal-submit-btn{
+  flex:2;padding:11px;border-radius:10px;border:none;
+  background:var(--green);color:white;
+  font-size:13px;font-weight:700;cursor:pointer;
+  transition:all .2s;font-family:inherit;
+}
+.modal-submit-btn:hover{background:var(--lg);}
+.modal-submit-btn:disabled{background:#aaa;cursor:not-allowed;}
+
+/* Score slider rows */
+.si-row{margin-bottom:18px;}
+.si-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.si-label{font-size:13px;font-weight:700;}
+.si-val{font-size:22px;font-weight:900;line-height:1;}
+.si-slider{
+  width:100%;-webkit-appearance:none;appearance:none;
+  height:7px;border-radius:4px;outline:none;cursor:pointer;
+  background:#eee;transition:background .2s;
+}
+.si-slider::-webkit-slider-thumb{
+  -webkit-appearance:none;width:22px;height:22px;border-radius:50%;
+  background:white;cursor:pointer;border:3px solid var(--accent);
+  box-shadow:0 2px 8px rgba(0,228,201,.3);transition:transform .15s;
+}
+.si-slider::-webkit-slider-thumb:hover{transform:scale(1.2);}
+.si-scale{display:flex;justify-content:space-between;font-size:9px;color:#bbb;padding:3px 2px 0;}
+
+/* Write cat buttons */
+.wcat-btn{
+  padding:5px 13px;border-radius:16px;font-size:11px;font-weight:600;
+  border:1.5px solid var(--border);background:white;cursor:pointer;
+  color:var(--gray);transition:all .2s;font-family:inherit;
+}
+.wcat-btn.active{background:var(--green);color:white;border-color:var(--green);}
+.wcat-btn:hover:not(.active){border-color:var(--accent);color:var(--green);}
+
+/* Toast */
+#toast{
+  position:fixed;bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--dark);color:white;
+  padding:12px 24px;border-radius:30px;
+  font-size:13px;font-weight:700;z-index:3000;
+  opacity:0;transition:all .32s cubic-bezier(.34,1.2,.64,1);
+  white-space:nowrap;pointer-events:none;
+  box-shadow:0 6px 24px rgba(0,0,0,.3);
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* Login modal */
+.login-form-row{margin-bottom:14px;}
+.login-form-row label{display:block;font-size:12px;font-weight:700;color:var(--gray);margin-bottom:6px;}
+.login-input{
+  width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;
+  font-size:14px;font-family:inherit;outline:none;transition:border-color .2s;
+}
+.login-input:focus{border-color:var(--accent);}
+.login-divider{text-align:center;font-size:11px;color:#bbb;margin:14px 0;}
+.social-btn{
+  width:100%;padding:11px;border-radius:10px;border:1.5px solid var(--border);
+  background:white;font-size:13px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  font-family:inherit;transition:all .2s;margin-bottom:8px;
+}
+.social-btn:hover{background:#fafafa;border-color:#ccc;}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ════════════════════════
+     TOP BAR
+════════════════════════ -->
+<div id="top-bar">
+  <div class="tb-logo" onclick="goHome()">
+    <span class="tb-logo-icon">⛳</span>
+    <div>
+      <div class="tb-logo-text">Golf<span>Now</span></div>
+      <div class="tb-logo-sub">COURSE STATUS &amp; COMMUNITY</div>
+    </div>
+  </div>
+  <div class="tb-ticker">
+    <div class="tb-ticker-track" id="tb-ticker-track"><!-- JS로 채움 --></div>
+  </div>
+  <div class="tb-right">
+    <div class="tb-notif" title="알림">🔔</div>
+    <div class="tb-pts-chip" title="활동 포인트">
+      <span class="tb-pts-icon">⭐</span>
+      <div class="tb-pts-info">
+        <div class="tb-pts-val">340 / 500 P</div>
+        <div class="tb-pts-bar"><div class="tb-pts-fill"></div></div>
+      </div>
+    </div>
+    <div class="tb-user-chip" onclick="openLoginModal()">
+      <div class="tb-user-av">⛳</div>
+      <span class="tb-user-name">아마추어 Lv.1</span>
+    </div>
+    <button class="tb-login-btn" onclick="openLoginModal()">🔐 로그인</button>
+  </div>
+</div>
+
+<!-- ════════════════════════
+     DETAIL OVERLAY
+════════════════════════ -->
+<div id="detail-overlay" onclick="closeDetail()"></div>
+
+<!-- ════════════════════════
+     CONTENT AREA
+════════════════════════ -->
+<div id="content-area">
+
+<!-- ════════════════════════
+     LEFT NAV
+════════════════════════ -->
+<nav id="left-nav">
+
+  <!-- Compact brand mark -->
+  <div class="nav-logo-area" style="padding:12px 16px 10px;">
+    <div class="nav-version" style="margin-top:0;">PROTOTYPE v0.4</div>
+  </div>
+
+  <!-- ── 골프장 정보 ── -->
+  <div class="nav-section">
+    <div class="nav-section-label">⛳ 골프장 정보</div>
+
+    <!-- 한국 -->
+    <div class="nav-group-hd open" id="ghd-korea" onclick="toggleNavGroup('korea')">
+      <span>🇰🇷 한국</span>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span class="nav-gcount" id="gc-korea">20</span>
+        <span class="nav-arrow open" id="arrow-korea">▶</span>
+      </div>
+    </div>
+    <div class="nav-group-items open" id="group-korea">
+      <button class="nav-item active" data-region="전체" onclick="navRegion(this,'전체')">🌏 전국 전체</button>
+      <button class="nav-item" data-region="서울/경기" onclick="navRegion(this,'서울/경기')">서울 / 경기</button>
+      <button class="nav-item" data-region="강원" onclick="navRegion(this,'강원')">강원</button>
+      <button class="nav-item" data-region="충청" onclick="navRegion(this,'충청')">충청</button>
+      <button class="nav-item" data-region="영남" onclick="navRegion(this,'영남')">영남</button>
+      <button class="nav-item" data-region="제주" onclick="navRegion(this,'제주')">제주</button>
+    </div>
+
+    <!-- 일본 -->
+    <div class="nav-group-hd" id="ghd-japan" onclick="toggleNavGroup('japan')">
+      <span>🇯🇵 일본</span>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span class="nav-gcount" id="gc-japan">10</span>
+        <span class="nav-arrow" id="arrow-japan">▶</span>
+      </div>
+    </div>
+    <div class="nav-group-items" id="group-japan">
+      <button class="nav-item" data-region="일본전체" onclick="navRegion(this,'일본전체')">🌏 일본 전체</button>
+      <button class="nav-item" data-region="간토" onclick="navRegion(this,'간토')">간토 (関東)</button>
+      <button class="nav-item" data-region="간사이" onclick="navRegion(this,'간사이')">간사이 (関西)</button>
+      <button class="nav-item" data-region="큐슈" onclick="navRegion(this,'큐슈')">큐슈 (九州)</button>
+      <button class="nav-item" data-region="오키나와" onclick="navRegion(this,'오키나와')">오키나와</button>
+    </div>
+  </div>
+
+  <div class="nav-divider"></div>
+
+  <!-- ── 커뮤니티 ── -->
+  <div class="nav-section">
+    <div class="nav-section-label">💬 커뮤니티</div>
+    <button class="nav-item nav-item-top" data-region="comm-all" onclick="navCommunity(this,'all')">🔥 전체 피드</button>
+    <button class="nav-item nav-item-top" data-region="comm-review" onclick="navCommunity(this,'review')">⛳ 코스리뷰</button>
+    <button class="nav-item nav-item-top" data-region="comm-gear" onclick="navCommunity(this,'gear')">🏌️ 장비</button>
+    <button class="nav-item nav-item-top" data-region="comm-lesson" onclick="navCommunity(this,'lesson')">📚 레슨</button>
+    <button class="nav-item nav-item-top" data-region="comm-japan" onclick="navCommunity(this,'japan')" style="color:rgba(228,100,150,.85);">🇯🇵 일본골프</button>
+    <button class="nav-item nav-item-top" data-region="comm-partner" onclick="navCommunity(this,'partner')">👥 동반자모집</button>
+    <button class="nav-item nav-item-top" data-region="comm-free" onclick="navCommunity(this,'free')">💭 자유게시판</button>
+  </div>
+
+
+</nav>
+
+<!-- ════════════════════════
+     MAIN AREA
+════════════════════════ -->
+<div id="main-area">
+
+  <!-- ── COURSE SIDEBAR ── -->
+  <div id="sidebar">
+    <div class="sb-head">
+      <div class="sb-view-row">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:16px;">🗺️</span>
+          <span class="sb-region" id="region-label">전국</span>
+          <span class="sb-count"><strong id="count-display">30</strong>개</span>
+        </div>
+        <div id="btn-map" style="display:none;"></div>
+      </div>
+      <div class="sb-search-row">
+        <span class="sb-search-icon">🔍</span>
+        <input type="text" class="sb-search-input" id="search-input" placeholder="골프장명, 지역 검색..." oninput="applyFilters()"/>
+      </div>
+      <div class="sort-row">
+        <button class="sort-btn active" onclick="setSort(this,'recent')">최근업데이트</button>
+        <button class="sort-btn" onclick="setSort(this,'condition')">상태좋은순</button>
+        <button class="sort-btn" onclick="setSort(this,'crowd')">페이스좋은순</button>
+      </div>
+    </div>
+    <div id="course-list"></div>
+  </div>
+
+  <!-- ── MAP ── -->
+  <div id="map-area">
+    <div id="map"></div>
+    <div id="map-legend">
+      <div style="font-size:9.5px;font-weight:700;color:#888;margin-bottom:5px;">코스 상태 (평균)</div>
+      <div class="li"><div class="ld" style="background:#00d872"></div>최상 ≥ 4.2</div>
+      <div class="li"><div class="ld" style="background:#22c55e"></div>좋음 3.0~4.1</div>
+      <div class="li"><div class="ld" style="background:#f59e0b"></div>보통 &lt; 3.0</div>
+    </div>
+    <div id="stat-bar">
+      <div class="sbi"><div class="sbd" style="background:#00d872"></div>최상 <span class="sbn" id="cnt-good">-</span></div>
+      <div class="sbi"><div class="sbd" style="background:#22c55e"></div>좋음 <span class="sbn" id="cnt-ok">-</span></div>
+      <div class="sbi"><div class="sbd" style="background:#f59e0b"></div>보통 <span class="sbn" id="cnt-bad">-</span></div>
+      <div class="sbi" style="color:var(--gray);">🕐 방금 업데이트</div>
+    </div>
+  </div>
+
+  <!-- ── COMMUNITY VIEW ── -->
+  <div id="community-view">
+    <div class="comm-layout">
+      <!-- Main feed -->
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <h2 style="font-size:17px;font-weight:800;" id="comm-title">💬 전체 피드</h2>
+          <button class="comm-write-btn" style="width:auto;padding:8px 18px;" onclick="openWriteModal()">✏️ 글쓰기</button>
+        </div>
+        <div class="cat-tabs">
+          <button class="cat-tab active" data-cat="all" onclick="filterCat(this,'all')">🔥 전체</button>
+          <button class="cat-tab" data-cat="review" onclick="filterCat(this,'review')">⛳ 코스리뷰</button>
+          <button class="cat-tab" data-cat="gear" onclick="filterCat(this,'gear')">🏌️ 장비</button>
+          <button class="cat-tab" data-cat="lesson" onclick="filterCat(this,'lesson')">📚 레슨</button>
+          <button class="cat-tab" data-cat="partner" onclick="filterCat(this,'partner')">👥 동반자모집</button>
+          <button class="cat-tab" data-cat="japan" onclick="filterCat(this,'japan')" style="border-color:#ffb3cc;color:#E40054;">🇯🇵 일본골프</button>
+          <button class="cat-tab" data-cat="free" onclick="filterCat(this,'free')">💭 자유</button>
+        </div>
+        <div id="post-list"></div>
+      </div>
+      <!-- Widgets -->
+      <div>
+        <div class="widget">
+          <div class="widget-title">🏆 이달의 랭킹 TOP 5</div>
+          <div class="rank-row"><span class="rank-no gold">1</span><span class="rank-badge">🏅</span><span class="rank-name">김**철</span><span class="rank-pt">2,480P</span></div>
+          <div class="rank-row"><span class="rank-no silver">2</span><span class="rank-badge">👑</span><span class="rank-name">박**수</span><span class="rank-pt">2,210P</span></div>
+          <div class="rank-row"><span class="rank-no bronze">3</span><span class="rank-badge">👑</span><span class="rank-name">이**진</span><span class="rank-pt">1,990P</span></div>
+          <div class="rank-row"><span class="rank-no">4</span><span class="rank-badge">🏌️</span><span class="rank-name">최**호</span><span class="rank-pt">1,740P</span></div>
+          <div class="rank-row"><span class="rank-no">5</span><span class="rank-badge">🏌️</span><span class="rank-name">정**아</span><span class="rank-pt">1,620P</span></div>
+        </div>
+        <div class="widget">
+          <div class="widget-title">📍 이번주 인기 골프장</div>
+          <div class="hot-row"><span class="hc-name">🥇 이스트밸리CC</span><span class="hc-score">4.8 ★</span></div>
+          <div class="hot-row"><span class="hc-name">🥈 클럽나인브릿지</span><span class="hc-score">4.7 ★</span></div>
+          <div class="hot-row"><span class="hc-name">🥉 안양베네스트</span><span class="hc-score">4.4 ★</span></div>
+          <div class="hot-row"><span class="hc-name">4 웰링턴CC</span><span class="hc-score">4.3 ★</span></div>
+          <div class="hot-row"><span class="hc-name">5 핀크스GC</span><span class="hc-score">4.2 ★</span></div>
+        </div>
+        <div class="widget jp-widget">
+          <div class="widget-title">🇯🇵 일본 인기 코스 TOP5</div>
+          <div class="hot-row"><span class="hc-name">🥇 태평양 고텐바</span><span class="hc-score">4.8 ★</span></div>
+          <div class="hot-row"><span class="hc-name">🥈 히로노 GC</span><span class="hc-score">4.7 ★</span></div>
+          <div class="hot-row"><span class="hc-name">🥉 도쿄 GC</span><span class="hc-score">4.6 ★</span></div>
+          <div class="hot-row"><span class="hc-name">4 가와나 호텔</span><span class="hc-score">4.5 ★</span></div>
+          <div class="hot-row"><span class="hc-name">5 PGM 오키나와</span><span class="hc-score">4.4 ★</span></div>
+        </div>
+        <div class="widget">
+          <div class="widget-title">🌱 내 활동 현황</div>
+          <div style="text-align:center;padding:10px 0;">
+            <div style="font-size:30px;margin-bottom:6px;">⛳</div>
+            <div style="font-size:14px;font-weight:800;color:var(--green);">아마추어</div>
+            <div style="font-size:11px;color:var(--gray);margin-top:4px;">340 / 500 P — 세미프로까지 160P</div>
+            <div style="height:5px;background:#eee;border-radius:3px;margin-top:8px;overflow:hidden;">
+              <div style="width:68%;height:100%;background:var(--accent);border-radius:3px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RIGHT DETAIL PANEL ── -->
+  <div id="detail-panel">
+    <div id="dp-inner">
+      <div id="dp-content"></div>
+    </div>
+  </div>
+
+</div><!-- /main-area -->
+
+</div><!-- /content-area -->
+</div><!-- /app -->
+
+<!-- ════════════════════════
+     TOAST
+════════════════════════ -->
+<div id="toast"></div>
+
+<!-- ════════════════════════
+     MODAL OVERLAY
+════════════════════════ -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+
+  <!-- ── 코스 상태 등록 ── -->
+  <div class="modal-box" id="modal-status" onclick="event.stopPropagation()" style="display:none">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">✏️ 코스 상태 등록</div>
+        <div class="modal-subtitle" id="modal-course-name">골프장명</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:#f0fff4;border:1.5px solid #bbf7d0;border-radius:10px;padding:10px 14px;font-size:12px;color:#065f46;margin-bottom:18px;">
+        🙏 오늘 직접 라운딩하신 코스 상태를 공유해 주세요. 골퍼들에게 큰 도움이 됩니다!
+      </div>
+      <!-- Tee -->
+      <div class="si-row">
+        <div class="si-hd"><span class="si-label">🏌️ 티박스</span><span class="si-val" id="si-val-0">4.0</span></div>
+        <input type="range" class="si-slider" id="si-0" min="1" max="5" step="0.5" value="4.0" oninput="updateSlider(0,this.value)"/>
+        <div class="si-scale"><span>1.0</span><span>2.0</span><span>3.0</span><span>4.0</span><span>5.0</span></div>
+      </div>
+      <!-- Fairway -->
+      <div class="si-row">
+        <div class="si-hd"><span class="si-label">🌿 페어웨이</span><span class="si-val" id="si-val-1">4.0</span></div>
+        <input type="range" class="si-slider" id="si-1" min="1" max="5" step="0.5" value="4.0" oninput="updateSlider(1,this.value)"/>
+        <div class="si-scale"><span>1.0</span><span>2.0</span><span>3.0</span><span>4.0</span><span>5.0</span></div>
+      </div>
+      <!-- Green -->
+      <div class="si-row">
+        <div class="si-hd"><span class="si-label">⛳ 그린</span><span class="si-val" id="si-val-2">4.0</span></div>
+        <input type="range" class="si-slider" id="si-2" min="1" max="5" step="0.5" value="4.0" oninput="updateSlider(2,this.value)"/>
+        <div class="si-scale"><span>1.0</span><span>2.0</span><span>3.0</span><span>4.0</span><span>5.0</span></div>
+      </div>
+      <!-- Pace -->
+      <div class="si-row">
+        <div class="si-hd"><span class="si-label">⏱️ 진행 페이스</span><span class="si-val" id="si-val-3">4.0</span></div>
+        <input type="range" class="si-slider" id="si-3" min="1" max="5" step="0.5" value="4.0" oninput="updateSlider(3,this.value)"/>
+        <div class="si-scale"><span>매우느림</span><span></span><span>보통</span><span></span><span>원활</span></div>
+      </div>
+      <!-- Caddie -->
+      <div class="si-row">
+        <div class="si-hd"><span class="si-label">🤝 캐디 친절도</span><span class="si-val" id="si-val-4">4.0</span></div>
+        <input type="range" class="si-slider" id="si-4" min="1" max="5" step="0.5" value="4.0" oninput="updateSlider(4,this.value)"/>
+        <div class="si-scale"><span>1.0</span><span>2.0</span><span>3.0</span><span>4.0</span><span>5.0</span></div>
+      </div>
+      <!-- Comment -->
+      <div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px;">
+          💬 한줄 코멘트 <span style="font-size:10px;color:var(--gray);font-weight:400;">(선택)</span>
+        </div>
+        <textarea id="si-comment" placeholder="오늘 코스 상태를 한 줄로 남겨주세요..."
+          style="width:100%;height:72px;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-size:12px;font-family:inherit;resize:none;outline:none;line-height:1.6;transition:border-color .2s;"
+          onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-cancel-btn" onclick="closeModal()">취소</button>
+      <button class="modal-submit-btn" id="si-submit-btn" onclick="submitStatus()">✅ 상태 등록하기</button>
+    </div>
+  </div>
+
+  <!-- ── 글쓰기 ── -->
+  <div class="modal-box" id="modal-write" onclick="event.stopPropagation()" style="display:none">
+    <div class="modal-header">
+      <div class="modal-title">✏️ 글쓰기</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom:14px;">
+        <div style="font-size:11px;font-weight:700;color:var(--gray);margin-bottom:8px;letter-spacing:.4px;text-transform:uppercase;">카테고리</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;" id="write-cats">
+          <button class="wcat-btn active" data-cat="review" onclick="selectWriteCat(this)">⛳ 코스리뷰</button>
+          <button class="wcat-btn" data-cat="gear" onclick="selectWriteCat(this)">🏌️ 장비</button>
+          <button class="wcat-btn" data-cat="lesson" onclick="selectWriteCat(this)">📚 레슨</button>
+          <button class="wcat-btn" data-cat="partner" onclick="selectWriteCat(this)">👥 동반자</button>
+          <button class="wcat-btn" data-cat="japan" onclick="selectWriteCat(this)" style="border-color:#ffb3cc;color:#E40054;">🇯🇵 일본골프</button>
+          <button class="wcat-btn" data-cat="free" onclick="selectWriteCat(this)">💭 자유</button>
+        </div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <input id="write-title" placeholder="제목을 입력하세요"
+          style="width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-weight:600;font-family:inherit;outline:none;transition:border-color .2s;"
+          onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"/>
+      </div>
+      <div style="margin-bottom:12px;">
+        <textarea id="write-body" placeholder="내용을 입력하세요..."
+          style="width:100%;height:140px;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-size:13px;font-family:inherit;resize:none;outline:none;line-height:1.65;transition:border-color .2s;"
+          onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button style="padding:7px 14px;border-radius:8px;border:1.5px solid var(--border);background:white;font-size:11px;cursor:pointer;color:var(--gray);font-family:inherit;transition:all .2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">📷 사진 추가</button>
+        <span style="font-size:11px;color:#bbb;">최대 5장 · JPG/PNG</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-cancel-btn" onclick="closeModal()">취소</button>
+      <button class="modal-submit-btn" onclick="submitPost()">📝 게시하기</button>
+    </div>
+  </div>
+
+  <!-- ── 로그인 ── -->
+  <div class="modal-box" id="modal-login" onclick="event.stopPropagation()" style="display:none;width:380px;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">🔐 로그인</div>
+        <div class="modal-subtitle">GolfNow 커뮤니티에 오신 것을 환영합니다</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <button class="social-btn" onclick="socialLogin('카카오')">
+        <span style="font-size:18px;">💛</span><span>카카오로 시작하기</span>
+      </button>
+      <button class="social-btn" onclick="socialLogin('네이버')" style="color:#03c75a;">
+        <span style="font-size:16px;font-weight:900;color:#03c75a;">N</span><span>네이버로 시작하기</span>
+      </button>
+      <button class="social-btn" onclick="socialLogin('구글')">
+        <span style="font-size:16px;">G</span><span>구글로 시작하기</span>
+      </button>
+      <div class="login-divider">또는 이메일로 로그인</div>
+      <div class="login-form-row">
+        <label>이메일</label>
+        <input class="login-input" type="email" placeholder="golfer@example.com"/>
+      </div>
+      <div class="login-form-row">
+        <label>비밀번호</label>
+        <input class="login-input" type="password" placeholder="••••••••"/>
+      </div>
+      <div style="text-align:right;font-size:11px;color:var(--accent);cursor:pointer;margin-top:-6px;margin-bottom:2px;">비밀번호 찾기</div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-cancel-btn" onclick="closeModal()">취소</button>
+      <button class="modal-submit-btn" onclick="loginSubmit()" style="background:var(--green);">로그인</button>
+    </div>
+    <div style="text-align:center;padding-bottom:16px;font-size:12px;color:var(--gray);">
+      아직 회원이 아니신가요? <span style="color:var(--accent);font-weight:700;cursor:pointer;" onclick="showToast('회원가입 기능 — 어드민 개발 후 오픈 예정!')">회원가입</span>
+    </div>
+  </div>
+
+  <!-- ── 게시글 상세 ── -->
+  <div class="modal-box" id="modal-post" onclick="event.stopPropagation()" style="display:none;width:580px;">
+    <div class="modal-header">
+      <div style="flex:1;min-width:0;">
+        <div id="post-modal-cat" style="margin-bottom:5px;"></div>
+        <div class="modal-title" id="post-modal-title" style="font-size:15px;line-height:1.4;"></div>
+        <div class="modal-subtitle" id="post-modal-meta"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()" style="margin-left:12px;">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="post-modal-body" style="font-size:13px;line-height:1.75;color:#333;margin-bottom:18px;"></div>
+      <div style="display:flex;gap:14px;font-size:12px;color:var(--gray);padding-bottom:14px;border-bottom:1px solid var(--border);">
+        <span id="post-modal-likes">👍 0</span>
+        <span id="post-modal-comments">💬 0</span>
+        <span id="post-modal-views">👁 0</span>
+      </div>
+      <!-- Comment section -->
+      <div style="margin-top:14px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:10px;">댓글 <span id="post-modal-ccount" style="color:var(--accent)">0</span>개</div>
+        <div id="post-modal-comment-list" style="margin-bottom:12px;"></div>
+        <div style="display:flex;gap:8px;">
+          <textarea placeholder="댓글을 입력하세요..." style="flex:1;height:50px;border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-size:12px;font-family:inherit;resize:none;outline:none;line-height:1.5;transition:border-color .2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+          <button onclick="showToast('💬 댓글 기능 — 백엔드 연동 후 활성화 예정!')" style="padding:0 16px;border-radius:10px;border:none;background:var(--green);color:white;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">등록</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /modal-overlay -->
+
+<script>
+/* ═══════════════════════════════════════
+   DATA
+═══════════════════════════════════════ */
+const courses=[
+  {id:1,  name:'남서울컨트리클럽',    short:'남서울CC',      country:'한국',region:'서울/경기',addr:'경기 안양시',  holes:18,par:72, lat:37.3939,lng:126.9519,weather:'☀️ 8°C', updated:'30분 전', tee:4.7,fairway:4.8,green:4.9,pace:4.2,caddie:4.5, slope:127,rating:71.5,avgScore:88,difficulty:'중급', reviews:[{user:'kim**',time:'오전 9:20',text:'그린 상태 역대급! 페어웨이도 너무 좋아요'},{user:'park**',time:'어제 4:15',text:'속도감 있고 깔끔합니다'}]},
+  {id:2,  name:'레이크사이드컨트리클럽',short:'레이크사이드',country:'한국',region:'서울/경기',addr:'경기 가평군',  holes:18,par:72, lat:37.8419,lng:127.1842,weather:'⛅ 5°C', updated:'1시간 전', tee:2.5,fairway:2.8,green:3.1,pace:2.0,caddie:3.2, slope:118,rating:70.2,avgScore:94,difficulty:'중급', reviews:[{user:'lee**',time:'어제 1:00',text:'러프 관리가 좀 아쉬움'},{user:'choi**',time:'2일 전',text:'주말은 혼잡합니다'}]},
+  {id:3,  name:'안양베네스트골프클럽', short:'안양베네스트', country:'한국',region:'서울/경기',addr:'경기 안양시',  holes:18,par:71, lat:37.3697,lng:126.9175,weather:'☀️ 9°C', updated:'2시간 전', tee:4.2,fairway:4.3,green:4.5,pace:4.4,caddie:4.3, slope:130,rating:72.1,avgScore:86,difficulty:'상급', reviews:[{user:'jung**',time:'오전 7:30',text:'조용하고 컨디션 좋아요'}]},
+  {id:4,  name:'한양컨트리클럽',       short:'한양CC',        country:'한국',region:'서울/경기',addr:'경기 구리시',  holes:27,par:108,lat:37.5980,lng:127.1820,weather:'🌥️ 6°C', updated:'3시간 전', tee:3.3,fairway:3.4,green:4.1,pace:3.0,caddie:3.8, slope:125,rating:71.0,avgScore:90,difficulty:'중급', reviews:[{user:'shin**',time:'오후 2:00',text:'그린 빠름 주의'}]},
+  {id:5,  name:'88컨트리클럽',         short:'88CC',          country:'한국',region:'서울/경기',addr:'경기 여주시',  holes:36,par:144,lat:37.3010,lng:127.6380,weather:'☀️ 7°C', updated:'4시간 전', tee:4.1,fairway:4.2,green:4.8,pace:4.5,caddie:4.0, slope:122,rating:70.8,avgScore:92,difficulty:'중급', reviews:[{user:'yoon**',time:'어제 3:00',text:'36홀 모두 관리 좋음'}]},
+  {id:6,  name:'스카이밸리컨트리클럽', short:'스카이밸리',    country:'한국',region:'강원',     addr:'강원 홍천군',  holes:18,par:72, lat:37.7010,lng:127.9750,weather:'❄️ -2°C',updated:'5시간 전', tee:1.8,fairway:1.9,green:2.0,pace:4.8,caddie:2.5, slope:135,rating:72.8,avgScore:98,difficulty:'상급', reviews:[{user:'han**',time:'어제',text:'동계 관리중, 그린 얼어있음'}]},
+  {id:7,  name:'오크밸리컨트리클럽',   short:'오크밸리',      country:'한국',region:'강원',     addr:'강원 원주시',  holes:18,par:72, lat:37.4160,lng:127.9130,weather:'⛅ 3°C', updated:'1일 전',  tee:3.0,fairway:3.2,green:3.0,pace:4.1,caddie:3.5, slope:138,rating:73.2,avgScore:97,difficulty:'상급', reviews:[{user:'kwon**',time:'2일 전',text:'산악 코스라 경치는 최고'}]},
+  {id:8,  name:'엘리시안강촌컨트리클럽',short:'엘리시안강촌',country:'한국',region:'강원',     addr:'강원 춘천시',  holes:18,par:72, lat:37.7850,lng:127.7050,weather:'❄️ -1°C',updated:'2일 전',  tee:2.0,fairway:2.1,green:1.8,pace:4.9,caddie:2.8, slope:140,rating:73.5,avgScore:99,difficulty:'상급', reviews:[{user:'oh**',time:'3일 전',text:'겨울 시즌 후반, 코스 상태 주의'}]},
+  {id:9,  name:'파인크리크컨트리클럽', short:'파인크리크',    country:'한국',region:'서울/경기',addr:'경기 가평군',  holes:18,par:72, lat:37.7300,lng:127.5200,weather:'❄️ 0°C', updated:'6시간 전', tee:3.9,fairway:4.1,green:4.0,pace:4.6,caddie:4.1, slope:120,rating:70.5,avgScore:91,difficulty:'중급', reviews:[{user:'bae**',time:'어제 11:00',text:'페어웨이 상태 아주 좋음'}]},
+  {id:10, name:'웰링턴컨트리클럽',     short:'웰링턴CC',      country:'한국',region:'서울/경기',addr:'경기 광주시',  holes:27,par:108,lat:37.4150,lng:127.2550,weather:'☀️ 8°C', updated:'10분 전', tee:4.4,fairway:4.5,green:4.6,pace:4.0,caddie:4.4, slope:128,rating:71.8,avgScore:89,difficulty:'중급', reviews:[{user:'seo**',time:'오전 10:00',text:'그린 컨디션 최상입니다'}]},
+  {id:11, name:'블루원상주컨트리클럽', short:'블루원상주',    country:'한국',region:'영남',     addr:'경북 상주시',  holes:27,par:108,lat:36.4200,lng:128.2100,weather:'☀️ 10°C',updated:'3시간 전', tee:3.8,fairway:4.0,green:3.9,pace:4.2,caddie:4.0, slope:123,rating:71.2,avgScore:91,difficulty:'중급', reviews:[{user:'im**',time:'오전 8:30',text:'날씨 좋고 코스 좋음'}]},
+  {id:12, name:'가야컨트리클럽',       short:'가야CC',        country:'한국',region:'영남',     addr:'경남 합천군',  holes:18,par:72, lat:35.5900,lng:128.1700,weather:'☀️ 12°C',updated:'2시간 전', tee:3.0,fairway:3.1,green:3.8,pace:3.2,caddie:3.5, slope:116,rating:69.8,avgScore:95,difficulty:'중급', reviews:[{user:'na**',time:'어제 2:00',text:'그린 상태 보통'}]},
+  {id:13, name:'클럽나인브릿지',       short:'나인브릿지',    country:'한국',region:'제주',     addr:'제주 서귀포시',holes:18,par:72, lat:33.3050,lng:126.5000,weather:'🌤️ 14°C',updated:'20분 전', tee:4.9,fairway:4.9,green:5.0,pace:4.5,caddie:5.0, slope:136,rating:73.0,avgScore:95,difficulty:'상급', reviews:[{user:'jang**',time:'오전 9:00',text:'제주 최고! 모든 컨디션 완벽'}]},
+  {id:14, name:'핀크스골프클럽',       short:'핀크스GC',      country:'한국',region:'제주',     addr:'제주 서귀포시',holes:18,par:72, lat:33.2900,lng:126.4250,weather:'🌤️ 14°C',updated:'4시간 전', tee:4.3,fairway:4.2,green:4.7,pace:4.2,caddie:4.6, slope:132,rating:72.3,avgScore:93,difficulty:'상급', reviews:[{user:'ryu**',time:'어제',text:'바람 있지만 코스 상태 매우 좋음'}]},
+  {id:15, name:'제주컨트리클럽',       short:'제주CC',        country:'한국',region:'제주',     addr:'제주 제주시',  holes:27,par:108,lat:33.4600,lng:126.5800,weather:'🌤️ 13°C',updated:'5시간 전', tee:2.9,fairway:3.0,green:3.6,pace:2.8,caddie:3.5, slope:119,rating:70.4,avgScore:94,difficulty:'중급', reviews:[{user:'cha**',time:'2일 전',text:'관광객 많아 페이스 느림'}]},
+  {id:16, name:'충남컨트리클럽',       short:'충남CC',        country:'한국',region:'충청',     addr:'충남 천안시',  holes:18,par:72, lat:36.8500,lng:127.1800,weather:'☀️ 9°C', updated:'1시간 전', tee:3.9,fairway:4.0,green:3.7,pace:4.4,caddie:4.1, slope:121,rating:70.6,avgScore:92,difficulty:'중급', reviews:[{user:'yang**',time:'오전 8:00',text:'페어웨이 상태 좋고 한산함'}]},
+  {id:17, name:'대전컨트리클럽',       short:'대전CC',        country:'한국',region:'충청',     addr:'충남 금산군',  holes:18,par:72, lat:36.1800,lng:127.4800,weather:'☀️ 10°C',updated:'3시간 전', tee:2.8,fairway:3.0,green:3.2,pace:4.0,caddie:3.3, slope:113,rating:69.3,avgScore:97,difficulty:'초급', reviews:[{user:'wang**',time:'어제',text:'러프 관리 다소 부족'}]},
+  {id:18, name:'코리아컨트리클럽',     short:'코리아CC',      country:'한국',region:'서울/경기',addr:'경기 용인시',  holes:18,par:72, lat:37.2200,lng:127.1800,weather:'☀️ 8°C', updated:'30분 전', tee:4.0,fairway:4.1,green:4.3,pace:4.1,caddie:4.2, slope:124,rating:71.1,avgScore:90,difficulty:'중급', reviews:[{user:'moon**',time:'오전 7:00',text:'아침 라운딩 쾌적'}]},
+  {id:19, name:'이스트밸리컨트리클럽', short:'이스트밸리',    country:'한국',region:'서울/경기',addr:'경기 이천시',  holes:18,par:72, lat:37.3050,lng:127.5050,weather:'☀️ 7°C', updated:'15분 전', tee:4.6,fairway:4.7,green:5.0,pace:4.8,caddie:4.7, slope:129,rating:71.7,avgScore:88,difficulty:'중급', reviews:[{user:'lim**',time:'오전 9:00',text:'정말 최상의 코스 상태!'}]},
+  {id:20, name:'태광컨트리클럽',       short:'태광CC',        country:'한국',region:'영남',     addr:'경북 경주시',  holes:18,par:72, lat:35.8600,lng:129.2200,weather:'☀️ 11°C',updated:'4시간 전', tee:3.9,fairway:4.0,green:4.1,pace:4.0,caddie:4.0, slope:122,rating:70.9,avgScore:92,difficulty:'중급', reviews:[{user:'park2**',time:'어제',text:'경주 특유의 역사 경관과 좋은 코스'}]},
+  {id:21, name:'태평양클럽 고텐바',    short:'태평양 고텐바', country:'일본',region:'간토',     addr:'시즈오카현 고텐바시', holes:18,par:72, lat:35.3050,lng:138.7900,weather:'⛅ 12°C', updated:'1시간 전', tee:4.6,fairway:4.7,green:4.8,pace:4.0,caddie:5.0, slope:133,rating:72.5,avgScore:91,difficulty:'상급', reviews:[{user:'가나**',time:'오전 8:00',text:'후지산 배경으로 라운딩 최고! 잔디 관리 수준급'},{user:'나리**',time:'어제',text:'페어웨이 상태 한국보다 훨씬 좋음'}]},
+  {id:22, name:'히로노 골프 클럽',     short:'히로노 GC',     country:'일본',region:'간사이',   addr:'효고현 미키시',       holes:18,par:72, lat:34.7980,lng:134.9120,weather:'☀️ 15°C', updated:'3시간 전', tee:4.9,fairway:4.9,green:5.0,pace:4.2,caddie:5.0, slope:139,rating:73.4,avgScore:96,difficulty:'상급', reviews:[{user:'다케**',time:'오전 9:00',text:'일본 랭킹 1위 코스, 그린 퀄리티 압도적'},{user:'호시**',time:'2일 전',text:'클럽하우스도 고급스럽고 서비스 최상'}]},
+  {id:23, name:'가스미가세키 컨트리클럽',short:'가스미가세키',country:'일본',region:'간토',     addr:'사이타마현 가와고에시',holes:36,par:144,lat:35.8950,lng:139.4820,weather:'☀️ 10°C', updated:'2시간 전', tee:4.4,fairway:4.5,green:4.6,pace:3.5,caddie:4.8, slope:134,rating:72.7,avgScore:93,difficulty:'상급', reviews:[{user:'야마**',time:'오전 7:30',text:'도쿄올림픽 개최지! 역사적 코스에서의 라운딩'},{user:'스즈**',time:'어제 3:00',text:'두 코스 다 관리 잘 돼 있음'}]},
+  {id:24, name:'가와나 호텔 골프코스', short:'가와나 호텔',   country:'일본',region:'간토',     addr:'시즈오카현 이토시',   holes:18,par:70, lat:34.8920,lng:139.0900,weather:'🌤️ 16°C', updated:'4시간 전', tee:4.2,fairway:4.3,green:4.5,pace:4.1,caddie:4.9, slope:126,rating:71.3,avgScore:90,difficulty:'중급', reviews:[{user:'이노**',time:'어제',text:'오션뷰 코스 넘 예쁨. 사진 스팟 많음'},{user:'마쓰**',time:'2일 전',text:'리조트 숙박하면서 라운딩 추천'}]},
+  {id:25, name:'고가 골프 클럽',       short:'고가 GC',       country:'일본',region:'큐슈',     addr:'후쿠오카현 고가시',   holes:18,par:72, lat:33.7240,lng:130.4810,weather:'☀️ 17°C', updated:'2시간 전', tee:4.1,fairway:4.2,green:4.4,pace:4.3,caddie:4.8, slope:121,rating:70.7,avgScore:91,difficulty:'중급', reviews:[{user:'후쿠**',time:'오전 8:30',text:'큐슈 최고 명문 코스. 조용하고 관리 훌륭'}]},
+  {id:26, name:'PGM 골프 리조트 오키나와',short:'PGM 오키나와',country:'일본',region:'오키나와',addr:'오키나와현 난조시',   holes:27,par:108,lat:26.1610,lng:127.8640,weather:'🌤️ 22°C', updated:'40분 전', tee:4.3,fairway:4.4,green:4.5,pace:3.5,caddie:4.5, slope:118,rating:70.1,avgScore:92,difficulty:'중급', reviews:[{user:'김**경',time:'오전 9:00',text:'겨울에 따뜻해서 최고. 야자수 사이 라운딩'},{user:'이**준',time:'어제 2:00',text:'에머랄드빛 바다뷰 홀 있음'}]},
+  {id:27, name:'가루이자와 72 골프',   short:'가루이자와 72', country:'일본',region:'간토',     addr:'나가노현 가루이자와마치',holes:72,par:288,lat:36.3580,lng:138.6340,weather:'❄️ 2°C',  updated:'5시간 전', tee:3.6,fairway:3.7,green:3.9,pace:4.3,caddie:4.0, slope:120,rating:70.5,avgScore:94,difficulty:'중급', reviews:[{user:'고바**',time:'2일 전',text:'72홀 리조트, 겨울은 일부 홀 휴장 확인 필요'}]},
+  {id:28, name:'도쿄 골프 클럽',       short:'도쿄 GC',       country:'일본',region:'간토',     addr:'사이타마현 사야마시', holes:18,par:72, lat:35.8490,lng:139.4250,weather:'☀️ 11°C', updated:'3시간 전', tee:4.5,fairway:4.6,green:4.7,pace:4.0,caddie:4.9, slope:136,rating:73.1,avgScore:94,difficulty:'상급', reviews:[{user:'나카**',time:'오전 10:00',text:'1913년 창립 명문. 코스 관리 전통적으로 우수'}]},
+  {id:29, name:'비와코 컨트리클럽',    short:'비와코 CC',     country:'일본',region:'간사이',   addr:'시가현 오쓰시',       holes:18,par:72, lat:35.0190,lng:135.9050,weather:'⛅ 14°C', updated:'4시간 전', tee:3.8,fairway:3.9,green:4.1,pace:4.0,caddie:4.4, slope:125,rating:71.2,avgScore:92,difficulty:'중급', reviews:[{user:'미야**',time:'어제 1:00',text:'비와코 호수 전망 홀들이 아름다움'}]},
+  {id:30, name:'아코다 골프 클럽 나라시노',short:'아코다 나라시노',country:'일본',region:'간토',addr:'치바현 나라시노시',   holes:18,par:72, lat:35.6820,lng:140.0190,weather:'☀️ 12°C', updated:'5분 전',   tee:4.3,fairway:4.4,green:4.6,pace:3.8,caddie:4.7, slope:130,rating:72.0,avgScore:90,difficulty:'상급', reviews:[{user:'이**수',time:'오전 7:00',text:'나리타공항 1시간. 일본 투어 첫 코스로 최적'},{user:'박**민',time:'어제',text:'잔디 품질 정말 좋고 직원분들 친절'}]},
+];
+
+const posts=[
+  {id:1,cat:'review',catLabel:'⛳ 코스리뷰',catColor:'#d1fae5',catTextColor:'#065f46',title:'이스트밸리 오늘 오전 후기 — 그린 5.0점 진짜 최고',preview:'오늘 오전 7시 라운딩 다녀왔습니다. 페어웨이도 4.7 수준으로 최상이고 그린 스피드가 매우 빠릅니다...',likes:52,comments:14,views:1203,time:'1시간 전',hot:true},
+  {id:2,cat:'gear',catLabel:'🏌️ 장비',catColor:'#dbeafe',catTextColor:'#1e40af',title:'아이언 샤프트 스틸 vs 카본 솔직한 비교 (3개월 사용기)',preview:'핸디 12인 아마추어 입장에서 스틸과 카본을 각각 3개월씩 써봤습니다. 결론부터 말하면 카본이...',likes:38,comments:22,views:876,time:'2시간 전',hot:true},
+  {id:3,cat:'free',catLabel:'💭 자유',catColor:'#f3e8ff',catTextColor:'#6b21a8',title:'오늘 첫 싱글 달성했습니다!! 79타 🎉',preview:'3년 동안 꿈꿔왔던 싱글을 드디어 달성했어요. 남서울 4.8 컨디션이 도움이 됐던 것 같습니다 ㅠㅠ',likes:94,comments:31,views:2140,time:'30분 전',hot:true},
+  {id:4,cat:'partner',catLabel:'👥 동반자모집',catColor:'#fef9c3',catTextColor:'#854d0e',title:'[3/25 토] 레이크사이드 4인 중 1자리 (싱글 핸디)',preview:'오전 7:30 티오프 예정입니다. 싱글 핸디 이상 실력자 선호합니다. 연락주세요!',likes:3,comments:7,views:142,time:'3시간 전',hot:false},
+  {id:5,cat:'review',catLabel:'⛳ 코스리뷰',catColor:'#d1fae5',catTextColor:'#065f46',title:'클럽나인브릿지 2박3일 제주 투어 후기',preview:'제주 4박5일 일정 중 나인브릿지 1라운딩 포함했는데 역시 소문대로였습니다. 그린 퀄리티가 국내 최고 수준...',likes:67,comments:18,views:1890,time:'5시간 전',hot:false},
+  {id:6,cat:'lesson',catLabel:'📚 레슨',catColor:'#fce7f3',catTextColor:'#9d174d',title:'드라이버 비거리 30미터 늘린 방법 (스윙 교정)',preview:'평균 210미터에서 240미터로 올린 방법을 공유합니다. 핵심은 체중이동보다 힙 회전이었는데...',likes:45,comments:19,views:1234,time:'1일 전',hot:false},
+  {id:7,cat:'gear',catLabel:'🏌️ 장비',catColor:'#dbeafe',catTextColor:'#1e40af',title:'2026 드라이버 추천 TOP5 실제 테스트 결과',preview:'5개 제품을 실제로 타석에서 테스트했습니다. 거리, 방향성, 조작성 세 가지 기준으로 평가했고...',likes:29,comments:11,views:654,time:'1일 전',hot:false},
+  {id:8,cat:'japan',catLabel:'🇯🇵 일본골프',catColor:'#fff0f0',catTextColor:'#c0392b',title:'[후기] 오키나와 PGM 3박4일 투어 — 총경비+코스 상태 총정리',preview:'2월 오키나와 투어 다녀왔습니다. 항공+숙박+3라운딩 총 80만원대 가능합니다. 코스 상태는 페어웨이 4.4, 그린 4.5...',likes:114,comments:42,views:5820,time:'2시간 전',hot:true},
+  {id:9,cat:'japan',catLabel:'🇯🇵 일본골프',catColor:'#fff0f0',catTextColor:'#c0392b',title:'후쿠오카 골프 투어 루트 — 고가GC + 볼캐노 추천 2박3일',preview:'후쿠오카 공항 입국 후 바로 골프장으로. 고가 GC는 입장료 저렴하고 퀄리티 대비 가성비 최상...',likes:87,comments:29,views:3140,time:'4시간 전',hot:true},
+  {id:10,cat:'japan',catLabel:'🇯🇵 일본골프',catColor:'#fff0f0',catTextColor:'#c0392b',title:'일본 골프 입문 가이드 — 예약 방법, 에티켓, 비용 총정리',preview:'처음 일본 라운딩 가시는 분들 위한 가이드입니다. GDO, 라쿠텐골프 등 예약 플랫폼 사용법...',likes:203,comments:67,views:12400,time:'2일 전',hot:true},
+  {id:11,cat:'japan',catLabel:'🇯🇵 일본골프',catColor:'#fff0f0',catTextColor:'#c0392b',title:'히로노 GC 방문기 — 일본 랭킹 1위 코스, 진짜였습니다',preview:'지인 초청으로 히로노 GC 다녀왔습니다. 그린 퀄리티 5.0점은 결코 과장이 아닙니다...',likes:156,comments:38,views:7890,time:'1일 전',hot:false},
+  {id:12,cat:'japan',catLabel:'🇯🇵 일본골프',catColor:'#fff0f0',catTextColor:'#c0392b',title:'[동반자 모집] 3월 오사카/교토 골프 투어 4인 모집',preview:'3월 15~18일 일정으로 오사카 베이스 골프 투어 계획 중입니다. 히로노 GC 한 곳 포함...',likes:12,comments:18,views:445,time:'6시간 전',hot:false},
+];
+
+/* ═══════════════════════════════════════
+   STATE
+═══════════════════════════════════════ */
+let map, markers={}, filteredCourses=[...courses];
+let currentRegion='전체', currentSort='recent', currentView='map', selectedId=null, currentCat='all';
+let carouselIdx=0, carouselTimer=null, _dpTabs={}, _currentCourse=null;
+
+/* ═══════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════ */
+const avg=c=>(c.tee+c.fairway+c.green+c.pace+c.caddie)/5;
+const f1=n=>Number(n).toFixed(1);
+function statusOf(c){const a=avg(c);return a>=4.2?{cls:'s-excellent',label:'✨ 최상'}:a>=3.0?{cls:'s-good',label:'🟢 좋음'}:{cls:'s-ok',label:'🟡 보통'};}
+function colorOf(c){const a=avg(c);return a>=4.0?'#00E4C9':a>=3.0?'#22c55e':a>=2.0?'#f59e0b':'#E40054';}
+function scoreColor(n){return n>=4.0?'#00E4C9':n>=3.0?'#22c55e':n>=2.0?'#f59e0b':'#E40054';}
+function dotBar(n,max=5){const f=Math.floor(n),fr=n-f;return '●'.repeat(f)+(fr>=.5?'◐':'')+'○'.repeat(max-f-(fr>=.5?1:0));}
+
+/* ═══════════════════════════════════════
+   SVG BUILDERS
+═══════════════════════════════════════ */
+function buildGaugeSVG(score,col){
+  const r=40,cx=56,cy=56,sz=112,circ=2*Math.PI*r,offset=circ/4;
+  return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}">
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#f0f4f0" stroke-width="10"/>
+    <circle id="gauge-arc" cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${col}" stroke-width="10"
+      stroke-dasharray="0 ${circ}" stroke-dashoffset="${offset}" stroke-linecap="round"/>
+    <text x="${cx}" y="${cy+2}" text-anchor="middle" dominant-baseline="middle"
+      font-size="18" font-weight="900" fill="${col}" font-family="'Noto Sans KR',sans-serif">${f1(score)}</text>
+    <text x="${cx}" y="${cy+16}" text-anchor="middle" font-size="9" fill="#aaa" font-family="'Noto Sans KR',sans-serif">/ 5.0</text>
+    <text x="${cx}" y="${cy-14}" text-anchor="middle" font-size="8" fill="#bbb" font-family="'Noto Sans KR',sans-serif">종합</text>
+  </svg>`;
+}
+function animateGauge(score,col){
+  const r=40,circ=2*Math.PI*r,offset=circ/4,target=(score/5)*circ;
+  const el=document.getElementById('gauge-arc');if(!el)return;
+  let t0=null;
+  (function step(ts){if(!t0)t0=ts;const p=Math.min((ts-t0)/1100,1),e=1-Math.pow(1-p,3),d=e*target;
+    el.setAttribute('stroke-dasharray',`${d} ${circ-d}`);if(p<1)requestAnimationFrame(step);})(performance.now());
+}
+function buildRadarSVG(c,col){
+  const cx=110,cy=105,R=58,w=220,h=210;
+  const step=2*Math.PI/5,base=-Math.PI/2;
+  const axes=[
+    {label:'티박스',  val:c.tee,     a:base},
+    {label:'페어웨이',val:c.fairway, a:base+step},
+    {label:'그린',    val:c.green,   a:base+step*2},
+    {label:'페이스',  val:c.pace,    a:base+step*3},
+    {label:'캐디',    val:c.caddie,  a:base+step*4},
+  ];
+  const pt=(r,a)=>({x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)});
+  const grids=[.25,.5,.75,1].map(p=>{
+    const pts=axes.map(ax=>pt(R*p,ax.a));
+    return `<polygon points="${pts.map(q=>`${q.x},${q.y}`).join(' ')}" fill="${p===1?col+'0c':'none'}" stroke="${p===1?col+'3a':'#e8ecef'}" stroke-width="${p===1?1.5:1}"/>`;
+  }).join('');
+  const axLines=axes.map(ax=>{const e=pt(R,ax.a);return `<line x1="${cx}" y1="${cy}" x2="${e.x}" y2="${e.y}" stroke="#dde3ea" stroke-width="1.5" stroke-dasharray="4,3"/>`;}).join('');
+  const dataPts=axes.map(ax=>{const p=pt(R*(ax.val/5),ax.a);return `${p.x},${p.y}`;}).join(' ');
+  const dots=axes.map(ax=>{const p=pt(R*(ax.val/5),ax.a);return `<circle cx="${p.x}" cy="${p.y}" r="4" fill="${scoreColor(ax.val)}" stroke="white" stroke-width="1.5"/>`;}).join('');
+  const labels=axes.map(ax=>{
+    const lp=pt(R+17,ax.a);
+    const anchor=Math.cos(ax.a)>0.3?'start':Math.cos(ax.a)<-0.3?'end':'middle';
+    const sc=scoreColor(ax.val);
+    return `<text x="${lp.x}" y="${lp.y}" text-anchor="${anchor}" font-size="9" fill="#666" font-weight="700" font-family="'Noto Sans KR',sans-serif">${ax.label}</text>
+      <text x="${lp.x}" y="${lp.y+11}" text-anchor="${anchor}" font-size="10" fill="${sc}" font-weight="900" font-family="'Noto Sans KR',sans-serif">${f1(ax.val)}</text>`;
+  }).join('');
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${grids}${axLines}<polygon points="${dataPts}" fill="${col}26" stroke="${col}" stroke-width="2.5" stroke-linejoin="round"/>${dots}${labels}</svg>`;
+}
+
+/* ═══════════════════════════════════════
+   MAP
+═══════════════════════════════════════ */
+function initMap(){
+  map=L.map('map',{zoomControl:false}).setView([36.5,127.8],7);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:18}).addTo(map);
+  L.control.zoom({position:'bottomright'}).addTo(map);
+  renderMarkers();updateStatBar();
+}
+function renderMarkers(){
+  Object.values(markers).forEach(m=>m.remove());markers={};
+  filteredCourses.forEach(c=>{
+    const a=avg(c),cls=a>=4.2?'m-excellent':a>=3.0?'m-good':'m-ok';
+    const col=colorOf(c);
+    const st=statusOf(c);
+    const icon=L.divIcon({
+      className:'',
+      html:`<div class="custom-marker ${cls}"><div class="cm-inner">${f1(a)}</div></div>`,
+      iconSize:[38,38],iconAnchor:[19,38]
+    });
+    const mk=L.marker([c.lat,c.lng],{icon}).addTo(map).on('click',()=>openDetail(c.id));
+    // Permanent info label
+    const tipHtml=`<div class="ml-wrap" onclick="openDetail(${c.id})">
+      <div class="ml-name">${c.short}${c.country==='일본'?' 🇯🇵':''}</div>
+      <div class="ml-row">
+        <div class="ml-dot" style="background:${col}"></div>
+        <span class="ml-status" style="color:${col}">${st.label.replace(/🟢|🟡|🔴/g,'').trim()}</span>
+        <span style="color:#bbb">·</span>
+        <span>${c.weather}</span>
+      </div>
+      <div class="ml-upd">🕐 ${c.updated}</div>
+    </div>`;
+    mk.bindTooltip(tipHtml,{
+      permanent:true,
+      direction:'top',
+      offset:[0,-34],
+      className:'ml-tip'
+    });
+    markers[c.id]=mk;
+  });
+}
+
+/* ═══════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════ */
+function renderSidebar(){
+  document.getElementById('count-display').textContent=filteredCourses.length;
+  document.getElementById('course-list').innerHTML=filteredCourses.map(c=>{
+    const st=statusOf(c),a=avg(c),col=colorOf(c);
+    const isLive=/\d+분\s*전/.test(c.updated);
+    const bgCol=a>=4.0?'rgba(0,228,201,.15)':a>=3.0?'rgba(34,197,94,.12)':a>=2.0?'rgba(245,158,11,.12)':'rgba(228,0,84,.12)';
+    return `<div class="course-card ${selectedId===c.id?'selected':''}" onclick="openDetail(${c.id})">
+      <div class="cc-top">
+        <div class="cc-top-left">
+          <div class="cc-name">${c.short}${c.country==='일본'?'<span class="jp-flag">🇯🇵</span>':''}</div>
+          <div class="cc-sub">📍 ${c.addr} · ${c.holes}홀</div>
+        </div>
+        <div class="cc-score-badge" style="background:${bgCol}">
+          <div class="cc-score-big" style="color:${col}">${f1(a)}</div>
+          <div class="cc-score-of" style="color:${col}">/ 5.0</div>
+        </div>
+      </div>
+      <div class="cc-badge-row">
+        <span class="status-badge ${st.cls}">${st.label}</span>
+        ${isLive?'<span class="badge-live">⚡ 방금업데이트</span>':''}
+      </div>
+      <div class="cc-scores">
+        ${[['티박스',c.tee],['페어웨이',c.fairway],['그린',c.green],['페이스',c.pace],['캐디',c.caddie]].map(([l,v])=>`<div class="score-box${v>=4.0?' sc-top':''}"><div class="sc-label">${l}</div><div class="sc-val" style="color:${scoreColor(v)}">${f1(v)}</div></div>`).join('')}
+      </div>
+      <div class="cc-foot">
+        <span class="cc-time">🕐 ${c.updated}</span>
+        <button class="fav-btn" onclick="event.stopPropagation();this.classList.toggle('on')">★</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════
+   LIST GRID
+═══════════════════════════════════════ */
+function renderListGrid(){
+  const em=['⛳','🏌️','🌿','🏆','🌄','🌳','🎯','🏅'];
+  document.getElementById('list-grid').innerHTML=filteredCourses.map(c=>{
+    const st=statusOf(c),a=avg(c),col=colorOf(c);
+    return `<div class="list-card" onclick="openDetail(${c.id})">
+      <div class="lc-thumb" style="background:linear-gradient(135deg,${col}99,${col})">
+        <span>${em[c.id%em.length]}</span>
+        <div class="lc-strip"><span>${st.label}</span><span>${c.weather}</span></div>
+      </div>
+      <div class="lc-body">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">
+          <div><div class="lc-name">${c.name}${c.country==='일본'?'<span class="jp-flag">🇯🇵</span>':''}</div><div class="lc-meta">📍 ${c.addr} · ${c.holes}홀 · 🕐 ${c.updated}</div></div>
+          <div class="avg-circle" style="background:${col}"><div class="av">${f1(a)}</div><div class="av-lbl">/ 5.0</div></div>
+        </div>
+        <div class="score-bars">
+          ${[['티박스',c.tee],['페어웨이',c.fairway],['그린',c.green],['페이스',c.pace],['캐디',c.caddie]].map(([l,v])=>`<div class="sb-row"><span class="sb-lbl">${l}</span><div class="sb-track"><div class="sb-fill" style="width:${v/5*100}%;background:${scoreColor(v)}"></div></div><span class="sb-num" style="color:${scoreColor(v)}">${f1(v)}</span></div>`).join('')}
+        </div>
+      </div>
+      <div class="lc-foot"><span style="color:var(--gray)">💬 후기 ${c.reviews.length}개</span><span class="status-badge ${st.cls}">${st.label}</span></div>
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════
+   COMMUNITY
+═══════════════════════════════════════ */
+const commTitles={all:'💬 전체 피드',review:'⛳ 코스리뷰',gear:'🏌️ 장비',lesson:'📚 레슨',japan:'🇯🇵 일본골프',partner:'👥 동반자모집',free:'💭 자유게시판'};
+function renderPosts(cat){
+  const filtered=cat==='all'?posts:posts.filter(p=>p.cat===cat);
+  document.getElementById('post-list').innerHTML=filtered.map(p=>`
+    <div class="post-card" onclick="openPostDetail(${p.id})">
+      <div><span class="post-cat-badge" style="background:${p.catColor};color:${p.catTextColor}">${p.catLabel}</span>${p.hot?'<span class="post-hot">HOT</span>':''}</div>
+      <div class="post-title">${p.title}</div>
+      <div class="post-preview">${p.preview}</div>
+      <div class="post-foot"><span class="pf-item">👍 ${p.likes}</span><span class="pf-item">💬 ${p.comments}</span><span class="pf-item">👁 ${p.views.toLocaleString()}</span><span style="margin-left:auto">${p.time}</span></div>
+    </div>`).join('');
+}
+function filterCat(btn,cat){
+  document.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');currentCat=cat;renderPosts(cat);
+  document.getElementById('comm-title').textContent=commTitles[cat]||'💬 커뮤니티';
+}
+
+/* ═══════════════════════════════════════
+   CAROUSEL
+═══════════════════════════════════════ */
+function updateCarousel(){
+  const s=document.getElementById('dp-slides');if(s)s.style.transform=`translateX(-${carouselIdx*100}%)`;
+  document.querySelectorAll('.dc-dot').forEach((d,i)=>d.classList.toggle('active',i===carouselIdx));
+}
+function carouselPrev(){clearInterval(carouselTimer);carouselIdx=(carouselIdx+3)%4;updateCarousel();}
+function carouselNext(){clearInterval(carouselTimer);carouselIdx=(carouselIdx+1)%4;updateCarousel();}
+function goSlide(i){clearInterval(carouselTimer);carouselIdx=i;updateCarousel();}
+
+/* ═══════════════════════════════════════
+   DETAIL PANEL
+═══════════════════════════════════════ */
+function openDetail(id){
+  const c=courses.find(x=>x.id===id);if(!c)return;
+  _currentCourse=c;
+  selectedId=id;renderSidebar();
+  if(currentView==='map'&&map)map.flyTo([c.lat,c.lng],12,{duration:1});
+  const a=avg(c),col=colorOf(c);
+  const logo=c.short.replace(/[\s\(\)\-]/g,'').slice(0,2);
+  const slideConfs=[
+    {icon:'🌄',label:'파노라마 뷰',  grad:`linear-gradient(150deg,${col}dd,${col})`},
+    {icon:'🌿',label:'페어웨이',     grad:`linear-gradient(150deg,#0a6e6a,#00E4C9)`},
+    {icon:'⛳',label:'그린',         grad:`linear-gradient(150deg,#1b4332,#40916c)`},
+    {icon:'🏛️',label:'클럽하우스',  grad:`linear-gradient(150deg,#264653,#3a8f8a)`},
+  ];
+  const metrics=[['티박스',c.tee],['페어웨이',c.fairway],['그린',c.green],['페이스',c.pace],['캐디',c.caddie]];
+  const galEmojis=['🌄','⛳','🌿','🏌️','🏆','🌳'];
+  const galGrads=[`linear-gradient(135deg,${col}cc,${col})`,`linear-gradient(135deg,#0a6e6a,#00E4C9)`,`linear-gradient(135deg,#100443,#1c0d68)`,`linear-gradient(135deg,#6b4226,#c08040)`,`linear-gradient(135deg,#100443,#E40054)`,`linear-gradient(135deg,#023e8a,#0096c7)`];
+  const galLabels=['파노라마','페어웨이','그린','클럽하우스','홀 전경','석양'];
+
+  /* ── 코스상태 탭 콘텐츠 ── */
+  const statusTabHtml=`
+    <div class="dp-status-block">
+      <div class="dp-sub-heading">📊 항목별 상태</div>
+      <div class="dp-status-inner">
+        <div class="dp-gauge-wrap">${buildGaugeSVG(a,col)}</div>
+        <div class="dp-bar-section">
+          ${metrics.map(([l,v],i)=>`<div class="dp-bar-row"><span class="dp-bar-lbl">${l}</span><div class="dp-bar-track"><div class="dp-bar-fill" id="dpbar-${i}" style="width:0%;background:${scoreColor(v)}"></div></div><span class="dp-bar-num" style="color:${scoreColor(v)}">${f1(v)}</span></div>`).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="dp-status-block">
+      <div class="dp-sub-heading">🎯 코스 상태 분석</div>
+      <div class="dp-radar-wrap">${buildRadarSVG(c,col)}</div>
+    </div>
+    <div class="dp-status-block">
+      <div class="dp-sub-heading">⛳ 난이도</div>
+      <div class="diff-badge diff-${c.difficulty}">🏌️ ${c.difficulty}</div>
+      <div class="diff-grid">
+        <div class="diff-item">
+          <div class="diff-label">네이버 평균스코어</div>
+          <div class="naver-score-row"><span class="diff-value">${c.avgScore}</span><span class="diff-unit">타</span></div>
+        </div>
+        <div class="diff-item">
+          <div class="diff-label">슬로프 레이팅</div>
+          <div class="diff-value">${c.slope}</div>
+        </div>
+        <div class="diff-item">
+          <div class="diff-label">코스 레이팅</div>
+          <div class="diff-value">${c.rating}</div>
+        </div>
+      </div>
+    </div>`;
+
+  document.getElementById('dp-content').innerHTML=`
+    <div class="dp-carousel">
+      <div class="dp-slides" id="dp-slides">${slideConfs.map(s=>`<div class="dp-slide" style="background:${s.grad}"><div class="dp-slide-icon">${s.icon}</div><div class="dp-slide-label">${s.label}</div></div>`).join('')}</div>
+      <div class="dp-logo-badge" style="background:linear-gradient(135deg,${col},${col}bb)">${logo}</div>
+      <button class="dc-arrow dc-prev" onclick="carouselPrev()">‹</button>
+      <button class="dc-arrow dc-next" onclick="carouselNext()">›</button>
+      <div class="dc-dots">${slideConfs.map((_,i)=>`<div class="dc-dot ${i===0?'active':''}" onclick="goSlide(${i})"></div>`).join('')}</div>
+    </div>
+    <div class="dp-head">
+      <div class="dp-name-row">
+        <div class="dp-name">${c.name}${c.country==='일본'?' <span class="jp-flag">🇯🇵 일본</span>':''}</div>
+        <button class="dp-close-btn" onclick="closeDetail()">✕</button>
+      </div>
+      <div class="dp-sub-info">📍 ${c.addr} &nbsp;·&nbsp; ${c.holes}홀 par${c.par}<br>${c.weather} &nbsp;·&nbsp; 🕐 ${c.updated}</div>
+    </div>
+    <div class="dp-tabs">
+      <button class="dp-tab active" onclick="dpTab(this,'status')">📊 코스상태</button>
+      <button class="dp-tab" onclick="dpTab(this,'review')">💬 리뷰</button>
+    </div>
+    <div id="dp-tab-body" class="dp-tab-body"></div>
+    <div class="dp-actions">
+      <button class="dp-btn dp-pri" onclick="openStatusModal(${c.id})">✏️ 상태 등록</button>
+      <button class="dp-btn dp-sec" onclick="goToReviews(${c.id})">💬 후기 더보기</button>
+    </div>`;
+
+  _dpTabs={
+    status: statusTabHtml,
+    review: c.reviews.map(r=>`<div class="rv"><div class="rv-top"><span class="rv-user">👤 ${r.user}</span><span class="rv-time">${r.time}</span></div><div class="rv-text">${r.text}</div></div>`).join(''),
+  };
+  document.getElementById('dp-tab-body').innerHTML=_dpTabs.status;
+  setTimeout(()=>{
+    const metrics=[['티박스',c.tee],['페어웨이',c.fairway],['그린',c.green],['페이스',c.pace],['캐디',c.caddie]];
+    metrics.forEach(([,v],i)=>{const el=document.getElementById(`dpbar-${i}`);if(el)el.style.width=`${v/5*100}%`;});
+    animateGauge(a,col);
+  },120);
+  document.getElementById('detail-panel').classList.add('open');
+  document.getElementById('detail-overlay').classList.add('active');
+
+  carouselIdx=0;clearInterval(carouselTimer);
+  carouselTimer=setInterval(()=>{carouselIdx=(carouselIdx+1)%4;updateCarousel();},3500);
+  if(currentView==='map'&&map)setTimeout(()=>map.invalidateSize(),400);
+}
+function closeDetail(){
+  clearInterval(carouselTimer);
+  document.getElementById('detail-panel').classList.remove('open');
+  document.getElementById('detail-overlay').classList.remove('active');
+  selectedId=null;renderSidebar();
+  if(currentView==='map'&&map)setTimeout(()=>map.invalidateSize(),400);
+}
+function dpTab(btn,tab){
+  document.querySelectorAll('.dp-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const body=document.getElementById('dp-tab-body');if(body)body.innerHTML=_dpTabs[tab]||'';
+  if(tab==='status'&&_currentCourse){
+    const c=_currentCourse;
+    const metrics=[['티박스',c.tee],['페어웨이',c.fairway],['그린',c.green],['페이스',c.pace],['캐디',c.caddie]];
+    const a=avg(c),col=colorOf(c);
+    setTimeout(()=>{
+      metrics.forEach(([,v],i)=>{const el=document.getElementById(`dpbar-${i}`);if(el)el.style.width=`${v/5*100}%`;});
+      animateGauge(a,col);
+    },80);
+  }
+}
+
+/* ═══════════════════════════════════════
+   NAV FUNCTIONS
+═══════════════════════════════════════ */
+function toggleNavGroup(id){
+  const items=document.getElementById('group-'+id);
+  const arrow=document.getElementById('arrow-'+id);
+  const hd=document.getElementById('ghd-'+id);
+  const open=items.classList.toggle('open');
+  arrow.classList.toggle('open',open);
+  hd.classList.toggle('open',open);
+}
+
+function navRegion(btn,region){
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(currentView==='community') switchView('map');
+  currentRegion=region;
+  const jpR=['간토','간사이','큐슈','오키나와'];
+  if(map){
+    if(region==='일본전체'||jpR.includes(region)) map.flyTo([36.2,138.5],6,{duration:1.2});
+    else if(region==='전체') map.flyTo([36.5,132.0],5,{duration:1.2});
+    else map.flyTo([36.5,127.8],7,{duration:1});
+  }
+  applyFilters();
+}
+
+function navCommunity(btn,cat){
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentCat=cat;
+  // sync cat-tabs
+  document.querySelectorAll('.cat-tab').forEach(b=>b.classList.toggle('active',b.dataset.cat===cat));
+  document.getElementById('comm-title').textContent=commTitles[cat]||'💬 커뮤니티';
+  switchView('community');
+  renderPosts(cat);
+}
+
+/* ═══════════════════════════════════════
+   FILTER & SORT
+═══════════════════════════════════════ */
+function setSort(btn,sort){
+  document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');currentSort=sort;applyFilters();
+}
+function applyFilters(){
+  const q=document.getElementById('search-input').value.toLowerCase();
+  const jpR=['간토','간사이','큐슈','오키나와'];
+  filteredCourses=courses.filter(c=>{
+    let rm;
+    if(currentRegion==='전체')             rm=true;
+    else if(currentRegion==='일본전체')    rm=c.country==='일본';
+    else if(jpR.includes(currentRegion))   rm=c.country==='일본'&&c.region===currentRegion;
+    else                                    rm=c.country==='한국'&&c.region===currentRegion;
+    const sm=!q||c.name.includes(q)||c.short.toLowerCase().includes(q)||c.addr.includes(q);
+    return rm&&sm;
+  });
+  if(currentSort==='condition') filteredCourses.sort((a,b)=>avg(b)-avg(a));
+  else if(currentSort==='crowd') filteredCourses.sort((a,b)=>b.pace-a.pace);
+  const labels={'전체':'전국','일본전체':'🇯🇵 일본','간토':'🇯🇵 간토','간사이':'🇯🇵 간사이','큐슈':'🇯🇵 큐슈','오키나와':'🇯🇵 오키나와'};
+  document.getElementById('region-label').textContent=labels[currentRegion]||currentRegion;
+  // update nav group counts
+  document.getElementById('gc-korea').textContent=courses.filter(c=>c.country==='한국').length;
+  document.getElementById('gc-japan').textContent=courses.filter(c=>c.country==='일본').length;
+  renderSidebar();renderListGrid();renderMarkers();updateStatBar();
+}
+function updateStatBar(){
+  document.getElementById('cnt-good').textContent=filteredCourses.filter(c=>avg(c)>=4.2).length;
+  document.getElementById('cnt-ok').textContent=filteredCourses.filter(c=>avg(c)>=3.0&&avg(c)<4.2).length;
+  document.getElementById('cnt-bad').textContent=filteredCourses.filter(c=>avg(c)<3.0).length;
+}
+
+/* ═══════════════════════════════════════
+   VIEW SWITCH
+═══════════════════════════════════════ */
+function goHome(){
+  if(document.getElementById('detail-panel').classList.contains('open'))closeDetail();
+  switchView('map');
+  currentRegion='전체';
+  currentSort='recent';
+  document.getElementById('search-input').value='';
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  const homeBtn=document.querySelector('[data-region="전체"]');
+  if(homeBtn)homeBtn.classList.add('active');
+  applyFilters();
+  if(map)map.setView([36.5,127.8],7,{animate:true,duration:.8});
+}
+function switchView(v){
+  if(v==='community'&&document.getElementById('detail-panel').classList.contains('open'))closeDetail();
+  currentView=v;
+  document.getElementById('map-area').style.display=v==='map'?'block':'none';
+  document.getElementById('community-view').style.display=v==='community'?'block':'none';
+  document.getElementById('sidebar').style.display=v==='community'?'none':'flex';
+  if(v==='map')setTimeout(()=>map.invalidateSize(),100);
+  if(v==='community')renderPosts(currentCat);
+}
+
+/* ═══════════════════════════════════════
+   MODAL SYSTEM
+═══════════════════════════════════════ */
+let _activeModal=null;
+let _statusCourseId=null;
+
+function showModal(id){
+  document.querySelectorAll('.modal-box').forEach(b=>b.style.display='none');
+  document.getElementById(id).style.display='block';
+  document.getElementById('modal-overlay').classList.add('open');
+  _activeModal=id;
+}
+
+function closeModal(e){
+  if(e&&e.target!==document.getElementById('modal-overlay'))return;
+  document.getElementById('modal-overlay').classList.remove('open');
+  setTimeout(()=>{document.querySelectorAll('.modal-box').forEach(b=>b.style.display='none');},200);
+  _activeModal=null;
+}
+
+/* STATUS MODAL */
+function openStatusModal(courseId){
+  _statusCourseId=courseId;
+  const c=courses.find(x=>x.id===courseId);if(!c)return;
+  document.getElementById('modal-course-name').textContent=c.name+' · '+c.addr;
+  const vals=[c.tee,c.fairway,c.green,c.pace,c.caddie];
+  [0,1,2,3,4].forEach(i=>{
+    const sl=document.getElementById('si-'+i);
+    sl.value=vals[i];
+    updateSlider(i,vals[i]);
+  });
+  document.getElementById('si-comment').value='';
+  const btn=document.getElementById('si-submit-btn');
+  btn.textContent='✅ 상태 등록하기';
+  btn.disabled=false;
+  btn.style.background='var(--green)';
+  showModal('modal-status');
+}
+
+function updateSlider(idx,val){
+  const v=parseFloat(val);
+  document.getElementById('si-val-'+idx).textContent=f1(v);
+  const col=scoreColor(v);
+  const pct=((v-1)/4)*100;
+  const sl=document.getElementById('si-'+idx);
+  sl.style.background=`linear-gradient(to right,${col} ${pct}%,#e8e8e8 ${pct}%)`;
+  sl.style.setProperty('--thumb-color',col);
+  document.getElementById('si-val-'+idx).style.color=col;
+}
+
+function submitStatus(){
+  const btn=document.getElementById('si-submit-btn');
+  btn.textContent='✓ 등록 완료!';
+  btn.style.background='var(--accent)';
+  btn.disabled=true;
+  setTimeout(()=>{
+    closeModal();
+    showToast('✅ 코스 상태가 등록되었습니다! +50 포인트 적립');
+  },800);
+}
+
+/* WRITE MODAL */
+function openWriteModal(){
+  document.getElementById('write-title').value='';
+  document.getElementById('write-body').value='';
+  document.querySelectorAll('.wcat-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  showModal('modal-write');
+}
+
+function selectWriteCat(btn){
+  document.querySelectorAll('.wcat-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function submitPost(){
+  const title=document.getElementById('write-title').value.trim();
+  if(!title){
+    document.getElementById('write-title').style.borderColor='var(--red)';
+    document.getElementById('write-title').focus();
+    setTimeout(()=>{document.getElementById('write-title').style.borderColor='var(--border)';},1500);
+    return;
+  }
+  closeModal();
+  showToast('📝 게시글이 등록되었습니다! +20 포인트 적립');
+}
+
+/* LOGIN MODAL */
+function openLoginModal(){
+  showModal('modal-login');
+}
+
+function socialLogin(provider){
+  closeModal();
+  setTimeout(()=>showToast(`🔐 ${provider} 로그인 — 어드민 개발 후 연동 예정!`),250);
+}
+
+function loginSubmit(){
+  closeModal();
+  setTimeout(()=>showToast('🔐 로그인 — 백엔드 연동 후 활성화 예정!'),250);
+}
+
+/* POST DETAIL */
+const sampleComments=[
+  {user:'golf**',time:'5분 전',text:'정보 감사합니다! 다음 주 라운딩 가는데 너무 도움돼요'},
+  {user:'iron**',time:'23분 전',text:'공감해요. 저도 비슷한 경험이었습니다'},
+  {user:'birdie**',time:'1시간 전',text:'좋은 후기 감사합니다. 즐거운 라운딩 하세요!'},
+];
+function openPostDetail(postId){
+  const p=posts.find(x=>x.id===postId);if(!p)return;
+  document.getElementById('post-modal-cat').innerHTML=`<span class="post-cat-badge" style="background:${p.catColor};color:${p.catTextColor}">${p.catLabel}</span>${p.hot?'<span class="post-hot" style="margin-left:4px">HOT</span>':''}`;
+  document.getElementById('post-modal-title').textContent=p.title;
+  document.getElementById('post-modal-meta').textContent=`${p.time} 작성`;
+  const extraLen=Math.floor(Math.random()*3+2);
+  const extra=`\n\n더 자세한 내용은 현장에서 직접 확인하시는 것을 권장드립니다. 궁금한 점은 댓글로 남겨주세요! 여러분의 라운딩이 즐거운 하루가 되기를 바랍니다 ⛳`;
+  document.getElementById('post-modal-body').textContent=p.preview+extra;
+  document.getElementById('post-modal-likes').textContent=`👍 ${p.likes}`;
+  document.getElementById('post-modal-comments').textContent=`💬 ${p.comments}`;
+  document.getElementById('post-modal-views').textContent=`👁 ${p.views.toLocaleString()}`;
+  document.getElementById('post-modal-ccount').textContent=p.comments;
+  const cmts=sampleComments.slice(0,Math.min(3,p.comments));
+  document.getElementById('post-modal-comment-list').innerHTML=cmts.map(c=>`
+    <div style="padding:9px 0;border-bottom:1px solid #f5f5f5;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+        <span style="font-size:12px;font-weight:700;">👤 ${c.user}</span>
+        <span style="font-size:10px;color:var(--gray);">${c.time}</span>
+      </div>
+      <div style="font-size:12px;color:#444;line-height:1.5;">${c.text}</div>
+    </div>`).join('');
+  showModal('modal-post');
+}
+
+/* GO TO REVIEWS */
+function goToReviews(courseId){
+  const c=courses.find(x=>x.id===courseId);if(!c)return;
+  closeDetail();
+  navCommunity(document.querySelector('[data-region="comm-review"]'),'review');
+  setTimeout(()=>showToast(`💬 ${c.short} 리뷰 목록`),200);
+}
+
+/* TOAST */
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  clearTimeout(t._tm);
+  t._tm=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+/* ESC KEY */
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&_activeModal)closeModal();});
+
+/* ═══════════════════════════════════════
+   BOOT
+═══════════════════════════════════════ */
+/* ═══════════════════════════════════════
+   TICKER
+═══════════════════════════════════════ */
+function initTicker(){
+  // 최근 업데이트 + 리뷰 알림 아이템 생성
+  const items=[];
+  // 1) 방금 업데이트된 코스
+  courses
+    .filter(c=>/\d+분\s*전/.test(c.updated))
+    .forEach(c=>{
+      const a=avg(c),st=statusOf(c);
+      items.push({icon:'⚡',text:`<strong>${c.short}</strong> 코스상태 업데이트 — ${st.label} (${f1(a)}점)`,time:c.updated,id:c.id});
+    });
+  // 2) 최근 1시간 코스
+  courses
+    .filter(c=>c.updated==='1시간 전')
+    .forEach(c=>{
+      items.push({icon:'🕐',text:`<strong>${c.short}</strong> ${statusOf(c).label} — ${c.weather}`,time:c.updated,id:c.id});
+    });
+  // 3) 리뷰 알림 (최근 업데이트 코스의 최신 리뷰)
+  courses
+    .filter(c=>/\d+분\s*전/.test(c.updated)&&c.reviews.length)
+    .forEach(c=>{
+      const r=c.reviews[0];
+      items.push({icon:'💬',text:`<strong>${c.short}</strong> 새 리뷰: "${r.text.slice(0,22)}..."`,time:r.time,id:c.id});
+    });
+  // 충분한 아이템 없으면 전체 상위 코스도 추가
+  if(items.length<5){
+    courses.slice(0,5).forEach(c=>{
+      items.push({icon:'📍',text:`<strong>${c.short}</strong> ${c.addr} · ${statusOf(c).label}`,time:c.updated,id:c.id});
+    });
+  }
+  // 2배 복제하여 끊김없는 스크롤
+  const doubled=[...items,...items];
+  const html=doubled.map(it=>
+    `<span class="tb-ticker-item" onclick="openDetail(${it.id})">
+      <span class="tb-ticker-dot"></span>
+      ${it.icon} ${it.text}
+      <span class="tb-ticker-time">${it.time}</span>
+    </span><span class="tb-ticker-sep">◆</span>`
+  ).join('');
+  const track=document.getElementById('tb-ticker-track');
+  if(track)track.innerHTML=html;
+  // 아이템 수에 따라 스피드 조정
+  const dur=Math.max(30,items.length*8);
+  if(track)track.style.animationDuration=dur+'s';
+}
+
+window.onload=()=>{
+  renderSidebar();initMap();initTicker();
+  [0,1,2,3,4].forEach(i=>updateSlider(i,document.getElementById('si-'+i).value));
+};
+</script>
+</body>
+</html>

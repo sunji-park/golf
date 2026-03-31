@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>⛳ Golf Community Platform – 기획서 v0.4</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --green: #2d6a4f;
+      --light-green: #40916c;
+      --pale-green: #d8f3dc;
+      --accent: #52b788;
+      --yellow: #f4a261;
+      --dark: #1b1b2f;
+      --gray: #6c757d;
+      --light: #f8f9fa;
+      --border: #dee2e6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans KR', -apple-system, sans-serif;
+      background: #f0f4f0;
+      color: var(--dark);
+      line-height: 1.7;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, var(--green) 0%, var(--light-green) 100%);
+      color: white;
+      padding: 48px 40px 36px;
+    }
+    header .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 12px;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+      font-weight: 600;
+    }
+    header h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+    header p { opacity: 0.85; font-size: 15px; max-width: 600px; }
+    .meta-row {
+      display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap;
+    }
+    .meta-item { font-size: 13px; opacity: 0.8; }
+    .meta-item strong { opacity: 1; }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+    main { padding: 40px 0 80px; }
+
+    /* ── SECTION ── */
+    .section {
+      background: white;
+      border-radius: 16px;
+      padding: 36px;
+      margin-bottom: 28px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 24px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--pale-green);
+    }
+    .section-title .icon { font-size: 22px; }
+
+    h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--dark);
+      margin: 20px 0 8px;
+    }
+    h3:first-of-type { margin-top: 0; }
+
+    p { font-size: 14px; color: #444; margin-bottom: 8px; }
+
+    /* ── CARDS ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 8px;
+    }
+    .card {
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      background: var(--light);
+    }
+    .card .card-icon { font-size: 26px; margin-bottom: 8px; }
+    .card .card-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    .card .card-desc { font-size: 13px; color: var(--gray); line-height: 1.6; }
+
+    /* ── TWO-COL ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media(max-width:600px){ .two-col { grid-template-columns: 1fr; } }
+
+    /* ── FEATURE LIST ── */
+    .feature-list { list-style: none; }
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      font-size: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .feature-list li:last-child { border-bottom: none; }
+    .feature-list .bullet {
+      flex-shrink: 0;
+      width: 22px; height: 22px;
+      background: var(--pale-green);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+    }
+    .feature-list .text strong { display: block; font-size: 13px; margin-bottom: 2px; }
+    .feature-list .text span { font-size: 12px; color: var(--gray); }
+
+    /* ── PHASE TIMELINE ── */
+    .phases { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+    @media(max-width:680px){ .phases { grid-template-columns: 1fr; } }
+    .phase-card {
+      border-radius: 14px;
+      padding: 22px;
+      border: 2px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .phase-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+    }
+    .phase-card.p1::before { background: var(--accent); }
+    .phase-card.p2::before { background: var(--yellow); }
+    .phase-card.p3::before { background: #9b5de5; }
+    .phase-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .phase-card.p1 .phase-label { color: var(--accent); }
+    .phase-card.p2 .phase-label { color: var(--yellow); }
+    .phase-card.p3 .phase-label { color: #9b5de5; }
+    .phase-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+    .phase-card ul {
+      padding-left: 16px;
+      font-size: 13px;
+      color: var(--gray);
+    }
+    .phase-card ul li { margin-bottom: 5px; }
+    .phase-duration {
+      display: inline-block;
+      margin-top: 14px;
+      background: var(--light);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    /* ── WIREFRAME ── */
+    .wireframe {
+      background: #f8fafc;
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      font-family: monospace;
+      font-size: 12px;
+      line-height: 1.8;
+      color: #555;
+      white-space: pre;
+      overflow-x: auto;
+      margin-bottom: 16px;
+    }
+    .wireframe-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray);
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── DATA MODEL ── */
+    .model-block {
+      background: #1e2a2e;
+      color: #a8d8a8;
+      border-radius: 10px;
+      padding: 18px 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      margin-bottom: 14px;
+      overflow-x: auto;
+    }
+    .model-block .key { color: #88c0d0; }
+    .model-block .type { color: #ebcb8b; }
+    .model-block .comment { color: #616e88; }
+
+    /* ── TAG ── */
+    .tag {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      margin: 2px;
+    }
+    .tag.green { background: var(--pale-green); color: var(--green); }
+    .tag.yellow { background: #fff3cd; color: #856404; }
+    .tag.purple { background: #ede7f6; color: #5e35b1; }
+    .tag.red { background: #fce4e4; color: #c0392b; }
+    .tag.blue { background: #e3f2fd; color: #1565c0; }
+
+    /* ── STACK TABLE ── */
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th {
+      text-align: left; padding: 10px 14px;
+      background: var(--pale-green); color: var(--green);
+      font-weight: 600;
+    }
+    td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f5f5f5; }
+
+    /* ── CALLOUT ── */
+    .callout {
+      border-left: 4px solid var(--accent);
+      background: #f0fff4;
+      padding: 14px 18px;
+      border-radius: 0 8px 8px 0;
+      font-size: 13px;
+      color: #2d6a4f;
+      margin: 12px 0;
+    }
+
+    /* ── TOC ── */
+    .toc { font-size: 13px; }
+    .toc a {
+      display: block;
+      color: var(--light-green);
+      text-decoration: none;
+      padding: 3px 0;
+    }
+    .toc a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="badge">🏌️ PRODUCT PLAN</div>
+    <h1>⛳ GolfNow Community Platform</h1>
+    <p>골프장 실시간 상태 정보 + 골퍼 커뮤니티 — 프로토타입 기획서 v0.4</p>
+    <div class="meta-row">
+      <div class="meta-item">📅 <strong>2026.03.31</strong> 최종수정</div>
+      <div class="meta-item">🎯 <strong>MVP First</strong> 전략</div>
+      <div class="meta-item">⚡ <strong>빠른 프로토타입</strong> → 점진적 업그레이드</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+  <!-- 1. 목차 -->
+  <div class="section">
+    <div class="section-title"><span class="icon">📋</span> 목차</div>
+    <nav class="toc">
+      <a href="#concept">1. 서비스 컨셉 & 핵심 가치</a>
+      <a href="#ia">2. 정보 구조 (IA) — 화면 목록</a>
+      <a href="#wireframes">3. 주요 화면 와이어프레임</a>
+      <a href="#features">4. 기능 명세 (Phase 1 MVP)</a>
+      <a href="#data">5. 데이터 모델</a>
+      <a href="#datasource">6. 데이터 수집 전략</a>
+      <a href="#roadmap">7. 개발 로드맵</a>
+      <a href="#stack">8. 기술 스택 제안</a>
+      <a href="#bm">9. 비즈니스 모델 (BM)</a>
+      <a href="#gamification">10. 커뮤니티 활성화 — 등급·포인트·랭킹</a>
+      <a href="#japan">11. 일본 골프 투어 전략</a>
+      <a href="#detail-ux">12. 골프장 상세페이지 UX 설계</a>
+      <a href="#leftnav">13. 좌측 내비게이션 IA 설계</a>
+    </nav>
+  </div>
+
+  <!-- 2. 컨셉 -->
+  <div class="section" id="concept">
+    <div class="section-title"><span class="icon">💡</span> 서비스 컨셉 & 핵심 가치</div>
+
+    <div class="callout">
+      💬 "<b>라운딩 예약했는데 오늘 코스 상태가 어떻지?</b>" — 골퍼라면 누구나 느끼는 이 불편함을 해소하는 플랫폼
+    </div>
+
+    <div class="card-grid" style="margin-top:20px">
+      <div class="card">
+        <div class="card-icon">📍</div>
+        <div class="card-title">골프장 상태 피드</div>
+        <div class="card-desc">코스 컨디션, 잔디 상태, 기상, 혼잡도 등을 실시간에 가깝게 확인. 다녀온 골퍼의 생생한 후기 중심.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">💬</div>
+        <div class="card-title">골퍼 커뮤니티</div>
+        <div class="card-desc">코스 리뷰, 장비 팁, 동반자 모집, 캐디 후기 등 골프 라이프 전반의 정보 공유.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔔</div>
+        <div class="card-title">맞춤 알림 (v2)</div>
+        <div class="card-desc">즐겨찾는 골프장 상태 변화, 내 라운딩 전날 자동 리포트 수신.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">⭐</div>
+        <div class="card-title">신뢰도 시스템</div>
+        <div class="card-desc">직접 다녀온 유저만 상태 입력 가능. 검증된 정보 우선 노출.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. IA -->
+  <div class="section" id="ia">
+    <div class="section-title"><span class="icon">🗺️</span> 정보 구조 (IA) — 화면 목록</div>
+
+    <div class="two-col">
+      <div>
+        <h3>🟢 골프장 정보 영역</h3>
+        <ul class="feature-list">
+          <li>
+            <span class="bullet">📋</span>
+            <span class="text"><strong>홈 / 탐색</strong><span>전국 골프장 목록 + 필터(지역·상태·거리)</span></span>
+          </li>
+          <li>
+            <span class="bullet">📍</span>
+            <span class="text"><strong>골프장 상세 페이지</strong><span>코스 정보, 현재 상태 카드, 최근 방문 후기 피드</span></span>
+          </li>
+          <li>
+            <span class="bullet">✏️</span>
+            <span class="text"><strong>상태 등록 폼</strong><span>방문일, 코스 컨디션, 혼잡도, 잔디/그린 상태 입력</span></span>
+          </li>
+          <li>
+            <span class="bullet">🔍</span>
+            <span class="text"><strong>검색</strong><span>골프장명 / 지역 검색</span></span>
+          </li>
+          <li>
+            <span class="bullet">⭐</span>
+            <span class="text"><strong>즐겨찾기 목록</strong><span>자주 가는 골프장 빠른 접근</span></span>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h3>🟡 커뮤니티 영역</h3>
+        <ul class="feature-list">
+          <li>
+            <span class="bullet">🏠</span>
+            <span class="text"><strong>커뮤니티 홈</strong><span>카테고리별 피드, 인기글, 최신글</span></span>
+          </li>
+          <li>
+            <span class="bullet">📝</span>
+            <span class="text"><strong>글쓰기 / 게시글 상세</strong><span>이미지 첨부, 댓글, 좋아요</span></span>
+          </li>
+          <li>
+            <span class="bullet">🏷️</span>
+            <span class="text"><strong>카테고리</strong><span>코스리뷰 / 장비 / 레슨 / 동반자 모집 / 자유</span></span>
+          </li>
+          <li>
+            <span class="bullet">👤</span>
+            <span class="text"><strong>마이페이지</strong><span>내 후기, 내 게시글, 즐겨찾기, 알림설정</span></span>
+          </li>
+          <li>
+            <span class="bullet">🔐</span>
+            <span class="text"><strong>로그인 / 회원가입</strong><span>소셜 로그인 (카카오/구글)</span></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top:20px">
+      <h3>🔧 관리자 영역 (운영용)</h3>
+      <ul class="feature-list">
+        <li><span class="bullet">⚙️</span><span class="text"><strong>골프장 DB 관리</strong><span>골프장 추가/수정, 기본 정보 업데이트</span></span></li>
+        <li><span class="bullet">🛡️</span><span class="text"><strong>게시물 모더레이션</strong><span>신고 처리, 부적절 게시글 삭제</span></span></li>
+        <li><span class="bullet">📊</span><span class="text"><strong>통계 대시보드</strong><span>DAU, 인기 골프장, 활성 유저 현황</span></span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 4. 와이어프레임 -->
+  <div class="section" id="wireframes">
+    <div class="section-title"><span class="icon">📐</span> 주요 화면 와이어프레임</div>
+
+    <div class="wireframe-label">① 홈 화면 (골프장 탐색)</div>
+    <div class="wireframe">┌─────────────────────────────────────────────────┐
+│  ⛳ GolfNow          [🔍 골프장 검색]   [👤]    │
+├─────────────────────────────────────────────────┤
+│  [전체] [서울/경기] [강원] [충청] [영남] [호남]  │
+│  정렬: [최근업데이트▼]  상태: [전체▼]            │
+├─────────────────────────────────────────────────┤
+│  ╔═══════════════╗  ╔═══════════════╗            │
+│  ║ 🟢 남서울CC   ║  ║ 🟡 한양CC     ║            │
+│  ║ 경기 · 18홀   ║  ║ 경기 · 27홀   ║            │
+│  ║ 잔디 ●●●●○  ║  ║ 잔디 ●●●○○  ║            │
+│  ║ 2시간 전 업뎃 ║  ║ 5시간 전 업뎃 ║            │
+│  ╚═══════════════╝  ╚═══════════════╝            │
+│  ╔═══════════════╗  ╔═══════════════╗            │
+│  ║ 🔴 레이크사이드║  ║ 🟢 안양베네스트║            │
+│  ║ 경기 · 18홀   ║  ║ 경기 · 18홀   ║            │
+│  ║ 잔디 ●●○○○  ║  ║ 잔디 ●●●●●║            │
+│  ║ 1일 전 업뎃   ║  ║ 3시간 전 업뎃 ║            │
+│  ╚═══════════════╝  ╚═══════════════╝            │
+└─────────────────────────────────────────────────┘
+🟢 좋음  🟡 보통  🔴 주의</div>
+
+    <div class="wireframe-label">② 골프장 상세 페이지</div>
+    <div class="wireframe">┌─────────────────────────────────────────────────┐
+│  ← 뒤로     남서울컨트리클럽          [⭐즐겨찾기] │
+├─────────────────────────────────────────────────┤
+│  📍 경기도 안양시 · 18홀 · 파72                  │
+│  🌤️ 현재 8°C · 맑음 · 바람 2m/s                │
+├────────────── 현재 코스 상태 ───────────────────┤
+│  ┌──────────┬──────────┬──────────┬──────────┐  │
+│  │ 페어웨이  │  그린    │  러프    │  혼잡도  │  │
+│  │  ●●●●○  │  ●●●●● │  ●●●○○  │  🟡보통  │  │
+│  │   좋음   │  최고    │   보통   │          │  │
+│  └──────────┴──────────┴──────────┴──────────┘  │
+│  최근 업데이트: 오늘 오전 9:20 · kim**님          │
+│  [+ 오늘 라운딩하셨나요? 상태 등록하기]          │
+├────────────── 최근 방문 후기 ───────────────────┤
+│  ● kim** · 오늘 오전 9:20                        │
+│    "그린 상태 역대급! 페어웨이도 깔끔"            │
+│    잔디●●●●●  혼잡●●○○○  [좋아요 12]      │
+│                                                  │
+│  ● park** · 어제 오후 4:15                       │
+│    "카트 도로 일부 공사중, 3번홀 우회"            │
+│    잔디●●●○○  혼잡●●●●○  [좋아요 5]      │
+│                                                  │
+│  [더보기]                                        │
+└─────────────────────────────────────────────────┘</div>
+
+    <div class="wireframe-label">③ 상태 등록 폼</div>
+    <div class="wireframe">┌─────────────────────────────────────────────────┐
+│  ← 남서울CC · 코스 상태 등록                    │
+├─────────────────────────────────────────────────┤
+│  📅 라운딩 날짜: [2026.02.26 ▼]                 │
+│                                                  │
+│  🌿 페어웨이 상태                                │
+│     ○──────────────●  [4/5 좋음]                │
+│  🟢 그린 상태                                    │
+│     ○──────────────●  [5/5 최고]                │
+│  🌾 러프 상태                                    │
+│     ○─────●──────○  [3/5 보통]                 │
+│  👥 혼잡도                                       │
+│     ○──●────────○  [2/5 여유]                  │
+│                                                  │
+│  📝 한줄 코멘트 (선택)                           │
+│  ┌────────────────────────────────────┐          │
+│  │ 오늘 코스 특이사항이나 팁을 적어주세요│          │
+│  └────────────────────────────────────┘          │
+│                                                  │
+│  📷 사진 첨부 (선택) [+ 추가]                    │
+│                                                  │
+│           [등록하기]                             │
+└─────────────────────────────────────────────────┘</div>
+
+    <div class="wireframe-label">④ 커뮤니티 홈</div>
+    <div class="wireframe">┌─────────────────────────────────────────────────┐
+│  ⛳ GolfNow   커뮤니티       [✏️글쓰기]  [👤]  │
+├─────────────────────────────────────────────────┤
+│  [전체] [코스리뷰] [장비] [레슨] [동반자모집] [자유] │
+├─────────────────────────────────────────────────┤
+│  🔥 인기글                                      │
+│  ● [코스리뷰] 남서울CC 오늘 후기 - 진짜 최고     │
+│     👍 48  💬 12  조회 891 · 1시간 전           │
+│                                                  │
+│  ● [장비] 아이언 샤프트 추천해주세요 스틸 vs 카본  │
+│     👍 31  💬 24  조회 654 · 2시간 전           │
+├─────────────────────────────────────────────────┤
+│  📋 최신글                                      │
+│  ● [자유] 오늘 첫 싱글 달성했습니다!!            │
+│     👍 15  💬 8   조회 312 · 30분 전            │
+│  ● [동반자] 이번 주말 레이크사이드 4인 중 1자리   │
+│     👍 2   💬 5   조회 89  · 1시간 전           │
+└─────────────────────────────────────────────────┘</div>
+  </div>
+
+  <!-- 5. 기능 명세 -->
+  <div class="section" id="features">
+    <div class="section-title"><span class="icon">✅</span> 기능 명세 — Phase 1 MVP 범위</div>
+
+    <div class="two-col">
+      <div>
+        <h3>🟢 골프장 상태 기능</h3>
+        <ul class="feature-list">
+          <li><span class="bullet">1</span><span class="text"><strong>골프장 목록 조회</strong><span>지역 필터, 상태 정렬, 카드형 UI</span></span></li>
+          <li><span class="bullet">2</span><span class="text"><strong>골프장 상세 조회</strong><span>기본 정보 + 현재 상태 + 최근 후기 5개</span></span></li>
+          <li><span class="bullet">3</span><span class="text"><strong>코스 상태 등록</strong><span>4개 지표 별점 + 한줄 코멘트 (로그인 필요)</span></span></li>
+          <li><span class="bullet">4</span><span class="text"><strong>날씨 정보 표시</strong><span>OpenWeather API 연동 (무료)</span></span></li>
+          <li><span class="bullet">5</span><span class="text"><strong>즐겨찾기</strong><span>마이페이지에서 관리</span></span></li>
+        </ul>
+      </div>
+      <div>
+        <h3>🟡 커뮤니티 기능</h3>
+        <ul class="feature-list">
+          <li><span class="bullet">1</span><span class="text"><strong>게시글 CRUD</strong><span>작성 / 수정 / 삭제 / 목록 / 상세</span></span></li>
+          <li><span class="bullet">2</span><span class="text"><strong>카테고리 필터</strong><span>5개 카테고리</span></span></li>
+          <li><span class="bullet">3</span><span class="text"><strong>댓글</strong><span>1depth 댓글 (대댓글은 v2)</span></span></li>
+          <li><span class="bullet">4</span><span class="text"><strong>좋아요</strong><span>게시글 / 댓글 좋아요</span></span></li>
+          <li><span class="bullet">5</span><span class="text"><strong>이미지 업로드</strong><span>게시글당 최대 4장</span></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top:20px">
+      <h3>🔐 공통 기능</h3>
+      <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
+        <span class="tag green">카카오 소셜 로그인</span>
+        <span class="tag green">구글 소셜 로그인</span>
+        <span class="tag green">마이페이지</span>
+        <span class="tag green">닉네임/프로필 설정</span>
+        <span class="tag yellow">신고 기능</span>
+        <span class="tag yellow">검색 (골프장명)</span>
+        <span class="tag blue">반응형 (모바일 우선)</span>
+      </div>
+    </div>
+
+    <div style="margin-top:20px">
+      <h3>❌ Phase 1 제외 (v2+)</h3>
+      <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
+        <span class="tag red">푸시 알림</span>
+        <span class="tag red">라운딩 전날 자동 리포트</span>
+        <span class="tag red">크롤링 자동화</span>
+        <span class="tag red">대댓글</span>
+        <span class="tag red">DM</span>
+        <span class="tag red">골프장 예약 연동</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. 데이터 모델 -->
+  <div class="section" id="data">
+    <div class="section-title"><span class="icon">🗄️</span> 데이터 모델 (핵심 엔티티)</div>
+
+    <div class="two-col">
+      <div>
+        <h3>GolfCourse (골프장)</h3>
+        <div class="model-block"><span class="key">id</span>: <span class="type">UUID</span>
+<span class="key">name</span>: <span class="type">string</span>         <span class="comment">// 남서울CC</span>
+<span class="key">region</span>: <span class="type">string</span>       <span class="comment">// 경기, 강원 ...</span>
+<span class="key">address</span>: <span class="type">string</span>
+<span class="key">holes</span>: <span class="type">number</span>        <span class="comment">// 18, 27, 36</span>
+<span class="key">lat</span>: <span class="type">number</span>
+<span class="key">lng</span>: <span class="type">number</span>
+<span class="key">thumbnail</span>: <span class="type">string</span>
+<span class="key">latest_status_at</span>: <span class="type">datetime</span>
+<span class="key">avg_rating</span>: <span class="type">float</span></div>
+      </div>
+      <div>
+        <h3>CourseStatus (상태 등록)</h3>
+        <div class="model-block"><span class="key">id</span>: <span class="type">UUID</span>
+<span class="key">course_id</span>: <span class="type">FK</span>
+<span class="key">user_id</span>: <span class="type">FK</span>
+<span class="key">visited_at</span>: <span class="type">date</span>   <span class="comment">// 라운딩일</span>
+<span class="key">fairway</span>: <span class="type">1-5</span>      <span class="comment">// 페어웨이</span>
+<span class="key">green</span>: <span class="type">1-5</span>         <span class="comment">// 그린</span>
+<span class="key">rough</span>: <span class="type">1-5</span>         <span class="comment">// 러프</span>
+<span class="key">crowd</span>: <span class="type">1-5</span>         <span class="comment">// 혼잡도</span>
+<span class="key">comment</span>: <span class="type">string</span>
+<span class="key">images</span>: <span class="type">string[]</span>
+<span class="key">likes</span>: <span class="type">number</span></div>
+      </div>
+      <div>
+        <h3>Post (커뮤니티 게시글)</h3>
+        <div class="model-block"><span class="key">id</span>: <span class="type">UUID</span>
+<span class="key">user_id</span>: <span class="type">FK</span>
+<span class="key">category</span>: <span class="type">enum</span>    <span class="comment">// review|gear|lesson|partner|free</span>
+<span class="key">title</span>: <span class="type">string</span>
+<span class="key">content</span>: <span class="type">text</span>
+<span class="key">images</span>: <span class="type">string[]</span>
+<span class="key">course_id</span>: <span class="type">FK?</span>    <span class="comment">// 코스리뷰일 때</span>
+<span class="key">likes</span>: <span class="type">number</span>
+<span class="key">views</span>: <span class="type">number</span>
+<span class="key">created_at</span>: <span class="type">datetime</span></div>
+      </div>
+      <div>
+        <h3>User (사용자)</h3>
+        <div class="model-block"><span class="key">id</span>: <span class="type">UUID</span>
+<span class="key">provider</span>: <span class="type">enum</span>   <span class="comment">// kakao | google</span>
+<span class="key">provider_id</span>: <span class="type">string</span>
+<span class="key">nickname</span>: <span class="type">string</span>
+<span class="key">avatar</span>: <span class="type">string</span>
+<span class="key">handicap</span>: <span class="type">number?</span>
+<span class="key">home_region</span>: <span class="type">string?</span>
+<span class="key">created_at</span>: <span class="type">datetime</span>
+<span class="key">post_count</span>: <span class="type">number</span>
+<span class="key">status_count</span>: <span class="type">number</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. 데이터 수집 전략 -->
+  <div class="section" id="datasource">
+    <div class="section-title"><span class="icon">📡</span> 데이터 수집 전략 (단계별)</div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">👤</div>
+        <div class="card-title">Phase 1: 유저 직접 입력</div>
+        <div class="card-desc">
+          라운딩 후 유저가 직접 코스 상태 등록.<br/>
+          <span class="tag green" style="margin-top:6px;">프로토타입 = 더미 데이터</span><br/>
+          신뢰도: 중 / 비용: 무료
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚙️</div>
+        <div class="card-title">Phase 2: 운영자 관리</div>
+        <div class="card-desc">
+          어드민 페이지에서 담당자가 직접 주요 골프장 상태 업데이트.<br/>
+          파트너 골프장과 협력 가능성.<br/>
+          신뢰도: 높음 / 비용: 인건비
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🤖</div>
+        <div class="card-title">Phase 3: 크롤링 자동화</div>
+        <div class="card-desc">
+          골프장 공식 사이트, SNS, 날씨 API 자동 수집 파이프라인.<br/>
+          법적 검토 필요.<br/>
+          신뢰도: 중 / 비용: 서버비
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌤️</div>
+        <div class="card-title">날씨 API (즉시 적용)</div>
+        <div class="card-desc">
+          OpenWeatherMap 무료 플랜으로 골프장 위치 기반 날씨 자동 표시.<br/>
+          일 1,000 콜 무료.<br/>
+          신뢰도: 높음 / 비용: 무료
+        </div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:20px;">
+      💡 <b>초기 전략:</b> 유저 입력 + 날씨 API 조합으로 빠르게 런칭 → 데이터가 쌓이면 패턴 분석해서 크롤링 포인트 발굴 → 파트너 골프장 제휴로 공식 데이터 확보
+    </div>
+  </div>
+
+  <!-- 8. 로드맵 -->
+  <div class="section" id="roadmap">
+    <div class="section-title"><span class="icon">🚀</span> 개발 로드맵</div>
+
+    <div class="phases">
+      <div class="phase-card p1">
+        <div class="phase-label">Phase 1 · MVP</div>
+        <h4>🌱 프로토타입 런칭</h4>
+        <ul>
+          <li>골프장 목록 / 상세 (더미)</li>
+          <li>코스 상태 등록 폼</li>
+          <li>커뮤니티 게시판 CRUD</li>
+          <li>소셜 로그인</li>
+          <li>날씨 API 연동</li>
+          <li>모바일 반응형 UI</li>
+        </ul>
+        <span class="phase-duration">⏱ 4~6주</span>
+      </div>
+      <div class="phase-card p2">
+        <div class="phase-label">Phase 2 · Growth</div>
+        <h4>📈 핵심 기능 강화</h4>
+        <ul>
+          <li>검색 + 필터 고도화</li>
+          <li>알림 시스템 (앱 푸시)</li>
+          <li>라운딩 전날 자동 리포트</li>
+          <li>어드민 관리 도구</li>
+          <li>유저 신뢰도 뱃지</li>
+          <li>대댓글 / 북마크</li>
+        </ul>
+        <span class="phase-duration">⏱ 6~8주</span>
+      </div>
+      <div class="phase-card p3">
+        <div class="phase-label">Phase 3 · Scale</div>
+        <h4>🔭 확장 & 수익화</h4>
+        <ul>
+          <li>크롤링 자동화 파이프라인</li>
+          <li>골프장 파트너십</li>
+          <li>AI 코스 상태 예측</li>
+          <li>예약 연동 (부킹닷컴 등)</li>
+          <li>프리미엄 멤버십</li>
+          <li>네이티브 앱 (iOS/Android)</li>
+        </ul>
+        <span class="phase-duration">⏱ 12주+</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. 기술 스택 -->
+  <div class="section" id="stack">
+    <div class="section-title"><span class="icon">🛠️</span> 기술 스택 제안</div>
+
+    <table>
+      <thead>
+        <tr><th>영역</th><th>추천 옵션</th><th>이유</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>🎨 프론트엔드</td><td><span class="tag blue">Next.js 14</span> + <span class="tag blue">Tailwind CSS</span></td><td>SSR/SEO 유리, 빠른 개발, 컴포넌트 재사용</td></tr>
+        <tr><td>⚙️ 백엔드</td><td><span class="tag green">Next.js API Routes</span> 또는 <span class="tag green">FastAPI</span></td><td>초기엔 Next.js 올인원으로 단순화 가능</td></tr>
+        <tr><td>🗄️ 데이터베이스</td><td><span class="tag yellow">Supabase</span> (PostgreSQL)</td><td>무료 티어 충분, Auth 내장, 실시간 구독</td></tr>
+        <tr><td>🔐 인증</td><td><span class="tag yellow">Supabase Auth</span></td><td>카카오/구글 OAuth 기본 지원</td></tr>
+        <tr><td>📁 파일 저장</td><td><span class="tag yellow">Supabase Storage</span></td><td>이미지 업로드, CDN 기본 제공</td></tr>
+        <tr><td>🌤️ 날씨 API</td><td><span class="tag purple">OpenWeatherMap</span></td><td>무료 1,000콜/일, 한국 데이터 정확</td></tr>
+        <tr><td>🚀 배포</td><td><span class="tag blue">Vercel</span></td><td>Next.js 최적화, 무료 플랜으로 시작 가능</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout" style="margin-top:20px;">
+      💡 <b>초기 비용 목표 $0:</b> Supabase 무료 + Vercel 무료 + OpenWeather 무료 플랜으로 프로토타입 전체 운영 가능. 월 활성 유저 500명 이상 시 유료 플랜 고려.
+    </div>
+  </div>
+
+  <!-- BM -->
+  <div class="section" id="bm">
+    <div class="section-title"><span class="icon">💰</span> 비즈니스 모델 (BM) — 수익화 전략</div>
+
+    <div class="callout" style="margin-bottom:20px;">
+      💡 <b>기본 전략:</b> 유저와 골프장 양쪽을 고객으로 두는 <b>양면 플랫폼(Two-sided Platform)</b>. 유저 트래픽을 모아 골프장/브랜드에 가치를 판매.
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">⭐</div>
+        <div class="card-title">① 프리미엄 멤버십</div>
+        <div class="card-desc">
+          <b>Free:</b> 기본 골프장 조회, 커뮤니티<br/>
+          <b>Pro (월 4,900원):</b> 라운딩 전날 AI 리포트, 즐겨찾기 무제한, 광고 제거<br/>
+          <b>Elite (월 9,900원):</b> 그린 스피드 예측, 실시간 알림, 전용 배지
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🏌️</div>
+        <div class="card-title">② 골프장 파트너십</div>
+        <div class="card-desc">
+          골프장 공식 페이지 운영권 판매 (월 50~200만원)<br/>
+          — 공식 코스 상태 직접 업로드<br/>
+          — 이벤트/프로모션 노출<br/>
+          — 리뷰 답변 기능<br/>
+          — 방문자 통계 제공
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🛒</div>
+        <div class="card-title">③ 예약 커머스 수수료</div>
+        <div class="card-desc">
+          골프장 티타임 예약 연동 (카카오VX, 스마트스코어, 엑스골프 등)<br/>
+          예약 1건당 수수료 2~5%<br/>
+          MAU 10만 → 예약 전환율 5% → 월 5억원 GMV 기준 수수료 1~2.5억
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📣</div>
+        <div class="card-title">④ 타겟 광고</div>
+        <div class="card-desc">
+          골프 장비 브랜드 (테일러메이드, 캘러웨이 등)<br/>
+          골프웨어, 골프여행 상품<br/>
+          골프 레슨 아카데미<br/>
+          리뷰어 타겟 정밀 광고 (CPM/CPC)
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <div class="card-title">⑤ 데이터 B2B 판매</div>
+        <div class="card-desc">
+          골프장 대상: 경쟁 골프장 벤치마킹 리포트<br/>
+          골프 장비사: 유저 선호도 트렌드 데이터<br/>
+          부동산/투자사: 골프장 방문 트렌드 (익명 집계)
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎪</div>
+        <div class="card-title">⑥ 이벤트 & 토너먼트</div>
+        <div class="card-desc">
+          플랫폼 자체 아마추어 대회 개최<br/>
+          참가비 수익 + 스폰서십<br/>
+          우승자 랭킹 부여로 커뮤니티 활성화 연계
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;">
+      <h3>📈 수익화 로드맵</h3>
+      <div style="overflow-x:auto;margin-top:12px;">
+        <table>
+          <thead><tr><th>단계</th><th>BM</th><th>예상 MAU</th><th>월 수익 목표</th><th>핵심 지표</th></tr></thead>
+          <tbody>
+            <tr><td>Phase 1</td><td>없음 (트래픽 확보)</td><td>1,000~5,000</td><td>—</td><td>DAU, 데이터 등록수</td></tr>
+            <tr><td>Phase 2</td><td>파트너십 + 타겟광고</td><td>1~5만</td><td>500~3,000만원</td><td>파트너 골프장 수, CTR</td></tr>
+            <tr><td>Phase 3</td><td>예약 수수료 + 프리미엄</td><td>10~50만</td><td>1~5억원</td><td>예약 전환율, 유료 전환율</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 커뮤니티 게이미피케이션 -->
+  <div class="section" id="gamification">
+    <div class="section-title"><span class="icon">🏆</span> 커뮤니티 활성화 — 등급 · 포인트 · 랭킹 시스템</div>
+
+    <div class="callout" style="margin-bottom:20px;">
+      💡 <b>핵심 원칙:</b> 활동이 눈에 보여야 한다. 유저가 올린 후기 하나가 다른 골퍼에게 실제로 도움이 된다는 <b>가시적 임팩트</b>를 느껴야 재참여가 일어남.
+    </div>
+
+    <!-- 등급 시스템 -->
+    <h3 style="margin-bottom:12px;">🎖️ 유저 등급 시스템 (6단계)</h3>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px;">
+      <div style="text-align:center;padding:14px 8px;border-radius:12px;background:#f8f9fa;border:2px solid #dee2e6;">
+        <div style="font-size:28px">🌱</div>
+        <div style="font-weight:700;font-size:12px;margin-top:6px;color:#555">새싹</div>
+        <div style="font-size:11px;color:#999;margin-top:2px">0~99P</div>
+      </div>
+      <div style="text-align:center;padding:14px 8px;border-radius:12px;background:#f0fff4;border:2px solid #52b788;">
+        <div style="font-size:28px">⛳</div>
+        <div style="font-weight:700;font-size:12px;margin-top:6px;color:#2d6a4f">아마추어</div>
+        <div style="font-size:11px;color:#999;margin-top:2px">100~499P</div>
+      </div>
+      <div style="text-align:center;padding:14px 8px;border-radius:12px;background:#fff8e1;border:2px solid #f4a261;">
+        <div style="font-size:28px">🏌️</div>
+        <div style="font-weight:700;font-size:12px;margin-top:6px;color:#e67e22">세미프로</div>
+        <div style="font-size:11px;color:#999;margin-top:2px">500~1,999P</div>
+      </div>
+      <div style="text-align:center;padding:14px 8px;border-radius:12px;background:#fce4e4;border:2px solid #e63946;">
+        <div style="font-size:28px">🎯</div>
+        <div style="font-weight:700;font-size:12px;margin-top:6px;color:#c0392b">싱글</div>
+        <div style="font-size:11px;color:#999;margin-top:2px">2,000~4,999P</div>
+      </div>
+      <div style="text-align:center;padding:14px 8px;border-radius:12px;background:#ede7f6;border:2px solid #9b59b6;">
+        <div style="font-size:28px">👑</div>
+        <div style="font-weight:700;font-size:12px;margin-top:6px;color:#6c3483">마스터</div>
+        <div style="font-size:11px;color:#999;margin-top:2px">5,000~9,999P</div>
+      </div>
+      <div style="text-align:center;padding:14px 8px;border-radius:12px;background:#fff3e0;border:2px solid #f39c12;">
+        <div style="font-size:28px">🏅</div>
+        <div style="font-weight:700;font-size:12px;margin-top:6px;color:#e67e22">레전드</div>
+        <div style="font-size:11px;color:#999;margin-top:2px">10,000P+</div>
+      </div>
+    </div>
+
+    <!-- 포인트 적립 -->
+    <div class="two-col">
+      <div>
+        <h3>💎 포인트 적립 (획득)</h3>
+        <ul class="feature-list" style="margin-top:8px;">
+          <li><span class="bullet">P</span><span class="text"><strong>코스 상태 등록</strong><span>1회당 +50P (일 1회 한정)</span></span></li>
+          <li><span class="bullet">P</span><span class="text"><strong>게시글 작성</strong><span>+20P / 인기글 선정 시 +100P 추가</span></span></li>
+          <li><span class="bullet">P</span><span class="text"><strong>댓글 작성</strong><span>+5P (일 최대 5회)</span></span></li>
+          <li><span class="bullet">P</span><span class="text"><strong>내 후기에 좋아요</strong><span>1개당 +2P (최대 50P/게시물)</span></span></li>
+          <li><span class="bullet">P</span><span class="text"><strong>도움이 됐어요 받기</strong><span>+30P — 후기 정확도 평가</span></span></li>
+          <li><span class="bullet">P</span><span class="text"><strong>사진 첨부 후기</strong><span>+30P 추가 (증거 기반 신뢰)</span></span></li>
+          <li><span class="bullet">P</span><span class="text"><strong>연속 활동 보너스</strong><span>7일 연속 +100P / 30일 +500P</span></span></li>
+          <li><span class="bullet">P</span><span class="text"><strong>친구 초대</strong><span>초대한 친구 첫 후기 작성 시 +200P</span></span></li>
+        </ul>
+      </div>
+      <div>
+        <h3>🎁 등급별 혜택</h3>
+        <ul class="feature-list" style="margin-top:8px;">
+          <li><span class="bullet">🌱</span><span class="text"><strong>새싹</strong><span>기본 서비스 이용</span></span></li>
+          <li><span class="bullet">⛳</span><span class="text"><strong>아마추어</strong><span>즐겨찾기 +10개 추가, 프로필 뱃지</span></span></li>
+          <li><span class="bullet">🏌️</span><span class="text"><strong>세미프로</strong><span>파트너 골프장 할인 쿠폰 월 1매, 광고 축소</span></span></li>
+          <li><span class="bullet">🎯</span><span class="text"><strong>싱글</strong><span>예약 수수료 할인, 전용 커뮤니티 입장권</span></span></li>
+          <li><span class="bullet">👑</span><span class="text"><strong>마스터</strong><span>Pro 멤버십 무료, 골프장 초청 라운딩 응모</span></span></li>
+          <li><span class="bullet">🏅</span><span class="text"><strong>레전드</strong><span>연간 골프장 무료 라운딩, 오피셜 리뷰어 인증</span></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 랭킹 시스템 -->
+    <div style="margin-top:24px;">
+      <h3>🏆 랭킹 시스템 구성</h3>
+      <div class="card-grid" style="margin-top:10px;">
+        <div class="card">
+          <div class="card-icon">🌍</div>
+          <div class="card-title">전체 랭킹</div>
+          <div class="card-desc">누적 포인트 기준 전국 순위. 상위 1% → 레전드 뱃지 자동 부여. 매월 초기화 없이 누적 (명예의 전당 개념).</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📅</div>
+          <div class="card-title">이달의 랭킹</div>
+          <div class="card-desc">이번 달 활동 포인트 기준. 매월 1일 초기화. 1~3위에게 골프장 할인권, 굿즈 등 실물 보상으로 경쟁 동기 자극.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📍</div>
+          <div class="card-title">지역 랭킹</div>
+          <div class="card-desc">경기/강원/제주 등 지역별 탑 리뷰어. 해당 지역 골프장 파트너십과 연계해 초청 라운딩 제공 가능.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">⛳</div>
+          <div class="card-title">골프장 랭킹</div>
+          <div class="card-desc">특정 골프장에 가장 많이 방문/후기를 올린 유저. "남서울CC 최다 방문자" 뱃지 — 골프장 파트너와 연계 리워드.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 특수 뱃지 -->
+    <div style="margin-top:20px;">
+      <h3>🎀 특수 뱃지 (활동 인증)</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;">
+        <div style="background:#fff8e1;border:1.5px solid #f4a261;border-radius:10px;padding:8px 14px;font-size:13px;">🌅 <b>얼리버드</b> — 오전 7시 이전 라운딩 후기 10회</div>
+        <div style="background:#e8f5e9;border:1.5px solid #52b788;border-radius:10px;padding:8px 14px;font-size:13px;">📸 <b>포토그래퍼</b> — 사진 첨부 후기 50회</div>
+        <div style="background:#fce4e4;border:1.5px solid #e63946;border-radius:10px;padding:8px 14px;font-size:13px;">🔥 <b>핫플 탐험가</b> — 20개 이상 골프장 방문</div>
+        <div style="background:#ede7f6;border:1.5px solid #9b59b6;border-radius:10px;padding:8px 14px;font-size:13px;">💬 <b>소통왕</b> — 댓글 500개 달성</div>
+        <div style="background:#e3f2fd;border:1.5px solid #1565c0;border-radius:10px;padding:8px 14px;font-size:13px;">✅ <b>검증 리뷰어</b> — 도움이 됐어요 100개 획득</div>
+        <div style="background:#fff3e0;border:1.5px solid #f39c12;border-radius:10px;padding:8px 14px;font-size:13px;">🏝️ <b>제주 전문가</b> — 제주 골프장 후기 5개 이상</div>
+        <div style="background:#d8f3dc;border:1.5px solid #2d6a4f;border-radius:10px;padding:8px 14px;font-size:13px;">📊 <b>신뢰 데이터</b> — 정확한 후기 평가 누적 90% 이상</div>
+        <div style="background:#f0f4f0;border:1.5px solid #555;border-radius:10px;padding:8px 14px;font-size:13px;">🎖️ <b>창립 멤버</b> — 베타 론칭 초기 100명 한정</div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:20px;">
+      🎯 <b>BM 연계 포인트:</b> 등급이 높을수록 파트너 골프장 혜택이 커지면 → 골프장 입장에서 "우리 파트너십이 실제로 유저에게 닿는다"는 걸 보여줄 수 있어 파트너십 세일즈가 쉬워짐. 즉 <b>유저 활성화 = BM 강화</b>의 선순환.
+    </div>
+  </div>
+
+  <!-- 섹션 12: 골프장 상세페이지 UX 설계 -->
+  <div class="section">
+    <div class="section-title"><span class="icon">🖥️</span> Section 12. 골프장 상세페이지 UX 설계</div>
+    <p style="margin-bottom:16px;color:var(--gray);">골프장 클릭 시 표시되는 상세 정보 패널. 리스트/지도 우측에 슬라이드 인 방식으로 배치되어 3-column 레이아웃(사이드바 | 지도/리스트 | 상세패널) 을 구성함.</p>
+
+    <div class="two-col">
+      <div>
+        <h3>📐 레이아웃 구조</h3>
+        <ul class="feature-list" style="margin-top:8px;">
+          <li><span class="bullet">①</span><span class="text"><strong>사이드바 (310px)</strong><span>골프장 목록, 정렬, 검색 결과</span></span></li>
+          <li><span class="bullet">②</span><span class="text"><strong>지도/리스트 영역 (flex:1)</strong><span>지도 또는 카드 리스트 — 상세 패널 열림 시 자동 축소</span></span></li>
+          <li><span class="bullet">③</span><span class="text"><strong>상세 패널 (390px)</strong><span>골프장 클릭 시 우측에서 슬라이드 인 애니메이션. 커뮤니티 뷰 전환 시 자동 닫힘</span></span></li>
+        </ul>
+      </div>
+      <div>
+        <h3>🎠 상단 포토 캐러셀</h3>
+        <ul class="feature-list" style="margin-top:8px;">
+          <li><span class="bullet">📸</span><span class="text"><strong>4종 슬라이드</strong><span>파노라마 뷰 / 페어웨이 / 그린 / 클럽하우스</span></span></li>
+          <li><span class="bullet">⟵⟶</span><span class="text"><strong>인터랙티브 네비게이션</strong><span>이전/다음 화살표 버튼 + 도트 인디케이터 클릭</span></span></li>
+          <li><span class="bullet">⏱</span><span class="text"><strong>자동 슬라이드</strong><span>3.5초 간격 자동 전환, 수동 조작 시 타이머 리셋</span></span></li>
+          <li><span class="bullet">🏷</span><span class="text"><strong>코스 로고 뱃지</strong><span>캐러셀 하단에 겹쳐진 원형 로고 (코스명 이니셜 표시)</span></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-top:20px;">
+      <div>
+        <h3>📊 점수 시각화</h3>
+        <ul class="feature-list" style="margin-top:8px;">
+          <li><span class="bullet">⭕</span><span class="text"><strong>SVG 원형 게이지</strong><span>종합 평점 애니메이션 (1.1초 ease-out 진입 효과)</span></span></li>
+          <li><span class="bullet">▬</span><span class="text"><strong>항목별 애니메이션 바</strong><span>페어웨이 / 그린 / 러프 / 혼잡도 각각 색상 코딩된 가로 바</span></span></li>
+          <li><span class="bullet">🕸</span><span class="text"><strong>4축 레이더 차트</strong><span>페어웨이 / 그린 / 러프 / 쾌적도 (혼잡도 역산) — SVG 렌더링</span></span></li>
+        </ul>
+      </div>
+      <div>
+        <h3>🗂 탭 구조</h3>
+        <ul class="feature-list" style="margin-top:8px;">
+          <li><span class="bullet">💬</span><span class="text"><strong>리뷰 탭</strong><span>최근 방문자 후기 목록 (닉네임 마스킹 + 시간 표시)</span></span></li>
+          <li><span class="bullet">📋</span><span class="text"><strong>코스정보 탭</strong><span>정식 코스명 / 주소 / 홀수 / 날씨 / 국가 / 종합 평점</span></span></li>
+          <li><span class="bullet">🖼</span><span class="text"><strong>갤러리 탭</strong><span>6칸 2열 그리드 썸네일 (파노라마·페어웨이·그린·클럽하우스·홀·석양)</span></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:20px;">
+      🔑 <b>UX 핵심 원칙:</b> 골프장 선택 → 패널 열림과 동시에 지도 포커스 이동 + 게이지/바 차트 애니메이션 실행 → 시각적 풍부함으로 체류 시간 증가 → 상태 등록/후기 더보기 CTA 노출로 전환율 제고.
+    </div>
+  </div>
+
+  <!-- Section 13: 좌측 내비게이션 IA 설계 -->
+  <div class="section" id="leftnav">
+    <div class="section-title"><span class="icon">🗂️</span> Section 13. 좌측 내비게이션 IA 설계</div>
+
+    <p style="margin-bottom:16px;">상단 헤더 메뉴를 제거하고 다크그린 좌측 사이드바로 전환 — 골프장 정보(한국/일본)와 커뮤니티를 명확히 구분하는 2-Level IA 구조.</p>
+
+    <!-- 레이아웃 구조 -->
+    <div style="background:#1b1b2f;border-radius:12px;padding:20px 24px;margin-bottom:20px;font-family:monospace;font-size:13px;color:#74c69d;line-height:1.8;">
+      ┌──────────────┬──────────────┬─────────────────────┬────────────────┐<br>
+      │  #left-nav   │  #sidebar    │    #main-area        │  #detail-panel │<br>
+      │   230px      │   286px      │     flex:1           │    0 → 390px   │<br>
+      │  (항상 고정)  │  (리스트/검색) │  (지도 or 커뮤니티)  │  (슬라이드인)   │<br>
+      └──────────────┴──────────────┴─────────────────────┴────────────────┘
+    </div>
+
+    <!-- 색상 토큰 -->
+    <div class="sub-section" style="margin-bottom:20px;">
+      <div style="font-weight:700;margin-bottom:12px;color:var(--green);">🎨 좌측 내비 색상 토큰</div>
+      <table class="detail-table">
+        <thead><tr><th>토큰</th><th>값</th><th>용도</th></tr></thead>
+        <tbody>
+          <tr><td><code>--nav-bg</code></td><td><span style="display:inline-block;width:14px;height:14px;background:#182d21;border-radius:3px;vertical-align:middle;margin-right:6px;"></span>#182d21</td><td>네비 배경 (다크 그린)</td></tr>
+          <tr><td><code>--nav-hover</code></td><td><span style="display:inline-block;width:14px;height:14px;background:#243c2d;border-radius:3px;vertical-align:middle;margin-right:6px;"></span>#243c2d</td><td>호버 배경</td></tr>
+          <tr><td><code>--nav-active-bg</code></td><td>rgba(82,183,136,.18)</td><td>활성 항목 배경</td></tr>
+          <tr><td><code>--nav-txt</code></td><td>rgba(255,255,255,.68)</td><td>기본 텍스트</td></tr>
+          <tr><td><code>--nav-txt-active</code></td><td><span style="display:inline-block;width:14px;height:14px;background:#74c69d;border-radius:3px;vertical-align:middle;margin-right:6px;"></span>#74c69d</td><td>활성 텍스트</td></tr>
+          <tr><td><code>--accent</code></td><td><span style="display:inline-block;width:14px;height:14px;background:#52b788;border-radius:3px;vertical-align:middle;margin-right:6px;"></span>#52b788</td><td>border-left 활성 바</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 내비 구조 목업 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
+      <!-- 왼쪽: 내비 목업 시각화 -->
+      <div style="background:#182d21;border-radius:12px;padding:16px;font-size:12px;color:rgba(255,255,255,.68);line-height:2;">
+        <div style="color:#74c69d;font-weight:800;font-size:15px;margin-bottom:4px;">⛳ GolfNow <span style="background:#52b788;color:#fff;font-size:10px;border-radius:4px;padding:1px 6px;margin-left:4px;">v0.4</span></div>
+        <div style="background:#243c2d;border-radius:6px;padding:6px 10px;margin:8px 0;color:rgba(255,255,255,.4);font-size:11px;">🔍 골프장 검색...</div>
+        <div style="color:#52b788;font-size:11px;font-weight:700;padding:6px 0 2px;">⛳ 골프장 정보</div>
+        <div style="color:rgba(255,255,255,.5);font-size:11px;padding:2px 0;">▼ 🇰🇷 한국</div>
+        <div style="border-left:3px solid #52b788;background:rgba(82,183,136,.18);color:#74c69d;padding:3px 0 3px 10px;font-size:11px;">전국 전체</div>
+        <div style="padding-left:12px;font-size:11px;">서울 / 경기 &nbsp; 강원 &nbsp; 충청 &nbsp; 영남 &nbsp; 제주</div>
+        <div style="color:rgba(255,255,255,.5);font-size:11px;padding:4px 0 2px;">▶ 🇯🇵 일본</div>
+        <div style="color:#52b788;font-size:11px;font-weight:700;padding:6px 0 2px;">💬 커뮤니티</div>
+        <div style="font-size:11px;">전체피드 &nbsp; 코스리뷰 &nbsp; 장비 &nbsp; 레슨</div>
+        <div style="font-size:11px;">일본골프 &nbsp; 동반자모집 &nbsp; 자유게시판</div>
+        <div style="border-top:1px solid rgba(255,255,255,.1);margin-top:10px;padding-top:10px;font-size:11px;">
+          👤 새싹 Lv.1 &nbsp; <span style="background:#52b788;border-radius:3px;display:inline-block;width:40px;height:5px;vertical-align:middle;"></span>
+        </div>
+      </div>
+      <!-- 오른쪽: 아코디언 동작 -->
+      <div>
+        <div style="font-weight:700;margin-bottom:12px;color:var(--green);">🔽 아코디언 동작 방식</div>
+        <table class="detail-table">
+          <thead><tr><th>상태</th><th>CSS</th><th>동작</th></tr></thead>
+          <tbody>
+            <tr><td>닫힘</td><td><code>max-height: 0</code></td><td>항목 숨김</td></tr>
+            <tr><td>열림</td><td><code>max-height: 320px</code></td><td>항목 표시 (0.32s ease)</td></tr>
+            <tr><td>화살표</td><td>▶ → ▼ rotate</td><td>시각적 피드백</td></tr>
+          </tbody>
+        </table>
+        <div style="font-weight:700;margin:16px 0 10px;color:var(--green);">🔄 뷰 전환 로직</div>
+        <table class="detail-table">
+          <thead><tr><th>클릭</th><th>결과</th></tr></thead>
+          <tbody>
+            <tr><td>한국 지역</td><td>지도 뷰 + flyTo 한국</td></tr>
+            <tr><td>일본 지역</td><td>지도 뷰 + flyTo 일본</td></tr>
+            <tr><td>커뮤니티 항목</td><td>커뮤니티 뷰 + cat-tab 동기화</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="callout">
+      💡 <b>설계 원칙:</b> 좌측 내비는 항상 고정 표시(230px). 골프장 정보와 커뮤니티 두 축을 명확히 분리. 한국/일본 아코디언으로 지역 계층 표현. 유저 등급·XP를 하단에 배치해 게이미피케이션 동기 부여.
+    </div>
+  </div>
+
+  <!-- 다음 단계 -->
+  <div class="section" style="border: 2px solid var(--accent);">
+    <div class="section-title"><span class="icon">👣</span> 다음 단계</div>
+    <ul class="feature-list">
+      <li><span class="bullet">1</span><span class="text"><strong>✅ 프로토타입 HTML 제작 완료</strong><span>더미 데이터 기반 인터랙티브 목업 (지도+리스트+커뮤니티+상세패널)</span></span></li>
+      <li><span class="bullet">2</span><span class="text"><strong>✅ 좌측 내비게이션 개편</strong><span>상단 메뉴 제거, 다크그린 사이드바 + 아코디언 한국/일본 그룹</span></span></li>
+      <li><span class="bullet">3</span><span class="text"><strong>TFT 발표 준비</strong><span>더미 데이터 완성도 향상, UI 전반 프로덕션 수준 정비</span></span></li>
+      <li><span class="bullet">4</span><span class="text"><strong>어드민 패널 제작</strong><span>골프장 정보 CRUD, 코스 상태 관리, 유저 관리</span></span></li>
+      <li><span class="bullet">5</span><span class="text"><strong>Supabase 스키마 구성</strong><span>위 데이터 모델 기반으로 DB 테이블 생성</span></span></li>
+      <li><span class="bullet">6</span><span class="text"><strong>Next.js 프로젝트 셋업</strong><span>기본 라우팅 + Tailwind + Supabase 연동</span></span></li>
+      <li><span class="bullet">7</span><span class="text"><strong>실제 골프장 사진 수집</strong><span>골프장별 대표 이미지 4종 수집 및 CDN 연동</span></span></li>
+      <li><span class="bullet">8</span><span class="text"><strong>코스 상태 등록 플로우 구현</strong><span>유저가 직접 페어웨이/그린/러프/혼잡도 입력 → Supabase 저장 → 실시간 평균 반영</span></span></li>
+    </ul>
+  </div>
+
+</div>
+</main>
+
+<footer style="background:var(--dark);color:#999;text-align:center;padding:20px;font-size:12px;">
+  ⛳ GolfNow Community Platform · 기획서 v0.4 · 2026.03.31
+</footer>
+
+</body>
+</html>

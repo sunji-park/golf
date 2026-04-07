@@ -19,7 +19,7 @@
   --pink:#E40054; --yellow:#f59e0b; --red:#E40054; --dark:#100443;
   --gray:#6b7280; --light:#f9f8ff; --border:#e4e2f0;
 }
-*{box-sizing:border-box;margin:0;padding:0;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Noto Sans KR',-apple-system,sans-serif;}
 html,body{height:100%;}
 body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;background:#F3F7FA;overflow:hidden;}
 
@@ -76,7 +76,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 /* ── 사이드바 검색 ── */
 .sb-search-row{
   display:flex;align-items:center;gap:8px;
-  background:#F3F7FA;border-radius:9px;
+  background:white;border-radius:9px;
   border:1.5px solid var(--border);
   padding:7px 11px;margin:10px 10px 0;
   transition:border-color .2s;
@@ -177,7 +177,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 .nav-arrow.open{transform:rotate(90deg);}
 
 .nav-group-items{max-height:0;overflow:hidden;transition:max-height .32s ease;}
-.nav-group-items.open{max-height:320px;}
+.nav-group-items.open{max-height:400px;}
 
 /* Nav items */
 .nav-item{
@@ -397,12 +397,12 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
   padding:14px 16px;margin-bottom:9px;cursor:pointer;transition:all .2s;
 }
 .post-card:hover{box-shadow:0 2px 12px rgba(0,228,201,.14);}
-.post-cat-badge{padding:2px 8px;border-radius:9px;font-size:10px;font-weight:700;margin-bottom:5px;display:inline-block;}
+.post-cat-badge{padding:2px 8px;border-radius:9px;font-size:10px;font-weight:700;line-height:1.6;display:inline-flex;align-items:center;}
 .post-title{font-size:14px;font-weight:700;margin-bottom:5px;line-height:1.4;}
 .post-preview{font-size:12px;color:#666;margin-bottom:8px;line-height:1.55;}
 .post-foot{display:flex;gap:12px;font-size:11px;color:var(--gray);align-items:center;}
 .pf-item{display:flex;align-items:center;gap:3px;}
-.post-hot{background:#fff0f6;border-radius:4px;padding:1px 5px;font-size:9px;font-weight:700;color:#E40054;}
+.post-hot{background:#fff0f6;border-radius:4px;padding:2px 6px;font-size:9px;font-weight:700;color:#E40054;line-height:1.6;display:inline-flex;align-items:center;}
 .widget{background:white;border-radius:12px;border:none;padding:14px;margin-bottom:13px;}
 .widget-title{font-size:11px;font-weight:700;color:var(--green);margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border);}
 .rank-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12px;}
@@ -504,7 +504,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 .dp-bar-title{font-size:9.5px;font-weight:700;color:var(--gray);margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px;}
 .dp-bar-row{display:flex;align-items:center;gap:6px;margin-bottom:7px;}
 .dp-bar-row:last-child{margin-bottom:0;}
-.dp-bar-lbl{width:44px;color:var(--gray);flex-shrink:0;font-size:10px;font-weight:600;}
+.dp-bar-lbl{width:58px;white-space:nowrap;color:var(--gray);flex-shrink:0;font-size:10px;font-weight:600;}
 .dp-bar-track{flex:1;height:8px;background:#f0f4f0;border-radius:5px;overflow:hidden;}
 .dp-bar-fill{height:100%;border-radius:5px;width:0%;transition:width 1.1s cubic-bezier(.4,0,.2,1);}
 .dp-bar-num{width:28px;text-align:right;font-weight:800;font-size:11px;}
@@ -607,7 +607,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 .modal-header{
   padding:20px 22px 16px;
   border-bottom:1px solid var(--border);
-  display:flex;justify-content:space-between;align-items:flex-start;
+  display:flex;justify-content:space-between;align-items:center;
   position:sticky;top:0;background:white;z-index:1;
 }
 .modal-title{font-size:16px;font-weight:800;line-height:1.3;}
@@ -615,7 +615,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 .modal-close{
   background:none;border:none;cursor:pointer;font-size:16px;color:var(--gray);
   width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  transition:background .2s;flex-shrink:0;margin-top:-2px;
+  transition:background .2s;flex-shrink:0;
 }
 .modal-close:hover{background:#f0f0f0;}
 .modal-body{padding:20px 22px;}
@@ -888,35 +888,36 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 
   <!-- ── 골프장 정보 ── -->
   <div class="nav-section">
-    <div class="nav-section-label">⛳ 골프장 정보</div>
+    <div class="nav-section-label">골프장 정보</div>
 
     <!-- 한국 -->
     <div class="nav-group-hd open" id="ghd-korea" onclick="toggleNavGroup('korea')">
-      <span>🇰🇷 한국</span>
+      <span>한국</span>
       <div style="display:flex;align-items:center;gap:6px;">
         <span class="nav-gcount" id="gc-korea">20</span>
         <span class="nav-arrow open" id="arrow-korea">▶</span>
       </div>
     </div>
     <div class="nav-group-items open" id="group-korea">
-      <button class="nav-item active" data-region="전체" onclick="navRegion(this,'전체')">🌏 전국 전체</button>
+      <button class="nav-item active" data-region="전체" onclick="navRegion(this,'전체')">전국 전체</button>
       <button class="nav-item" data-region="서울/경기" onclick="navRegion(this,'서울/경기')">서울 / 경기</button>
       <button class="nav-item" data-region="강원" onclick="navRegion(this,'강원')">강원</button>
       <button class="nav-item" data-region="충청" onclick="navRegion(this,'충청')">충청</button>
       <button class="nav-item" data-region="영남" onclick="navRegion(this,'영남')">영남</button>
+      <button class="nav-item" data-region="호남" onclick="navRegion(this,'호남')">호남</button>
       <button class="nav-item" data-region="제주" onclick="navRegion(this,'제주')">제주</button>
     </div>
 
     <!-- 일본 -->
-    <div class="nav-group-hd" id="ghd-japan" onclick="toggleNavGroup('japan')">
-      <span>🇯🇵 일본</span>
+    <div class="nav-group-hd open" id="ghd-japan" onclick="toggleNavGroup('japan')">
+      <span>일본</span>
       <div style="display:flex;align-items:center;gap:6px;">
         <span class="nav-gcount" id="gc-japan">10</span>
-        <span class="nav-arrow" id="arrow-japan">▶</span>
+        <span class="nav-arrow open" id="arrow-japan">▶</span>
       </div>
     </div>
-    <div class="nav-group-items" id="group-japan">
-      <button class="nav-item" data-region="일본전체" onclick="navRegion(this,'일본전체')">🌏 일본 전체</button>
+    <div class="nav-group-items open" id="group-japan">
+      <button class="nav-item" data-region="일본전체" onclick="navRegion(this,'일본전체')">일본 전체</button>
       <button class="nav-item" data-region="간토" onclick="navRegion(this,'간토')">간토 (関東)</button>
       <button class="nav-item" data-region="간사이" onclick="navRegion(this,'간사이')">간사이 (関西)</button>
       <button class="nav-item" data-region="큐슈" onclick="navRegion(this,'큐슈')">큐슈 (九州)</button>
@@ -928,14 +929,14 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 
   <!-- ── 커뮤니티 ── -->
   <div class="nav-section">
-    <div class="nav-section-label">💬 커뮤니티</div>
-    <button class="nav-item nav-item-top" data-region="comm-all" onclick="navCommunity(this,'all')">🔥 전체 피드</button>
-    <button class="nav-item nav-item-top" data-region="comm-review" onclick="navCommunity(this,'review')">⛳ 코스리뷰</button>
-    <button class="nav-item nav-item-top" data-region="comm-gear" onclick="navCommunity(this,'gear')">🏌️ 장비</button>
-    <button class="nav-item nav-item-top" data-region="comm-lesson" onclick="navCommunity(this,'lesson')">📚 레슨</button>
-    <button class="nav-item nav-item-top" data-region="comm-japan" onclick="navCommunity(this,'japan')" style="color:rgba(228,100,150,.85);">🇯🇵 일본골프</button>
-    <button class="nav-item nav-item-top" data-region="comm-partner" onclick="navCommunity(this,'partner')">👥 동반자모집</button>
-    <button class="nav-item nav-item-top" data-region="comm-free" onclick="navCommunity(this,'free')">💭 자유게시판</button>
+    <div class="nav-section-label">커뮤니티</div>
+    <button class="nav-item nav-item-top" data-region="comm-all" onclick="navCommunity(this,'all')">전체 피드</button>
+    <button class="nav-item nav-item-top" data-region="comm-review" onclick="navCommunity(this,'review')">코스리뷰</button>
+    <button class="nav-item nav-item-top" data-region="comm-gear" onclick="navCommunity(this,'gear')">장비</button>
+    <button class="nav-item nav-item-top" data-region="comm-lesson" onclick="navCommunity(this,'lesson')">레슨</button>
+    <button class="nav-item nav-item-top" data-region="comm-japan" onclick="navCommunity(this,'japan')">일본골프</button>
+    <button class="nav-item nav-item-top" data-region="comm-partner" onclick="navCommunity(this,'partner')">동반자모집</button>
+    <button class="nav-item nav-item-top" data-region="comm-free" onclick="navCommunity(this,'free')">자유게시판</button>
   </div>
 
 
@@ -1101,7 +1102,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
   <div class="modal-box" id="modal-status" onclick="event.stopPropagation()" style="display:none">
     <div class="modal-header">
       <div>
-        <div class="modal-title">✏️ 코스 상태 등록</div>
+        <div class="modal-title">평가하기</div>
         <div class="modal-subtitle" id="modal-course-name">골프장명</div>
       </div>
       <button class="modal-close" onclick="closeModal()">✕</button>
@@ -1140,6 +1141,12 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
         <input type="range" class="si-slider" id="si-4" min="1" max="5" step="0.5" value="4.0" oninput="updateSlider(4,this.value)"/>
         <div class="si-scale"><span>1.0</span><span>2.0</span><span>3.0</span><span>4.0</span><span>5.0</span></div>
       </div>
+      <!-- Clubhouse -->
+      <div class="si-row">
+        <div class="si-hd"><span class="si-label">🏛️ 클럽하우스</span><span class="si-val" id="si-val-5">4.0</span></div>
+        <input type="range" class="si-slider" id="si-5" min="1" max="5" step="0.5" value="4.0" oninput="updateSlider(5,this.value)"/>
+        <div class="si-scale"><span>1.0</span><span>2.0</span><span>3.0</span><span>4.0</span><span>5.0</span></div>
+      </div>
       <!-- Comment -->
       <div>
         <div style="font-size:13px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px;">
@@ -1152,20 +1159,21 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
     </div>
     <div class="modal-footer">
       <button class="modal-cancel-btn" onclick="closeModal()">취소</button>
-      <button class="modal-submit-btn" id="si-submit-btn" onclick="submitStatus()">✅ 상태 등록하기</button>
+      <button class="modal-submit-btn" id="si-submit-btn" onclick="submitStatus()">평가하기</button>
     </div>
   </div>
 
   <!-- ── 글쓰기 ── -->
-  <div class="modal-box" id="modal-write" onclick="event.stopPropagation()" style="display:none">
-    <div class="modal-header">
+  <div class="modal-box" id="modal-write" onclick="event.stopPropagation()" style="display:none;width:560px;">
+    <div class="modal-header" style="padding:14px 18px;align-items:center;">
       <div class="modal-title">✏️ 글쓰기</div>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
-    <div class="modal-body">
-      <div style="margin-bottom:14px;">
-        <div style="font-size:11px;font-weight:700;color:var(--gray);margin-bottom:8px;letter-spacing:.4px;text-transform:uppercase;">카테고리</div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;" id="write-cats">
+    <div class="modal-body" style="padding:14px 18px;">
+      <!-- 카테고리 -->
+      <div style="margin-bottom:10px;">
+        <div style="font-size:10px;font-weight:700;color:var(--gray);margin-bottom:5px;letter-spacing:.4px;text-transform:uppercase;">카테고리</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;" id="write-cats">
           <button class="wcat-btn active" data-cat="review" onclick="selectWriteCat(this)">⛳ 코스리뷰</button>
           <button class="wcat-btn" data-cat="gear" onclick="selectWriteCat(this)">🏌️ 장비</button>
           <button class="wcat-btn" data-cat="lesson" onclick="selectWriteCat(this)">📚 레슨</button>
@@ -1174,18 +1182,71 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
           <button class="wcat-btn" data-cat="free" onclick="selectWriteCat(this)">💭 자유</button>
         </div>
       </div>
-      <div style="margin-bottom:12px;">
+      <!-- 골프장 검색 (코스리뷰 전용) -->
+      <div id="write-course-row" style="margin-bottom:10px;">
+        <div style="font-size:10px;font-weight:700;color:var(--gray);margin-bottom:5px;letter-spacing:.4px;text-transform:uppercase;">골프장 선택</div>
+        <div style="display:flex;gap:6px;position:relative;">
+          <div style="flex:1;position:relative;">
+            <input id="write-course-search" type="text" placeholder="골프장명으로 검색..."
+              oninput="filterWriteCourses(this.value)"
+              onkeydown="if(event.key==='Enter')searchWriteCourse()"
+              style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:inherit;outline:none;transition:border-color .2s;box-sizing:border-box;"
+              onfocus="this.style.borderColor='var(--accent)'" onblur="setTimeout(()=>{document.getElementById('write-course-list').style.display='none';},200)"/>
+            <div id="write-course-list" style="display:none;position:absolute;left:0;right:0;top:100%;margin-top:3px;background:white;border:1.5px solid var(--accent);border-radius:10px;overflow:hidden;z-index:100;box-shadow:0 4px 16px rgba(0,0,0,.12);"></div>
+          </div>
+          <button onclick="searchWriteCourse()" style="padding:8px 14px;background:var(--green);color:white;border:none;border-radius:9px;font-size:12px;font-family:inherit;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:opacity .2s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">검색</button>
+        </div>
+        <!-- 코스 평가 (선택 후 표시) — 2열 compact grid -->
+        <div id="write-rating-section" style="display:none;margin-top:10px;border-top:1.5px solid var(--border);padding-top:10px;">
+          <div style="font-size:10px;font-weight:700;color:var(--gray);margin-bottom:8px;letter-spacing:.4px;text-transform:uppercase;">코스 평가</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px 16px;">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="font-size:11px;font-weight:700;color:#555;min-width:52px;flex-shrink:0;">🏌️ 티박스</span>
+              <input type="range" class="si-slider" id="wr-0" min="1" max="5" step="0.5" value="4.0" oninput="updateWriteSlider(0,this.value)" style="flex:1;height:5px;"/>
+              <span id="wr-val-0" style="font-size:12px;font-weight:800;min-width:24px;text-align:right;color:var(--dark);">4.0</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="font-size:11px;font-weight:700;color:#555;min-width:52px;flex-shrink:0;">🌿 페어웨이</span>
+              <input type="range" class="si-slider" id="wr-1" min="1" max="5" step="0.5" value="4.0" oninput="updateWriteSlider(1,this.value)" style="flex:1;height:5px;"/>
+              <span id="wr-val-1" style="font-size:12px;font-weight:800;min-width:24px;text-align:right;color:var(--dark);">4.0</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="font-size:11px;font-weight:700;color:#555;min-width:52px;flex-shrink:0;">⛳ 그린</span>
+              <input type="range" class="si-slider" id="wr-2" min="1" max="5" step="0.5" value="4.0" oninput="updateWriteSlider(2,this.value)" style="flex:1;height:5px;"/>
+              <span id="wr-val-2" style="font-size:12px;font-weight:800;min-width:24px;text-align:right;color:var(--dark);">4.0</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="font-size:11px;font-weight:700;color:#555;min-width:52px;flex-shrink:0;">⏱️ 페이스</span>
+              <input type="range" class="si-slider" id="wr-3" min="1" max="5" step="0.5" value="4.0" oninput="updateWriteSlider(3,this.value)" style="flex:1;height:5px;"/>
+              <span id="wr-val-3" style="font-size:12px;font-weight:800;min-width:24px;text-align:right;color:var(--dark);">4.0</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="font-size:11px;font-weight:700;color:#555;min-width:52px;flex-shrink:0;">🤝 캐디</span>
+              <input type="range" class="si-slider" id="wr-4" min="1" max="5" step="0.5" value="4.0" oninput="updateWriteSlider(4,this.value)" style="flex:1;height:5px;"/>
+              <span id="wr-val-4" style="font-size:12px;font-weight:800;min-width:24px;text-align:right;color:var(--dark);">4.0</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="font-size:11px;font-weight:700;color:#555;min-width:52px;flex-shrink:0;">🏛️ 클럽하우스</span>
+              <input type="range" class="si-slider" id="wr-5" min="1" max="5" step="0.5" value="4.0" oninput="updateWriteSlider(5,this.value)" style="flex:1;height:5px;"/>
+              <span id="wr-val-5" style="font-size:12px;font-weight:800;min-width:24px;text-align:right;color:var(--dark);">4.0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 제목 -->
+      <div style="margin-bottom:8px;">
         <input id="write-title" placeholder="제목을 입력하세요"
-          style="width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-weight:600;font-family:inherit;outline:none;transition:border-color .2s;"
+          style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-weight:600;font-family:inherit;outline:none;transition:border-color .2s;"
           onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"/>
       </div>
-      <div style="margin-bottom:12px;">
+      <!-- 본문 -->
+      <div style="margin-bottom:8px;">
         <textarea id="write-body" placeholder="내용을 입력하세요..."
-          style="width:100%;height:140px;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-size:13px;font-family:inherit;resize:none;outline:none;line-height:1.65;transition:border-color .2s;"
+          style="width:100%;height:96px;border:1.5px solid var(--border);border-radius:9px;padding:9px 12px;font-size:13px;font-family:inherit;resize:none;outline:none;line-height:1.6;transition:border-color .2s;"
           onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;">
-        <button style="padding:7px 14px;border-radius:8px;border:1.5px solid var(--border);background:white;font-size:11px;cursor:pointer;color:var(--gray);font-family:inherit;transition:all .2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">📷 사진 추가</button>
+      <div style="display:flex;align-items:center;gap:7px;">
+        <button style="padding:5px 12px;border-radius:7px;border:1.5px solid var(--border);background:white;font-size:11px;cursor:pointer;color:var(--gray);font-family:inherit;transition:all .2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">📷 사진 추가</button>
         <span style="font-size:11px;color:#bbb;">최대 5장 · JPG/PNG</span>
       </div>
     </div>
@@ -1245,6 +1306,10 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
       <button class="modal-close" onclick="closeModal()" style="margin-left:12px;">✕</button>
     </div>
     <div class="modal-body">
+      <!-- 코스 최신 평점 요약 (코스리뷰 전용) -->
+      <div id="post-modal-course-rating" style="display:none;background:#F3F7FA;border-radius:10px;padding:11px 14px;margin-bottom:14px;">
+        <div id="post-modal-course-rating-inner"></div>
+      </div>
       <div id="post-modal-body" style="font-size:13px;line-height:1.75;color:#333;margin-bottom:18px;"></div>
       <div style="display:flex;gap:14px;font-size:12px;color:var(--gray);padding-bottom:14px;border-bottom:1px solid var(--border);">
         <span id="post-modal-likes">👍 0</span>
@@ -1303,18 +1368,18 @@ const courses=[
 ];
 
 const posts=[
-  {id:1,cat:'review',catLabel:'⛳ 코스리뷰',catColor:'#d1fae5',catTextColor:'#065f46',title:'이스트밸리 오늘 오전 후기 — 그린 5.0점 진짜 최고',preview:'오늘 오전 7시 라운딩 다녀왔습니다. 페어웨이도 4.7 수준으로 최상이고 그린 스피드가 매우 빠릅니다...',likes:52,comments:14,views:1203,time:'1시간 전',hot:true},
-  {id:2,cat:'gear',catLabel:'🏌️ 장비',catColor:'#dbeafe',catTextColor:'#1e40af',title:'아이언 샤프트 스틸 vs 카본 솔직한 비교 (3개월 사용기)',preview:'핸디 12인 아마추어 입장에서 스틸과 카본을 각각 3개월씩 써봤습니다. 결론부터 말하면 카본이...',likes:38,comments:22,views:876,time:'2시간 전',hot:true},
-  {id:3,cat:'free',catLabel:'💭 자유',catColor:'#f3e8ff',catTextColor:'#6b21a8',title:'오늘 첫 싱글 달성했습니다!! 79타 🎉',preview:'3년 동안 꿈꿔왔던 싱글을 드디어 달성했어요. 남서울 4.8 컨디션이 도움이 됐던 것 같습니다 ㅠㅠ',likes:94,comments:31,views:2140,time:'30분 전',hot:true},
-  {id:4,cat:'partner',catLabel:'👥 동반자모집',catColor:'#fef9c3',catTextColor:'#854d0e',title:'[3/25 토] 레이크사이드 4인 중 1자리 (싱글 핸디)',preview:'오전 7:30 티오프 예정입니다. 싱글 핸디 이상 실력자 선호합니다. 연락주세요!',likes:3,comments:7,views:142,time:'3시간 전',hot:false},
-  {id:5,cat:'review',catLabel:'⛳ 코스리뷰',catColor:'#d1fae5',catTextColor:'#065f46',title:'클럽나인브릿지 2박3일 제주 투어 후기',preview:'제주 4박5일 일정 중 나인브릿지 1라운딩 포함했는데 역시 소문대로였습니다. 그린 퀄리티가 국내 최고 수준...',likes:67,comments:18,views:1890,time:'5시간 전',hot:false},
-  {id:6,cat:'lesson',catLabel:'📚 레슨',catColor:'#fce7f3',catTextColor:'#9d174d',title:'드라이버 비거리 30미터 늘린 방법 (스윙 교정)',preview:'평균 210미터에서 240미터로 올린 방법을 공유합니다. 핵심은 체중이동보다 힙 회전이었는데...',likes:45,comments:19,views:1234,time:'1일 전',hot:false},
-  {id:7,cat:'gear',catLabel:'🏌️ 장비',catColor:'#dbeafe',catTextColor:'#1e40af',title:'2026 드라이버 추천 TOP5 실제 테스트 결과',preview:'5개 제품을 실제로 타석에서 테스트했습니다. 거리, 방향성, 조작성 세 가지 기준으로 평가했고...',likes:29,comments:11,views:654,time:'1일 전',hot:false},
-  {id:8,cat:'japan',catLabel:'🇯🇵 일본골프',catColor:'#fff0f0',catTextColor:'#c0392b',title:'[후기] 오키나와 PGM 3박4일 투어 — 총경비+코스 상태 총정리',preview:'2월 오키나와 투어 다녀왔습니다. 항공+숙박+3라운딩 총 80만원대 가능합니다. 코스 상태는 페어웨이 4.4, 그린 4.5...',likes:114,comments:42,views:5820,time:'2시간 전',hot:true},
-  {id:9,cat:'japan',catLabel:'🇯🇵 일본골프',catColor:'#fff0f0',catTextColor:'#c0392b',title:'후쿠오카 골프 투어 루트 — 고가GC + 볼캐노 추천 2박3일',preview:'후쿠오카 공항 입국 후 바로 골프장으로. 고가 GC는 입장료 저렴하고 퀄리티 대비 가성비 최상...',likes:87,comments:29,views:3140,time:'4시간 전',hot:true},
-  {id:10,cat:'japan',catLabel:'🇯🇵 일본골프',catColor:'#fff0f0',catTextColor:'#c0392b',title:'일본 골프 입문 가이드 — 예약 방법, 에티켓, 비용 총정리',preview:'처음 일본 라운딩 가시는 분들 위한 가이드입니다. GDO, 라쿠텐골프 등 예약 플랫폼 사용법...',likes:203,comments:67,views:12400,time:'2일 전',hot:true},
-  {id:11,cat:'japan',catLabel:'🇯🇵 일본골프',catColor:'#fff0f0',catTextColor:'#c0392b',title:'히로노 GC 방문기 — 일본 랭킹 1위 코스, 진짜였습니다',preview:'지인 초청으로 히로노 GC 다녀왔습니다. 그린 퀄리티 5.0점은 결코 과장이 아닙니다...',likes:156,comments:38,views:7890,time:'1일 전',hot:false},
-  {id:12,cat:'japan',catLabel:'🇯🇵 일본골프',catColor:'#fff0f0',catTextColor:'#c0392b',title:'[동반자 모집] 3월 오사카/교토 골프 투어 4인 모집',preview:'3월 15~18일 일정으로 오사카 베이스 골프 투어 계획 중입니다. 히로노 GC 한 곳 포함...',likes:12,comments:18,views:445,time:'6시간 전',hot:false},
+  {id:1,author:'이스트밸리매니아',cat:'review',catLabel:'⛳ 코스리뷰',catColor:'#d1fae5',catTextColor:'#065f46',title:'이스트밸리 오늘 오전 후기 — 그린 5.0점 진짜 최고',preview:'오늘 오전 7시 라운딩 다녀왔습니다. 페어웨이도 4.7 수준으로 최상이고 그린 스피드가 매우 빠릅니다...',likes:52,comments:14,views:1203,time:'1시간 전',hot:true,courseRef:19,myRatings:{tee:4.6,fairway:4.7,green:5.0,pace:4.8,caddie:4.7,clubhouse:4.5}},
+  {id:2,author:'샤프트고민중',cat:'gear',catLabel:'🏌️ 장비',catColor:'#dbeafe',catTextColor:'#1e40af',title:'아이언 샤프트 스틸 vs 카본 솔직한 비교 (3개월 사용기)',preview:'핸디 12인 아마추어 입장에서 스틸과 카본을 각각 3개월씩 써봤습니다. 결론부터 말하면 카본이...',likes:38,comments:22,views:876,time:'2시간 전',hot:true},
+  {id:3,author:'싱글도전3년',cat:'free',catLabel:'💭 자유',catColor:'#f3e8ff',catTextColor:'#6b21a8',title:'오늘 첫 싱글 달성했습니다!! 79타 🎉',preview:'3년 동안 꿈꿔왔던 싱글을 드디어 달성했어요. 남서울 4.8 컨디션이 도움이 됐던 것 같습니다 ㅠㅠ',likes:94,comments:31,views:2140,time:'30분 전',hot:true},
+  {id:4,author:'주말라운더',cat:'partner',catLabel:'👥 동반자모집',catColor:'#fef9c3',catTextColor:'#854d0e',title:'[3/25 토] 레이크사이드 4인 중 1자리 (싱글 핸디)',preview:'오전 7:30 티오프 예정입니다. 싱글 핸디 이상 실력자 선호합니다. 연락주세요!',likes:3,comments:7,views:142,time:'3시간 전',hot:false},
+  {id:5,author:'제주골프러',cat:'review',catLabel:'⛳ 코스리뷰',catColor:'#d1fae5',catTextColor:'#065f46',title:'클럽나인브릿지 2박3일 제주 투어 후기',preview:'제주 4박5일 일정 중 나인브릿지 1라운딩 포함했는데 역시 소문대로였습니다. 그린 퀄리티가 국내 최고 수준...',likes:67,comments:18,views:1890,time:'5시간 전',hot:false,courseRef:13,myRatings:{tee:4.9,fairway:4.9,green:5.0,pace:4.5,caddie:5.0,clubhouse:4.8}},
+  {id:6,author:'비거리늘리기',cat:'lesson',catLabel:'📚 레슨',catColor:'#fce7f3',catTextColor:'#9d174d',title:'드라이버 비거리 30미터 늘린 방법 (스윙 교정)',preview:'평균 210미터에서 240미터로 올린 방법을 공유합니다. 핵심은 체중이동보다 힙 회전이었는데...',likes:45,comments:19,views:1234,time:'1일 전',hot:false},
+  {id:7,author:'장비덕후',cat:'gear',catLabel:'🏌️ 장비',catColor:'#dbeafe',catTextColor:'#1e40af',title:'2026 드라이버 추천 TOP5 실제 테스트 결과',preview:'5개 제품을 실제로 타석에서 테스트했습니다. 거리, 방향성, 조작성 세 가지 기준으로 평가했고...',likes:29,comments:11,views:654,time:'1일 전',hot:false},
+  {id:8,author:'오키나와단골',cat:'japan',catLabel:'🇯🇵 일본골프',catColor:'#fff0f0',catTextColor:'#c0392b',title:'[후기] 오키나와 PGM 3박4일 투어 — 총경비+코스 상태 총정리',preview:'2월 오키나와 투어 다녀왔습니다. 항공+숙박+3라운딩 총 80만원대 가능합니다. 코스 상태는 페어웨이 4.4, 그린 4.5...',likes:114,comments:42,views:5820,time:'2시간 전',hot:true},
+  {id:9,author:'후쿠오카러버',cat:'japan',catLabel:'🇯🇵 일본골프',catColor:'#fff0f0',catTextColor:'#c0392b',title:'후쿠오카 골프 투어 루트 — 고가GC + 볼캐노 추천 2박3일',preview:'후쿠오카 공항 입국 후 바로 골프장으로. 고가 GC는 입장료 저렴하고 퀄리티 대비 가성비 최상...',likes:87,comments:29,views:3140,time:'4시간 전',hot:true},
+  {id:10,author:'일본골프입문',cat:'japan',catLabel:'🇯🇵 일본골프',catColor:'#fff0f0',catTextColor:'#c0392b',title:'일본 골프 입문 가이드 — 예약 방법, 에티켓, 비용 총정리',preview:'처음 일본 라운딩 가시는 분들 위한 가이드입니다. GDO, 라쿠텐골프 등 예약 플랫폼 사용법...',likes:203,comments:67,views:12400,time:'2일 전',hot:true},
+  {id:11,author:'히로노순례자',cat:'japan',catLabel:'🇯🇵 일본골프',catColor:'#fff0f0',catTextColor:'#c0392b',title:'히로노 GC 방문기 — 일본 랭킹 1위 코스, 진짜였습니다',preview:'지인 초청으로 히로노 GC 다녀왔습니다. 그린 퀄리티 5.0점은 결코 과장이 아닙니다...',likes:156,comments:38,views:7890,time:'1일 전',hot:false},
+  {id:12,author:'간사이골퍼',cat:'japan',catLabel:'🇯🇵 일본골프',catColor:'#fff0f0',catTextColor:'#c0392b',title:'[동반자 모집] 3월 오사카/교토 골프 투어 4인 모집',preview:'3월 15~18일 일정으로 오사카 베이스 골프 투어 계획 중입니다. 히로노 GC 한 곳 포함...',likes:12,comments:18,views:445,time:'6시간 전',hot:false},
 ];
 
 /* ═══════════════════════════════════════
@@ -1327,7 +1392,8 @@ let carouselIdx=0, carouselTimer=null, _dpTabs={}, _currentCourse=null;
 /* ═══════════════════════════════════════
    HELPERS
 ═══════════════════════════════════════ */
-const avg=c=>(c.tee+c.fairway+c.green+c.pace+c.caddie)/5;
+const clubhouseOf=c=>c.clubhouse!==undefined?c.clubhouse:parseFloat(((c.tee+c.fairway+c.green)/3).toFixed(1));
+const avg=c=>(c.tee+c.fairway+c.green+c.pace+c.caddie+clubhouseOf(c))/6;
 const f1=n=>Number(n).toFixed(1);
 function statusOf(c){const a=avg(c);return a>=4.2?{cls:'s-excellent',label:'✨ 최상'}:a>=3.0?{cls:'s-good',label:'🟢 좋음'}:{cls:'s-ok',label:'🟡 보통'};}
 function colorOf(c){const a=avg(c);return a>=4.0?'#00E4C9':a>=3.0?'#22c55e':a>=2.0?'#f59e0b':'#E40054';}
@@ -1357,14 +1423,15 @@ function animateGauge(score,col){
     el.setAttribute('stroke-dasharray',`${d} ${circ-d}`);if(p<1)requestAnimationFrame(step);})(performance.now());
 }
 function buildRadarSVG(c,col){
-  const cx=110,cy=105,R=58,w=220,h=210;
-  const step=2*Math.PI/5,base=-Math.PI/2;
+  const cx=115,cy=110,R=56,w=230,h=220;
+  const step=2*Math.PI/6,base=-Math.PI/2;
   const axes=[
-    {label:'티박스',  val:c.tee,     a:base},
-    {label:'페어웨이',val:c.fairway, a:base+step},
-    {label:'그린',    val:c.green,   a:base+step*2},
-    {label:'페이스',  val:c.pace,    a:base+step*3},
-    {label:'캐디',    val:c.caddie,  a:base+step*4},
+    {label:'티박스',    val:c.tee,          a:base},
+    {label:'페어웨이',  val:c.fairway,      a:base+step},
+    {label:'그린',      val:c.green,        a:base+step*2},
+    {label:'페이스',    val:c.pace,         a:base+step*3},
+    {label:'캐디',      val:c.caddie,       a:base+step*4},
+    {label:'클럽하우스',val:clubhouseOf(c), a:base+step*5},
   ];
   const pt=(r,a)=>({x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)});
   const grids=[.25,.5,.75,1].map(p=>{
@@ -1458,9 +1525,6 @@ function renderSidebar(){
           <div class="cc-total-bar-fill" style="width:${(a/5*100).toFixed(1)}%;background:${col};box-shadow:0 0 6px ${col}88;"></div>
         </div>
       </div>
-      <div class="cc-scores">
-        ${[['티박스',c.tee],['페어웨이',c.fairway],['그린',c.green],['페이스',c.pace],['캐디',c.caddie]].map(([l,v])=>`<div class="score-box${v>=4.0?' sc-top':''}"><div class="sc-label">${l}</div><div class="sc-val" style="color:${scoreColor(v)}">${f1(v)}</div></div>`).join('')}
-      </div>
     </div>`;
   }).join('');
 }
@@ -1497,13 +1561,20 @@ function renderListGrid(){
 const commTitles={all:'💬 전체 피드',review:'⛳ 코스리뷰',gear:'🏌️ 장비',lesson:'📚 레슨',japan:'🇯🇵 일본골프',partner:'👥 동반자모집',free:'💭 자유게시판'};
 function renderPosts(cat){
   const filtered=cat==='all'?posts:posts.filter(p=>p.cat===cat);
-  document.getElementById('post-list').innerHTML=filtered.map(p=>`
+  document.getElementById('post-list').innerHTML=filtered.map(p=>{
+    const linked=p.courseRef?courses.find(x=>x.id===p.courseRef):null;
+    return `
     <div class="post-card" onclick="openPostDetail(${p.id})">
-      <div><span class="post-cat-badge" style="background:${p.catColor};color:${p.catTextColor}">${p.catLabel}</span>${p.hot?'<span class="post-hot">HOT</span>':''}</div>
+      <div style="display:flex;align-items:center;gap:5px;margin-bottom:5px;flex-wrap:nowrap;">
+        <span class="post-cat-badge" style="background:${p.catColor};color:${p.catTextColor};">${p.catLabel}</span>
+        ${linked?`<span style="font-size:10px;font-weight:700;color:#00796b;padding:2px 7px;background:rgba(0,121,107,.1);border-radius:8px;display:inline-flex;align-items:center;line-height:1.6;">⛳ ${linked.short}</span>`:''
+        }${p.hot?'<span class="post-hot">HOT</span>':''}
+      </div>
       <div class="post-title">${p.title}</div>
       <div class="post-preview">${p.preview}</div>
-      <div class="post-foot"><span class="pf-item">👍 ${p.likes}</span><span class="pf-item">💬 ${p.comments}</span><span class="pf-item">👁 ${p.views.toLocaleString()}</span><span style="margin-left:auto">${p.time}</span></div>
-    </div>`).join('');
+      <div class="post-foot"><span style="color:#888;font-weight:600;">👤 ${p.author||'익명'}</span><span class="pf-item">👍 ${p.likes}</span><span class="pf-item">💬 ${p.comments}</span><span class="pf-item">👁 ${p.views.toLocaleString()}</span><span style="margin-left:auto">${p.time}</span></div>
+    </div>`;
+  }).join('');
 }
 function filterCat(btn,cat){
   document.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active'));
@@ -1539,7 +1610,7 @@ function openDetail(id){
     {icon:'⛳',label:'그린',         grad:`linear-gradient(150deg,#1b4332,#40916c)`},
     {icon:'🏛️',label:'클럽하우스',  grad:`linear-gradient(150deg,#264653,#3a8f8a)`},
   ];
-  const metrics=[['티박스',c.tee],['페어웨이',c.fairway],['그린',c.green],['페이스',c.pace],['캐디',c.caddie]];
+  const metrics=[['티박스',c.tee],['페어웨이',c.fairway],['그린',c.green],['페이스',c.pace],['캐디',c.caddie],['클럽하우스',clubhouseOf(c)]];
   const galEmojis=['🌄','⛳','🌿','🏌️','🏆','🌳'];
   const galGrads=[`linear-gradient(135deg,${col}cc,${col})`,`linear-gradient(135deg,#0a6e6a,#00E4C9)`,`linear-gradient(135deg,#100443,#1c0d68)`,`linear-gradient(135deg,#6b4226,#c08040)`,`linear-gradient(135deg,#100443,#E40054)`,`linear-gradient(135deg,#023e8a,#0096c7)`];
   const galLabels=['파노라마','페어웨이','그린','클럽하우스','홀 전경','석양'];
@@ -1591,7 +1662,7 @@ function openDetail(id){
         <div class="dp-name">${c.name}${c.country==='일본'?' <span class="jp-flag">🇯🇵 일본</span>':''}</div>
         <button class="dp-close-btn" onclick="closeDetail()">✕</button>
       </div>
-      <div class="dp-sub-info">📍 ${c.addr} &nbsp;·&nbsp; ${c.holes}홀 par${c.par}<br>${c.weather} &nbsp;·&nbsp; 🕐 ${c.updated}</div>
+      <div class="dp-sub-info">📍 ${c.addr} &nbsp;·&nbsp; ${c.holes}홀 par${c.par}<br>${c.weather} &nbsp;·&nbsp; ${c.updated}에 마지막 평가가 있습니다.</div>
     </div>
     <div class="dp-tabs">
       <button class="dp-tab active" onclick="dpTab(this,'status')">📊 코스상태</button>
@@ -1601,7 +1672,7 @@ function openDetail(id){
 
   document.getElementById('dp-actions-bar').innerHTML=`
     <div class="dp-actions">
-      <button class="dp-btn dp-pri" onclick="openStatusModal(${c.id})">✏️ 상태 등록</button>
+      <button class="dp-btn dp-pri" onclick="openStatusModal(${c.id})">평가하기</button>
       <button class="dp-btn dp-sec" onclick="goToReviews(${c.id})">💬 후기 더보기</button>
     </div>`;
 
@@ -1611,7 +1682,6 @@ function openDetail(id){
   };
   document.getElementById('dp-tab-body').innerHTML=_dpTabs.status;
   setTimeout(()=>{
-    const metrics=[['티박스',c.tee],['페어웨이',c.fairway],['그린',c.green],['페이스',c.pace],['캐디',c.caddie]];
     metrics.forEach(([,v],i)=>{const el=document.getElementById(`dpbar-${i}`);if(el)el.style.width=`${v/5*100}%`;});
     animateGauge(a,col);
   },120);
@@ -1635,7 +1705,7 @@ function dpTab(btn,tab){
   const body=document.getElementById('dp-tab-body');if(body)body.innerHTML=_dpTabs[tab]||'';
   if(tab==='status'&&_currentCourse){
     const c=_currentCourse;
-    const metrics=[['티박스',c.tee],['페어웨이',c.fairway],['그린',c.green],['페이스',c.pace],['캐디',c.caddie]];
+    const metrics=[['티박스',c.tee],['페어웨이',c.fairway],['그린',c.green],['페이스',c.pace],['캐디',c.caddie],['클럽하우스',clubhouseOf(c)]];
     const a=avg(c),col=colorOf(c);
     setTimeout(()=>{
       metrics.forEach(([,v],i)=>{const el=document.getElementById(`dpbar-${i}`);if(el)el.style.width=`${v/5*100}%`;});
@@ -1869,16 +1939,63 @@ function submitStatus(){
 }
 
 /* WRITE MODAL */
+let _selectedWriteCourse=null;
+let _currentUser=null; // 로그인 후 설정
+function _resetWriteSliders(){
+  for(let i=0;i<6;i++){
+    const sl=document.getElementById(`wr-${i}`);
+    if(sl){sl.value=4.0;}
+    const vl=document.getElementById(`wr-val-${i}`);
+    if(vl){vl.textContent='4.0';}
+  }
+}
 function openWriteModal(){
   document.getElementById('write-title').value='';
   document.getElementById('write-body').value='';
   document.querySelectorAll('.wcat-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  _selectedWriteCourse=null;
+  document.getElementById('write-course-search').value='';
+  document.getElementById('write-course-list').style.display='none';
+  document.getElementById('write-rating-section').style.display='none';
+  _resetWriteSliders();
+  document.getElementById('write-course-row').style.display='block';
   showModal('modal-write');
 }
-
 function selectWriteCat(btn){
   document.querySelectorAll('.wcat-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
+  const isReview=btn.dataset.cat==='review';
+  document.getElementById('write-course-row').style.display=isReview?'block':'none';
+  if(isReview){
+    // 코스리뷰로 돌아왔을 때 이전에 선택된 골프장 있으면 평가 섹션 복원
+    if(_selectedWriteCourse){
+      document.getElementById('write-rating-section').style.display='block';
+    }
+  } else {
+    // 다른 카테고리로 이동 시 평가 섹션만 숨김, 선택 골프장은 유지
+    document.getElementById('write-rating-section').style.display='none';
+  }
+}
+function searchWriteCourse(){
+  filterWriteCourses(document.getElementById('write-course-search').value);
+}
+function filterWriteCourses(q){
+  const list=document.getElementById('write-course-list');
+  if(!q.trim()){list.style.display='none';return;}
+  const res=courses.filter(c=>c.name.includes(q)||c.short.includes(q)).slice(0,6);
+  if(!res.length){list.style.display='none';return;}
+  list.style.display='block';
+  list.innerHTML=res.map(c=>`<div onclick="selectWriteCourse(${c.id})" style="padding:8px 13px;cursor:pointer;border-bottom:1px solid var(--border);font-size:12px;font-weight:600;transition:background .15s;" onmouseover="this.style.background='rgba(0,228,201,.07)'" onmouseout="this.style.background=''"> ${c.short} <span style="font-size:10px;color:var(--gray);font-weight:400;">· ${c.addr}</span></div>`).join('');
+}
+function selectWriteCourse(id){
+  _selectedWriteCourse=courses.find(c=>c.id===id);
+  document.getElementById('write-course-list').style.display='none';
+  document.getElementById('write-course-search').value=_selectedWriteCourse.name;
+  document.getElementById('write-rating-section').style.display='block';
+}
+function updateWriteSlider(idx,val){
+  const vl=document.getElementById(`wr-val-${idx}`);
+  if(vl)vl.textContent=parseFloat(val).toFixed(1);
 }
 
 function submitPost(){
@@ -1889,6 +2006,27 @@ function submitPost(){
     setTimeout(()=>{document.getElementById('write-title').style.borderColor='var(--border)';},1500);
     return;
   }
+  // 코스리뷰 + 골프장 선택 + 평가 슬라이더가 열려있으면 myRatings 수집
+  let myRatings=null;
+  if(_selectedWriteCourse&&document.getElementById('write-rating-section').style.display!=='none'){
+    const vals=[0,1,2,3,4,5].map(i=>parseFloat(document.getElementById(`wr-${i}`).value));
+    myRatings={tee:vals[0],fairway:vals[1],green:vals[2],pace:vals[3],caddie:vals[4],clubhouse:vals[5]};
+  }
+  const newPost={
+    id:posts.length+1,
+    author:_currentUser||'나',
+    cat:document.querySelector('.wcat-btn.active').dataset.cat,
+    catLabel:document.querySelector('.wcat-btn.active').textContent.trim(),
+    catColor:'#d1fae5',catTextColor:'#065f46',
+    title,
+    preview:document.getElementById('write-body').value.trim()||title,
+    likes:0,comments:0,views:1,
+    time:'방금 전',hot:false,
+    ...((_selectedWriteCourse)?{courseRef:_selectedWriteCourse.id}:{}),
+    ...(myRatings?{myRatings}:{})
+  };
+  posts.unshift(newPost);
+  renderPosts(currentCat);
   closeModal();
   showToast('📝 게시글이 등록되었습니다! +20 포인트 적립');
 }
@@ -1918,7 +2056,34 @@ function openPostDetail(postId){
   const p=posts.find(x=>x.id===postId);if(!p)return;
   document.getElementById('post-modal-cat').innerHTML=`<span class="post-cat-badge" style="background:${p.catColor};color:${p.catTextColor}">${p.catLabel}</span>${p.hot?'<span class="post-hot" style="margin-left:4px">HOT</span>':''}`;
   document.getElementById('post-modal-title').textContent=p.title;
-  document.getElementById('post-modal-meta').textContent=`${p.time} 작성`;
+  document.getElementById('post-modal-meta').innerHTML=`<span style="font-weight:700;color:#555;">👤 ${p.author||'익명'}</span><span style="margin:0 6px;color:#ccc;">·</span>${p.time} 작성`;
+  // 코스 평점 요약
+  const ratingDiv=document.getElementById('post-modal-course-rating');
+  const ratingInner=document.getElementById('post-modal-course-rating-inner');
+  const linked=p.courseRef?courses.find(x=>x.id===p.courseRef):null;
+  if(linked&&p.cat==='review'&&p.myRatings){
+    const r=p.myRatings;
+    const ch=r.clubhouse!==undefined?r.clubhouse:parseFloat(((r.tee+r.fairway+r.green)/3).toFixed(1));
+    const a=parseFloat(((r.tee+r.fairway+r.green+r.pace+r.caddie+ch)/6).toFixed(1));
+    const col=scoreColor(a);
+    const mets=[['티박스',r.tee],['페어웨이',r.fairway],['그린',r.green],['페이스',r.pace],['캐디',r.caddie],['클럽하우스',ch]];
+    ratingDiv.style.display='block';
+    ratingInner.innerHTML=`
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:12px;font-weight:800;color:var(--dark);">⛳ ${linked.short}</span>
+        <span style="font-size:16px;font-weight:900;color:${col};">${f1(a)}<span style="font-size:10px;opacity:.6;font-weight:600;"> / 5.0</span></span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px 10px;">
+        ${mets.map(([l,v])=>`<div style="display:flex;align-items:center;gap:5px;">
+          <span style="font-size:10px;color:var(--gray);min-width:46px;">${l}</span>
+          <div style="flex:1;height:4px;background:rgba(0,0,0,.07);border-radius:2px;overflow:hidden;"><div style="height:100%;width:${v/5*100}%;background:${scoreColor(v)};border-radius:2px;"></div></div>
+          <span style="font-size:10px;font-weight:700;color:${scoreColor(v)};min-width:22px;text-align:right;">${f1(v)}</span>
+        </div>`).join('')}
+      </div>
+      <div style="font-size:10px;color:var(--gray);margin-top:6px;">${p.time} 작성한 평가</div>`;
+  } else {
+    ratingDiv.style.display='none';
+  }
   const extraLen=Math.floor(Math.random()*3+2);
   const extra=`\n\n더 자세한 내용은 현장에서 직접 확인하시는 것을 권장드립니다. 궁금한 점은 댓글로 남겨주세요! 여러분의 라운딩이 즐거운 하루가 되기를 바랍니다 ⛳`;
   document.getElementById('post-modal-body').textContent=p.preview+extra;
@@ -2011,7 +2176,7 @@ function initTicker(){
 
 window.onload=()=>{
   renderSidebar();initMap();initTicker();initMobile();
-  [0,1,2,3,4].forEach(i=>updateSlider(i,document.getElementById('si-'+i).value));
+  [0,1,2,3,4,5].forEach(i=>updateSlider(i,document.getElementById('si-'+i).value));
 };
 </script>
 </body>

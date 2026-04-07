@@ -21,7 +21,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;}
-body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;background:#f0f0fb;overflow:hidden;}
+body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;background:#F3F7FA;overflow:hidden;}
 
 /* ═══════════════════════════════════════
    APP SHELL
@@ -76,7 +76,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 /* ── 사이드바 검색 ── */
 .sb-search-row{
   display:flex;align-items:center;gap:8px;
-  background:#f5f4fc;border-radius:9px;
+  background:#F3F7FA;border-radius:9px;
   border:1.5px solid var(--border);
   padding:7px 11px;margin:10px 10px 0;
   transition:border-color .2s;
@@ -207,14 +207,14 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
    COURSE SIDEBAR
 ═══════════════════════════════════════ */
 #sidebar{
-  width:var(--sidebar);background:white;
+  width:var(--sidebar);background:#F3F7FA;
   display:flex;flex-direction:column;
   border-right:1px solid var(--border);flex-shrink:0;overflow:hidden;
 }
-.sb-head{padding:10px 0 8px;border-bottom:1px solid var(--border);}
+.sb-head{padding:10px 0 8px;}
 .sb-view-row{padding:0 12px;}
 .sb-view-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-.sb-view-toggle{display:flex;background:#f0f4f0;border-radius:7px;overflow:hidden;padding:2px;gap:2px;}
+.sb-view-toggle{display:flex;background:#F3F7FA;border-radius:7px;overflow:hidden;padding:2px;gap:2px;}
 .sv-btn{
   padding:5px 11px;border:none;background:none;
   color:var(--gray);cursor:pointer;font-size:11px;font-weight:600;
@@ -235,12 +235,12 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 
 /* Sidebar course card */
 .course-card{
-  border:1.5px solid var(--border);border-radius:11px;
+  border:none;border-radius:11px;
   padding:10px 11px;margin-bottom:6px;cursor:pointer;
   transition:all .2s;background:white;
 }
-.course-card:hover{border-color:var(--accent);box-shadow:0 2px 12px rgba(0,228,201,.18);}
-.course-card.selected{border-color:var(--accent);background:rgba(0,228,201,.06);}
+.course-card:hover{box-shadow:0 2px 12px rgba(0,228,201,.18);}
+.course-card.selected{background:rgba(0,228,201,.06);}
 .cc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:6px;}
 .cc-top-left{flex:1;min-width:0;}
 .cc-name{font-size:13px;font-weight:700;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -268,7 +268,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 .cc-total-bar-fill{height:100%;border-radius:4px;transition:width .5s cubic-bezier(.4,0,.2,1);}
 /* 5열 스코어 그리드 */
 .cc-scores{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin-top:0;}
-.score-box{border-radius:6px;padding:4px 2px;text-align:center;background:#f5f4fc;}
+.score-box{border-radius:6px;padding:4px 2px;text-align:center;background:#F3F7FA;}
 .score-box.sc-top{background:rgba(0,228,201,.13);}
 .sc-label{font-size:7.5px;color:var(--gray);font-weight:600;}
 .sc-val{font-size:12px;font-weight:900;margin-top:1px;}
@@ -348,11 +348,11 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 #list-view::-webkit-scrollbar-thumb{background:#ccc;border-radius:3px;}
 .list-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(256px,1fr));gap:14px;max-width:1400px;}
 .list-card{
-  background:white;border-radius:13px;border:1.5px solid var(--border);
+  background:white;border-radius:13px;border:none;
   overflow:hidden;cursor:pointer;transition:all .2s;
   box-shadow:0 1px 4px rgba(0,0,0,.04);
 }
-.list-card:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(0,0,0,.1);border-color:var(--accent);}
+.list-card:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(0,0,0,.1);}
 .lc-thumb{height:96px;display:flex;align-items:center;justify-content:center;font-size:36px;position:relative;}
 .lc-strip{
   position:absolute;bottom:0;left:0;right:0;
@@ -381,7 +381,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 /* ═══════════════════════════════════════
    COMMUNITY VIEW
 ═══════════════════════════════════════ */
-#community-view{flex:1;overflow-y:auto;padding:20px 22px;background:#f4f6f4;display:none;min-width:0;}
+#community-view{flex:1;overflow-y:auto;padding:20px 22px;background:#F3F7FA;display:none;min-width:0;}
 #community-view::-webkit-scrollbar{width:5px;}
 #community-view::-webkit-scrollbar-thumb{background:#ccc;border-radius:3px;}
 .comm-layout{display:grid;grid-template-columns:1fr 272px;gap:20px;max-width:1060px;}
@@ -393,17 +393,17 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 }
 .cat-tab.active{background:var(--green);color:white;border-color:var(--green);}
 .post-card{
-  background:white;border-radius:12px;border:1.5px solid var(--border);
+  background:white;border-radius:12px;border:none;
   padding:14px 16px;margin-bottom:9px;cursor:pointer;transition:all .2s;
 }
-.post-card:hover{border-color:var(--accent);box-shadow:0 2px 12px rgba(0,228,201,.14);}
+.post-card:hover{box-shadow:0 2px 12px rgba(0,228,201,.14);}
 .post-cat-badge{padding:2px 8px;border-radius:9px;font-size:10px;font-weight:700;margin-bottom:5px;display:inline-block;}
 .post-title{font-size:14px;font-weight:700;margin-bottom:5px;line-height:1.4;}
 .post-preview{font-size:12px;color:#666;margin-bottom:8px;line-height:1.55;}
 .post-foot{display:flex;gap:12px;font-size:11px;color:var(--gray);align-items:center;}
 .pf-item{display:flex;align-items:center;gap:3px;}
 .post-hot{background:#fff0f6;border-radius:4px;padding:1px 5px;font-size:9px;font-weight:700;color:#E40054;}
-.widget{background:white;border-radius:12px;border:1.5px solid var(--border);padding:14px;margin-bottom:13px;}
+.widget{background:white;border-radius:12px;border:none;padding:14px;margin-bottom:13px;}
 .widget-title{font-size:11px;font-weight:700;color:var(--green);margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border);}
 .rank-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12px;}
 .rank-no{width:20px;font-weight:800;color:var(--gray);text-align:center;}
@@ -730,9 +730,10 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
   color:var(--gray);font-size:9.5px;font-weight:600;
   font-family:inherit;transition:all .2s;padding:4px 0;
 }
-.mob-tab .mob-tab-icon{font-size:19px;line-height:1;}
+.mob-tab .mob-tab-icon{width:22px;height:22px;display:flex;align-items:center;justify-content:center;}
+.mob-tab .mob-tab-icon svg{width:20px;height:20px;display:block;}
 .mob-tab.active{color:var(--accent);}
-.mob-tab.active .mob-tab-icon{filter:drop-shadow(0 0 4px rgba(0,228,201,.5));}
+.mob-tab.active .mob-tab-icon svg{filter:drop-shadow(0 0 4px rgba(0,228,201,.5));}
 
 /* ═══════════════════════════════════════
    MOBILE RESPONSIVE ≤768px
@@ -778,8 +779,9 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
   /* sidebar: full width */
   #sidebar{width:100%;min-width:0;flex-shrink:1;}
 
-  /* map area hidden by default on mobile (controlled by mobSwitch) */
-  #map-area{display:none;}
+  /* mobile default: home = map view; sidebar hidden until user switches to list */
+  #sidebar{display:none;}
+  /* map-area visible by default on mobile (JS inline styles take over after load) */
 
   /* detail panel: full-screen slide */
   #detail-panel{
@@ -811,10 +813,18 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 
   /* main area: leave room for bottom nav */
   #main-area{padding-bottom:58px;}
-  #community-view{padding-bottom:0;}
+  /* list & community: same horizontal padding for equal content width */
+  #community-view{padding:14px 12px 0;}
+  #course-list{padding:6px 12px;}
+  /* remove filter header border on mobile */
+  .sb-head{border-bottom:none;}
 
   /* community: single column */
   .comm-layout{grid-template-columns:1fr;}
+
+  /* sidebar: full scroll (header scrolls with content) */
+  #sidebar{overflow-y:auto !important;}
+  #course-list{overflow-y:visible !important;flex:none !important;height:auto !important;}
 
   /* modal adjustments */
   .modal-box{margin:12px;width:calc(100% - 24px);max-width:none;}
@@ -1053,17 +1063,25 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 <!-- 모바일: #app 안에 위치해야 같은 스태킹 컨텍스트 -->
 <div id="mob-nav-overlay" onclick="closeMobNav()"></div>
 <nav id="mob-bottom-nav">
-  <button class="mob-tab active" id="mobtab-list" onclick="mobSwitch('list')">
-    <span class="mob-tab-icon">📋</span><span>리스트</span>
+  <button class="mob-tab active" id="mobtab-map" onclick="mobSwitch('map')">
+    <span class="mob-tab-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 22V12h6v10" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+    </span><span>홈</span>
   </button>
-  <button class="mob-tab" id="mobtab-map" onclick="mobSwitch('map')">
-    <span class="mob-tab-icon">🗺️</span><span>지도</span>
+  <button class="mob-tab" id="mobtab-list" onclick="mobSwitch('list')">
+    <span class="mob-tab-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="5" width="18" height="2" rx="1" fill="currentColor"/><rect x="3" y="11" width="18" height="2" rx="1" fill="currentColor"/><rect x="3" y="17" width="18" height="2" rx="1" fill="currentColor"/></svg>
+    </span><span>리스트</span>
   </button>
   <button class="mob-tab" id="mobtab-community" onclick="mobSwitch('community')">
-    <span class="mob-tab-icon">💬</span><span>커뮤니티</span>
+    <span class="mob-tab-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+    </span><span>커뮤니티</span>
   </button>
   <button class="mob-tab" id="mobtab-mypage" onclick="openLoginModal()">
-    <span class="mob-tab-icon">👤</span><span>마이페이지</span>
+    <span class="mob-tab-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </span><span>마이페이지</span>
   </button>
 </nav>
 
@@ -1767,7 +1785,7 @@ function mobSwitch(v){
   const mapArea=document.getElementById('map-area');
   const commView=document.getElementById('community-view');
   if(v==='list'){
-    sidebar.style.display='flex';
+    sidebar.style.display=isMobile()?'block':'flex';
     mapArea.style.display='none';
     commView.style.display='none';
   } else if(v==='map'){
@@ -1785,10 +1803,8 @@ function mobSwitch(v){
 
 function initMobile(){
   if(!isMobile())return;
-  // start with list view
-  const mapArea=document.getElementById('map-area');
-  if(mapArea)mapArea.style.display='none';
-  document.getElementById('mobtab-list').classList.add('active');
+  // start with home(map) view
+  mobSwitch('map');
 }
 
 /* ═══════════════════════════════════════

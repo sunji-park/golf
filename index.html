@@ -38,18 +38,18 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
   z-index:500;flex-shrink:0;gap:14px;
   box-shadow:0 2px 12px rgba(0,0,0,.25);
 }
+.tb-logo-img{
+  height:38px;width:auto;
+  filter:brightness(0) invert(1);
+  display:block;
+}
 .tb-logo{
   width:var(--nav);flex-shrink:0;height:100%;
-  display:flex;align-items:center;gap:8px;padding:0 18px 0 12px;
-  border-right:1px solid rgba(255,255,255,.12);
+  display:flex;align-items:center;justify-content:center;gap:8px;padding:0 12px;
   cursor:pointer;user-select:none;transition:opacity .18s;
 }
 .tb-logo:hover{opacity:.82;
 }
-.tb-logo-icon{font-size:22px;line-height:1;}
-.tb-logo-text{font-size:18px;font-weight:900;color:white;letter-spacing:-.6px;}
-.tb-logo-text span{color:var(--accent);}
-.tb-logo-sub{font-size:8.5px;color:rgba(255,255,255,.45);letter-spacing:.4px;margin-top:1px;}
 /* ── 상단바 티커 ── */
 .tb-ticker{flex:1;overflow:hidden;position:relative;height:100%;display:flex;align-items:center;}
 .tb-ticker::before,.tb-ticker::after{
@@ -319,6 +319,12 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 .nav-logo span{color:var(--accent);}
 .nav-tagline{font-size:10px;color:rgba(255,255,255,.3);margin-top:3px;letter-spacing:.4px;}
 .nav-version{display:none;}
+.nav-logo-img{
+  height:26px;width:auto;
+  filter:brightness(0) invert(1);
+  opacity:.85;
+  display:block;
+}
 
 /* Section label */
 .nav-section{padding:14px 0 6px;}
@@ -776,7 +782,29 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
   animation:modalIn .28s cubic-bezier(.34,1.25,.64,1);
 }
 @keyframes modalIn{from{opacity:0;transform:scale(.91)}to{opacity:1;transform:scale(1)}}
+.modal-logo-bar{
+  background:var(--green);
+  padding:28px 22px 22px;
+  display:flex;flex-direction:column;align-items:center;gap:0;
+  border-radius:20px 20px 0 0;
+  position:relative;
+}
+.modal-logo-bar img{
+  height:44px;width:auto;
+  filter:brightness(0) invert(1);
+}
+.modal-logo-bar .modal-close{
+  position:absolute;top:12px;right:12px;
+  color:rgba(255,255,255,.7);
+}
+.modal-logo-bar .modal-close:hover{background:rgba(255,255,255,.15);color:#fff;}
 .modal-header{
+  padding:18px 22px 14px;
+  border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  position:sticky;top:0;background:white;z-index:1;
+}
+.modal-header-no-logo{
   padding:20px 22px 16px;
   border-bottom:1px solid var(--border);
   display:flex;justify-content:space-between;align-items:center;
@@ -914,6 +942,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
   /* top bar */
   #top-bar{padding:0 10px 0 0;gap:8px;}
   .tb-logo{width:auto;padding:0 12px 0 10px;border-right:none;}
+  .tb-logo-img{height:28px;}
   .tb-hamburger{display:flex;}
   .tb-ticker{display:none;}
   #tb-update-label{display:none;}
@@ -922,9 +951,6 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
   .tb-login-btn{display:none;}
   .tb-signup-btn{display:none;}
   .tb-mypage-btn{display:none;}
-  .tb-logo-sub{display:none;}
-  .tb-logo-text{font-size:15px;}
-  .tb-logo-icon{font-size:18px;}
   .tb-notif{width:30px;height:30px;font-size:14px;}
   .tb-user-name{display:none;}
   .tb-user-chip{padding:4px;border-radius:50%;gap:0;min-width:32px;justify-content:center;}
@@ -1016,11 +1042,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 ════════════════════════ -->
 <div id="top-bar">
   <div class="tb-logo" onclick="goHome()">
-    <span class="tb-logo-icon">⛳</span>
-    <div>
-      <div class="tb-logo-text">Golf<span>Now</span></div>
-      <div class="tb-logo-sub">COURSE STATUS &amp; COMMUNITY</div>
-    </div>
+    <img src="logo.svg" alt="GolfNow" class="tb-logo-img">
   </div>
   <div class="tb-ticker">
     <div class="tb-ticker-track" id="tb-ticker-track"><!-- JS로 채움 --></div>
@@ -1028,7 +1050,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
   <div class="tb-right" id="tb-right">
     <!-- 비로그인 상태 -->
     <div id="tb-auth-guest" style="display:flex;align-items:center;gap:8px;">
-      <button class="tb-login-btn" onclick="openLoginModal()">🔐 로그인</button>
+      <button class="tb-login-btn" onclick="openLoginModal()">로그인</button>
       <button class="tb-signup-btn" onclick="openSignupModal()">회원가입</button>
     </div>
     <!-- 로그인 상태 -->
@@ -1080,7 +1102,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 <nav id="left-nav">
 
   <!-- Compact brand mark -->
-  <div class="nav-logo-area" style="padding:12px 16px 10px;">
+  <div class="nav-logo-area" style="padding:14px 16px 12px;">
     <div class="nav-version" style="margin-top:0;">PROTOTYPE v0.4</div>
   </div>
 
@@ -1481,12 +1503,15 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 
   <!-- ── 로그인 ── -->
   <div class="modal-box" id="modal-login" onclick="event.stopPropagation()" style="display:none;width:360px;">
+    <div class="modal-logo-bar">
+      <img src="logo.svg" alt="GolfNow">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
     <div class="modal-header">
       <div>
-        <div class="modal-title">🔐 로그인</div>
+        <div class="modal-title">로그인</div>
         <div class="modal-subtitle">소셜 계정으로 간편하게 로그인하세요</div>
       </div>
-      <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body" style="padding-bottom:10px;">
       <!-- 소셜 로그인 버튼 -->
@@ -1512,12 +1537,15 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 
   <!-- ── 회원가입 (4단계) ── -->
   <div class="modal-box" id="modal-signup" onclick="event.stopPropagation()" style="display:none;width:400px;">
+    <div class="modal-logo-bar">
+      <img src="logo.svg" alt="GolfNow">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
     <div class="modal-header">
       <div>
-        <div class="modal-title">✨ 회원가입</div>
+        <div class="modal-title">회원가입</div>
         <div class="modal-subtitle" id="signup-subtitle">GolfNow 커뮤니티에 함께하세요</div>
       </div>
-      <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body" style="padding-top:14px;">
       <!-- 스텝 인디케이터 -->

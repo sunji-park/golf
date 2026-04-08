@@ -619,20 +619,20 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 ═══════════════════════════════════════ */
 #detail-panel{
   width:0;min-width:0;overflow:hidden;
-  background:white;
+  background:#F0F2F5;
   flex-shrink:0;position:relative;z-index:900;
   transition:width .38s cubic-bezier(.4,0,.2,1), min-width .38s;
 }
 #detail-panel.open{width:var(--detail);min-width:var(--detail);}
 #dp-inner{width:var(--detail);height:100%;overflow:hidden;display:flex;flex-direction:column;}
-#dp-content{flex:1;overflow-y:auto;min-height:0;}
+#dp-content{flex:1;overflow-y:auto;min-height:0;background:#F0F2F5;}
 #dp-content::-webkit-scrollbar{width:4px;}
-#dp-content::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px;}
-.dp-tab-body{padding:13px 16px;}
-.dp-head{padding:36px 16px 13px;border-bottom:1px solid var(--border);background:white;}
+#dp-content::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px;}
+.dp-tab-body{padding:12px;}
+.dp-head{padding:36px 14px 13px;background:white;border-radius:0 0 16px 16px;box-shadow:0 2px 8px rgba(0,0,0,.05);position:relative;z-index:2;}
 
 /* Carousel */
-.dp-carousel{position:relative;height:210px;overflow:hidden;flex-shrink:0;background:#1a1a2e;}
+.dp-carousel{position:relative;height:210px;overflow:hidden;flex-shrink:0;background:#1a1a2e;border-radius:0 0 20px 20px;z-index:3;}
 .dp-slides{display:flex;height:100%;transition:transform .55s cubic-bezier(.4,0,.2,1);}
 .dp-slide{
   min-width:100%;height:100%;
@@ -674,7 +674,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 .dp-sub-info{font-size:11px;color:var(--gray);margin-top:5px;line-height:1.7;}
 
 /* Gauge + bars */
-.dp-metrics-row{display:flex;align-items:center;gap:12px;padding:15px 16px 13px;border-bottom:1px solid var(--border);}
+.dp-metrics-row{display:flex;align-items:center;gap:12px;padding:15px 16px 13px;}
 .dp-gauge-wrap{flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 .dp-gauge-wrap svg{display:block;}
 .dp-bar-section{flex:1;}
@@ -687,23 +687,24 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 .dp-bar-num{width:28px;text-align:right;font-weight:800;font-size:11px;}
 
 /* Radar */
-.dp-radar-section{padding:13px 16px 8px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;align-items:center;}
+.dp-radar-section{padding:13px 16px 8px;display:flex;flex-direction:column;align-items:center;}
 .dp-section-title{font-size:9.5px;font-weight:700;color:var(--gray);margin-bottom:8px;text-transform:uppercase;letter-spacing:.6px;align-self:flex-start;}
 
-/* Tabs */
-.dp-tabs{display:flex;border-bottom:2px solid var(--border);background:white;flex-shrink:0;}
+/* Tabs — pill style */
+.dp-tabs{display:flex;gap:6px;padding:10px 12px 6px;background:#F0F2F5;flex-shrink:0;}
 .dp-tab{
-  flex:1;padding:10px 0;font-size:11px;font-weight:700;
-  border:none;background:none;cursor:pointer;color:var(--gray);
-  border-bottom:2.5px solid transparent;margin-bottom:-2px;transition:all .2s;
+  flex:1;padding:9px 0;font-size:11px;font-weight:700;
+  border:none;background:white;cursor:pointer;color:var(--gray);
+  border-radius:10px;transition:all .25s;
+  box-shadow:0 1px 3px rgba(0,0,0,.06);
 }
-.dp-tab.active{color:var(--green);border-bottom-color:var(--green);}
-.dp-tab:hover:not(.active){color:var(--dark);}
+.dp-tab.active{color:white;background:var(--green);box-shadow:0 3px 12px rgba(16,4,67,.25);}
+.dp-tab:hover:not(.active){color:var(--dark);background:#f9f8ff;}
 
-/* Review */
-.rv{padding:10px 0;border-bottom:1px solid var(--border);}
-.rv:last-child{border:none;}
-.rv-top{display:flex;justify-content:space-between;margin-bottom:4px;}
+/* Review — card style */
+.rv{padding:12px 14px;background:white;border-radius:14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);border:1px solid rgba(0,0,0,.04);}
+.rv:last-child{margin-bottom:0;}
+.rv-top{display:flex;justify-content:space-between;margin-bottom:5px;}
 .rv-user{font-size:12px;font-weight:700;}
 .rv-time{font-size:10px;color:var(--gray);}
 .rv-text{font-size:12px;color:#444;line-height:1.6;}
@@ -717,20 +718,93 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 /* Gallery */
 .gal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
 .gal-thumb{
-  height:88px;border-radius:9px;
+  height:88px;border-radius:12px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:4px;cursor:pointer;transition:transform .2s;
+  box-shadow:0 2px 8px rgba(0,0,0,.12);
 }
 .gal-thumb:hover{transform:scale(1.04);}
 .gal-thumb>span:first-child{font-size:26px;}
 .gal-thumb>span:last-child{font-size:9px;font-weight:700;color:rgba(255,255,255,.88);text-shadow:0 1px 3px rgba(0,0,0,.3);}
 
-/* Course Status tab sub-sections */
-.dp-sub-heading{font-size:10px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.6px;margin:0 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
-.dp-status-block{padding:14px 16px;border-bottom:1px solid var(--border);}
-.dp-status-block:last-child{border-bottom:none;}
+/* Course Status tab sub-sections — card style */
+.dp-sub-heading{font-size:10px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.6px;margin:0 0 10px;padding-bottom:6px;border-bottom:1px solid #eee;}
+
+/* ── 전체기간 vs 최근1개월 비교 차트 ── */
+.cmp-legend{display:flex;gap:14px;margin-bottom:10px;justify-content:center;}
+.cmp-legend-item{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:#666;}
+.cmp-legend-dot{width:10px;height:10px;border-radius:3px;}
+
+/* 종합 통합 게이지 (arc + needle marker) */
+.cmp-total-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #eee;}
+.cmp-total-scores{display:flex;align-items:center;gap:14px;margin-top:6px;}
+.cmp-total-score-item{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;}
+.cmp-total-score-item .dot{width:8px;height:8px;border-radius:50%;}
+.cmp-total-score-item .dot.recent{width:4px;border-radius:1px;}
+.cmp-total-diff{
+  display:inline-flex;align-items:center;gap:3px;
+  font-size:10px;font-weight:800;padding:2px 8px;border-radius:6px;margin-left:4px;
+}
+.cmp-total-diff.up{background:#ecfdf5;color:#059669;}
+.cmp-total-diff.down{background:#fef2f2;color:#dc2626;}
+.cmp-total-diff.same{background:#f3f4f6;color:#9ca3af;}
+
+/* 날씨 카드 */
+.wx-card{overflow:hidden;}
+.wx-header{display:flex;align-items:center;justify-content:space-between;padding:0 0 8px;}
+.wx-header-left{display:flex;align-items:baseline;gap:6px;}
+.wx-date{font-size:11px;font-weight:800;color:var(--dark);}
+.wx-day{font-size:10px;font-weight:700;color:var(--gray);}
+.wx-badge{font-size:9px;font-weight:800;padding:2px 7px;border-radius:6px;}
+.wx-main{display:flex;align-items:center;gap:10px;padding-bottom:8px;}
+.wx-icon{font-size:30px;flex-shrink:0;}
+.wx-main-info{display:flex;flex-direction:column;gap:0;}
+.wx-temp{font-size:24px;font-weight:900;line-height:1;letter-spacing:-1px;color:var(--dark);}
+.wx-desc-row{display:flex;align-items:center;gap:5px;margin-top:2px;}
+.wx-desc{font-size:10px;font-weight:700;color:#555;}
+.wx-feel{font-size:9px;font-weight:600;color:var(--gray);}
+.wx-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:8px 0 4px;border-top:1px solid #eee;}
+.wx-cell{text-align:center;padding:4px 2px;background:#f7f8fb;border-radius:6px;}
+.wx-cell-icon{font-size:12px;margin-bottom:1px;}
+.wx-cell-val{font-size:10.5px;font-weight:800;color:var(--dark);}
+.wx-cell-lbl{font-size:7.5px;font-weight:600;color:var(--gray);margin-top:1px;}
+.wx-tip{padding:6px 8px;font-size:10px;font-weight:700;line-height:1.4;display:flex;align-items:center;gap:5px;border-radius:7px;margin-top:4px;}
+
+/* 통합 바 (전체=채움바, 최근=세로라인 마커) */
+.cmp-row{display:flex;align-items:center;gap:6px;margin-bottom:7px;}
+.cmp-row:last-child{margin-bottom:0;}
+.cmp-label{width:54px;font-size:10px;font-weight:600;color:var(--gray);flex-shrink:0;}
+.cmp-bar-stack{flex:1;position:relative;height:10px;background:#f0f2f5;border-radius:5px;overflow:visible;}
+.cmp-bar-fill-all{position:absolute;top:0;left:0;height:100%;border-radius:5px;transition:width 1.1s cubic-bezier(.4,0,.2,1);opacity:.7;}
+.cmp-bar-marker{position:absolute;top:-2px;width:2.5px;height:14px;border-radius:1.5px;background:#E4005A;box-shadow:0 0 5px rgba(228,0,90,.4);z-index:3;transition:left 1.1s cubic-bezier(.4,0,.2,1);}
+.cmp-bar-marker::after{content:'';position:absolute;top:-2.5px;left:-2.25px;width:7px;height:7px;border-radius:50%;background:#E4005A;box-shadow:0 0 4px rgba(228,0,90,.35);}
+.cmp-vals{display:flex;flex-direction:column;align-items:flex-end;width:52px;flex-shrink:0;gap:0;}
+.cmp-val-all{font-size:9px;font-weight:700;}
+.cmp-val-rec{font-size:10px;font-weight:900;color:#E4005A;}
+.cmp-trend{width:38px;text-align:center;flex-shrink:0;}
+.cmp-trend-badge{display:inline-flex;align-items:center;gap:2px;font-size:9px;font-weight:800;padding:2px 5px;border-radius:6px;}
+.cmp-trend-badge.up{background:#ecfdf5;color:#059669;}
+.cmp-trend-badge.down{background:#fef2f2;color:#dc2626;}
+.cmp-trend-badge.same{background:#f3f4f6;color:#9ca3af;}
+
+/* 듀얼 레이더 */
+.cmp-radar-wrap{display:flex;flex-direction:column;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid #eee;}
+
+/* 요약 */
+.cmp-summary{margin-top:14px;padding:10px 12px;border-radius:10px;display:flex;align-items:center;gap:10px;font-size:12px;font-weight:700;line-height:1.5;}
+.cmp-summary.improved{background:linear-gradient(135deg,#ecfdf5,#d1fae5);color:#065f46;border:1px solid #a7f3d0;}
+.cmp-summary.declined{background:linear-gradient(135deg,#fef2f2,#fce7f3);color:#9f1239;border:1px solid #fecdd3;}
+.cmp-summary.stable{background:linear-gradient(135deg,#f9fafb,#f3f4f6);color:#4b5563;border:1px solid #e5e7eb;}
+.cmp-summary-icon{font-size:22px;}
+.dp-status-block{
+  padding:16px;background:white;border-radius:14px;
+  margin-bottom:10px;
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
+  border:1px solid rgba(0,0,0,.04);
+}
+.dp-status-block:last-child{margin-bottom:0;}
 .dp-status-inner{display:flex;align-items:center;gap:12px;}
-.dp-radar-wrap{display:flex;flex-direction:column;align-items:center;}
+.dp-radar-wrap{display:flex;flex-direction:column;align-items:center;padding:4px 0;}
 
 /* Difficulty section */
 .diff-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:800;margin-bottom:13px;}
@@ -738,7 +812,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 .diff-중급{background:#e0fdfb;color:#0a9e8a;}
 .diff-초급{background:#eef6ff;color:#2563eb;}
 .diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-.diff-item{background:#f9f8ff;border-radius:10px;padding:10px 8px;text-align:center;}
+.diff-item{background:#f7f8fb;border-radius:10px;padding:10px 8px;text-align:center;border:1px solid #eef0f4;}
 .diff-label{font-size:9.5px;color:var(--gray);font-weight:600;margin-bottom:4px;}
 .diff-value{font-size:15px;font-weight:900;color:var(--dark);}
 .diff-unit{font-size:10px;font-weight:600;color:var(--gray);}
@@ -747,13 +821,15 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 
 /* Actions — 플로팅 하단 고정 */
 .dp-actions{
-  padding:12px 16px;display:flex;gap:8px;
-  border-top:1px solid var(--border);background:white;flex-shrink:0;
-  box-shadow:0 -6px 20px rgba(0,0,0,.08);
+  padding:10px 12px;display:flex;gap:8px;
+  background:#F0F2F5;flex-shrink:0;
+  box-shadow:0 -4px 16px rgba(0,0,0,.06);
 }
-.dp-btn{flex:1;padding:12px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .2s;font-family:inherit;text-align:center;}
+.dp-btn{flex:1;padding:12px;border-radius:12px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .2s;font-family:inherit;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.08);}
 .dp-pri{background:var(--green);color:white;}
-.dp-sec{background:var(--pale);color:var(--green);}
+.dp-pri:hover{box-shadow:0 4px 16px rgba(16,4,67,.3);}
+.dp-sec{background:white;color:var(--green);}
+.dp-sec:hover{background:#f9f8ff;}
 .dp-btn:hover{opacity:.9;transform:translateY(-1px);}
 .dp-url-btn{display:flex;align-items:center;justify-content:center;gap:4px;text-decoration:none;}
 
@@ -1923,6 +1999,277 @@ function buildRadarSVG(c,col){
 }
 
 /* ═══════════════════════════════════════
+   RECENT-MONTH DATA & COMPARISON CHART
+═══════════════════════════════════════ */
+function seededRand(seed){let s=seed%2147483647;if(s<=0)s+=2147483646;return{next(){s=s*16807%2147483647;return(s-1)/2147483646;}}}
+function getRecentMonth(c){
+  const rng=seededRand(c.id*1337+42);
+  const jitter=(base)=>{
+    const delta=(rng.next()-0.42)*0.8;
+    return Math.max(0.5, Math.min(5.0, parseFloat((base+delta).toFixed(1))));
+  };
+  return {tee:jitter(c.tee),fairway:jitter(c.fairway),green:jitter(c.green),pace:jitter(c.pace),caddie:jitter(c.caddie),clubhouse:jitter(clubhouseOf(c))};
+}
+function buildCombinedGaugeSVG(allScore,allCol,recScore){
+  const r=42,cx=54,cy=54,sz=108,circ=2*Math.PI*r;
+  // 최근1개월 마커 위치 (12시 시작 시계방향)
+  const recAngle=-Math.PI/2 + (recScore/5)*2*Math.PI;
+  const mx=cx+r*Math.cos(recAngle), my=cy+r*Math.sin(recAngle);
+  // 마커 라인 방향 (중심→바깥)
+  const ndx=Math.cos(recAngle), ndy=Math.sin(recAngle);
+  const x1=cx+(r-8)*ndx, y1=cy+(r-8)*ndy;
+  const x2=cx+(r+8)*ndx, y2=cy+(r+8)*ndy;
+  return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}">
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#f0f2f5" stroke-width="10"/>
+    <circle id="gauge-comb-arc" cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${allCol}" stroke-width="10"
+      stroke-dasharray="0 ${circ}" stroke-dashoffset="${circ/4}" stroke-linecap="round" opacity=".75"/>
+    <line id="gauge-comb-needle" x1="${cx}" y1="${cy-r+8}" x2="${cx}" y2="${cy-r-8}"
+      stroke="#E4005A" stroke-width="3" stroke-linecap="round" opacity="0"/>
+    <circle id="gauge-comb-dot" cx="${cx}" cy="${cy-r}" r="4.5"
+      fill="#E4005A" stroke="white" stroke-width="2" opacity="0"/>
+    <text x="${cx}" y="${cy-1}" text-anchor="middle" dominant-baseline="middle"
+      font-size="13" font-weight="900" fill="${allCol}" font-family="'Noto Sans KR',sans-serif" id="gauge-comb-alltext">${f1(allScore)}</text>
+    <text x="${cx}" y="${cy+13}" text-anchor="middle"
+      font-size="11" font-weight="900" fill="#E4005A" font-family="'Noto Sans KR',sans-serif" id="gauge-comb-rectext">${f1(recScore)}</text>
+    <text x="${cx}" y="${cy+24}" text-anchor="middle" font-size="7.5" fill="#bbb" font-family="'Noto Sans KR',sans-serif">/ 5.0</text>
+  </svg>`;
+}
+function animateCombinedGauge(allScore,allCol,recScore){
+  const r=42,cx=54,cy=54,circ=2*Math.PI*r;
+  const arcEl=document.getElementById('gauge-comb-arc');
+  const needleEl=document.getElementById('gauge-comb-needle');
+  const dotEl=document.getElementById('gauge-comb-dot');
+  if(!arcEl)return;
+  const arcTarget=(allScore/5)*circ;
+  const recAngleTarget=-Math.PI/2+(recScore/5)*2*Math.PI;
+  let t0=null;
+  (function step(ts){
+    if(!t0)t0=ts;
+    const p=Math.min((ts-t0)/1100,1),e=1-Math.pow(1-p,3);
+    // arc
+    const d=e*arcTarget;
+    arcEl.setAttribute('stroke-dasharray',`${d} ${circ-d}`);
+    // needle + dot
+    const curAngle=-Math.PI/2+e*(recAngleTarget-(-Math.PI/2));
+    const ndx=Math.cos(curAngle),ndy=Math.sin(curAngle);
+    if(needleEl){
+      needleEl.setAttribute('x1',cx+(r-8)*ndx);
+      needleEl.setAttribute('y1',cy+(r-8)*ndy);
+      needleEl.setAttribute('x2',cx+(r+8)*ndx);
+      needleEl.setAttribute('y2',cy+(r+8)*ndy);
+      needleEl.setAttribute('opacity','1');
+    }
+    if(dotEl){
+      dotEl.setAttribute('cx',cx+r*ndx);
+      dotEl.setAttribute('cy',cy+r*ndy);
+      dotEl.setAttribute('opacity','1');
+    }
+    if(p<1)requestAnimationFrame(step);
+  })(performance.now());
+}
+function getWeatherDetail(c){
+  const rng=seededRand(c.id*777+99);
+  const r=()=>rng.next();
+  // 기본 weather 파싱: "☀️ 8°C" → icon, temp
+  const m=c.weather.match(/([\S]+)\s*([\-\d]+)°C/);
+  const icon=m?m[1]:'☀️', temp=m?parseInt(m[2]):15;
+  // 날씨 타입 판별
+  const isSnow=icon.includes('❄');
+  const isCloudy=icon.includes('⛅')||icon.includes('🌥')||icon.includes('🌤');
+  const isRain=icon.includes('🌧')||icon.includes('🌦');
+  const isSunny=icon.includes('☀');
+  // 파생 데이터 (시드 기반)
+  const wind=Math.round(1+r()*14); // 1~15 m/s
+  const humidity=Math.round(30+r()*50); // 30~80%
+  const rain=isSnow?Math.round(r()*20):isRain?Math.round(30+r()*60):isCloudy?Math.round(r()*30):Math.round(r()*10);
+  const uv=isSunny?Math.round(3+r()*8):isCloudy?Math.round(1+r()*4):Math.round(r()*3);
+  const feel=temp-Math.round(wind*0.3+(humidity>60?2:0));
+  const desc=isSnow?'눈':isRain?'비':isCloudy?(r()>0.5?'구름많음':'흐림'):isSunny?'맑음':'맑음';
+  const bigIcon=isSnow?'❄️':isRain?'🌧️':isCloudy?(r()>0.5?'⛅':'🌥️'):'☀️';
+  // 골프 적합도 & 팁
+  let golfScore, tip, tipIcon, tipBg, tipColor;
+  if(isSnow||temp<0){golfScore='부적합';tip='적설 또는 동결 상태입니다. 라운딩을 자제해주세요.';tipIcon='🚫';tipBg='#fef2f2';tipColor='#991b1b';}
+  else if(isRain||rain>40){golfScore='주의';tip='강수 확률이 높습니다. 우의와 그립타월을 챙기세요.';tipIcon='🌂';tipBg='#fffbeb';tipColor='#92400e';}
+  else if(wind>10){golfScore='주의';tip='바람이 강합니다. 클럽 선택에 유의하세요.';tipIcon='💨';tipBg='#fffbeb';tipColor='#92400e';}
+  else if(isSunny&&uv>=7){golfScore='양호';tip='자외선이 강합니다. 선크림과 모자를 착용하세요.';tipIcon='🧴';tipBg='#fefce8';tipColor='#854d0e';}
+  else{golfScore='최적';tip='라운딩하기 좋은 날씨입니다. 즐거운 라운딩 되세요!';tipIcon='⛳';tipBg='#ecfdf5';tipColor='#065f46';}
+  // 그라데이션
+  const grad=isSnow?'linear-gradient(135deg,#475569,#94a3b8)':isRain?'linear-gradient(135deg,#374151,#6b7280)':isCloudy?'linear-gradient(135deg,#1e3a5f,#4a7fb5)':'linear-gradient(135deg,#0369a1,#38bdf8)';
+  return {icon:bigIcon,temp,feel,desc,wind,humidity,rain,uv,golfScore,tip,tipIcon,tipBg,tipColor,grad};
+}
+function buildWeatherCardHtml(c){
+  const w=getWeatherDetail(c);
+  // 오늘 날짜
+  const now=new Date();
+  const mm=now.getMonth()+1, dd=now.getDate();
+  const days=['일','월','화','수','목','금','토'];
+  const dayStr=days[now.getDay()];
+  return `<div class="wx-card">
+    <div class="wx-header">
+      <div class="wx-header-left">
+        <span class="wx-date">${mm}월 ${dd}일</span>
+        <span class="wx-day">${dayStr}요일</span>
+      </div>
+      <span class="wx-badge" style="background:${w.tipBg};color:${w.tipColor}">${w.tipIcon} ${w.golfScore}</span>
+    </div>
+    <div class="wx-main">
+      <div class="wx-icon">${w.icon}</div>
+      <div class="wx-main-info">
+        <div class="wx-temp">${w.temp}°</div>
+        <div class="wx-desc-row">
+          <span class="wx-desc">${w.desc}</span>
+          <span class="wx-feel">체감 ${w.feel}°C</span>
+        </div>
+      </div>
+    </div>
+    <div class="wx-grid">
+      <div class="wx-cell">
+        <div class="wx-cell-icon">💨</div>
+        <div class="wx-cell-val">${w.wind}<small>m/s</small></div>
+        <div class="wx-cell-lbl">바람</div>
+      </div>
+      <div class="wx-cell">
+        <div class="wx-cell-icon">💧</div>
+        <div class="wx-cell-val">${w.humidity}<small>%</small></div>
+        <div class="wx-cell-lbl">습도</div>
+      </div>
+      <div class="wx-cell">
+        <div class="wx-cell-icon">🌧️</div>
+        <div class="wx-cell-val">${w.rain}<small>%</small></div>
+        <div class="wx-cell-lbl">강수확률</div>
+      </div>
+      <div class="wx-cell">
+        <div class="wx-cell-icon">☀️</div>
+        <div class="wx-cell-val">${w.uv}</div>
+        <div class="wx-cell-lbl">자외선</div>
+      </div>
+    </div>
+    <div class="wx-tip" style="background:${w.tipBg};color:${w.tipColor}">
+      <span style="font-size:16px">${w.tipIcon}</span>
+      <span>${w.tip}</span>
+    </div>
+  </div>`;
+}
+function buildDualRadarSVG(c){
+  const rm=getRecentMonth(c);
+  const cx=130,cy=115,R=60,w=260,h=248;
+  const step=2*Math.PI/6,base=-Math.PI/2;
+  const allAxes=[
+    {label:'티박스',    allV:c.tee,       recV:rm.tee,      a:base},
+    {label:'페어웨이',  allV:c.fairway,   recV:rm.fairway,  a:base+step},
+    {label:'그린',      allV:c.green,     recV:rm.green,    a:base+step*2},
+    {label:'페이스',    allV:c.pace,      recV:rm.pace,     a:base+step*3},
+    {label:'캐디',      allV:c.caddie,    recV:rm.caddie,   a:base+step*4},
+    {label:'클럽하우스',allV:clubhouseOf(c),recV:rm.clubhouse,a:base+step*5},
+  ];
+  const pt=(r,a)=>({x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)});
+  // grids
+  const grids=[.25,.5,.75,1].map(p=>{
+    const pts=allAxes.map(ax=>pt(R*p,ax.a));
+    return `<polygon points="${pts.map(q=>`${q.x},${q.y}`).join(' ')}" fill="none" stroke="${p===1?'#d1d5db':'#e8ecef'}" stroke-width="${p===1?1.2:0.8}"/>`;
+  }).join('');
+  // axis lines
+  const axLines=allAxes.map(ax=>{const e=pt(R,ax.a);return `<line x1="${cx}" y1="${cy}" x2="${e.x}" y2="${e.y}" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="3,3"/>`;}).join('');
+  // all-time polygon
+  const allPts=allAxes.map(ax=>pt(R*(ax.allV/5),ax.a));
+  const allPoly=`<polygon points="${allPts.map(q=>`${q.x},${q.y}`).join(' ')}" fill="#9ca3af20" stroke="#9ca3af" stroke-width="2" stroke-linejoin="round" stroke-dasharray="5,4"/>`;
+  // recent polygon
+  const recPts=allAxes.map(ax=>pt(R*(ax.recV/5),ax.a));
+  const recPoly=`<polygon points="${recPts.map(q=>`${q.x},${q.y}`).join(' ')}" fill="#00E4C926" stroke="#00E4C9" stroke-width="2.5" stroke-linejoin="round"/>`;
+  // dots
+  const allDots=allPts.map(q=>`<circle cx="${q.x}" cy="${q.y}" r="3" fill="#9ca3af" stroke="white" stroke-width="1.5"/>`).join('');
+  const recDots=recPts.map(q=>`<circle cx="${q.x}" cy="${q.y}" r="3.5" fill="#00E4C9" stroke="white" stroke-width="1.5"/>`).join('');
+  // labels with both scores
+  const labels=allAxes.map(ax=>{
+    const lp=pt(R+20,ax.a);
+    const anchor=Math.cos(ax.a)>0.3?'start':Math.cos(ax.a)<-0.3?'end':'middle';
+    const d=ax.recV-ax.allV;
+    const dCol=d>0.05?'#059669':d<-0.05?'#dc2626':'#9ca3af';
+    const arrow=d>0.05?'▲':d<-0.05?'▼':'';
+    return `<text x="${lp.x}" y="${lp.y-2}" text-anchor="${anchor}" font-size="9" fill="#888" font-weight="700" font-family="'Noto Sans KR',sans-serif">${ax.label}</text>
+      <text x="${lp.x}" y="${lp.y+10}" text-anchor="${anchor}" font-size="9" font-weight="800" font-family="'Noto Sans KR',sans-serif">
+        <tspan fill="#9ca3af">${f1(ax.allV)}</tspan>
+        <tspan fill="#bbb"> → </tspan>
+        <tspan fill="${scoreColor(ax.recV)}" font-weight="900">${f1(ax.recV)}</tspan>
+        <tspan fill="${dCol}" font-size="7.5"> ${arrow}</tspan>
+      </text>`;
+  }).join('');
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${grids}${axLines}${allPoly}${recPoly}${allDots}${recDots}${labels}</svg>`;
+}
+function buildComparisonHtml(c){
+  const rm=getRecentMonth(c);
+  const allMetrics=[['티박스',c.tee,rm.tee],['페어웨이',c.fairway,rm.fairway],['그린',c.green,rm.green],['페이스',c.pace,rm.pace],['캐디',c.caddie,rm.caddie],['클럽하우스',clubhouseOf(c),rm.clubhouse]];
+  const allAvg=allMetrics.reduce((s,m)=>s+m[1],0)/6;
+  const recentAvg=allMetrics.reduce((s,m)=>s+m[2],0)/6;
+  const allCol=scoreColor(allAvg), recCol=scoreColor(recentAvg);
+  const diff=recentAvg-allAvg;
+  const diffAbs=Math.abs(diff);
+  const trendClass=diff>0.05?'improved':diff<-0.05?'declined':'stable';
+  const trendIcon=diff>0.05?'📈':diff<-0.05?'📉':'➡️';
+  const diffBadgeCls=diff>0.05?'up':diff<-0.05?'down':'same';
+  const diffArrow=diff>0.05?'▲':diff<-0.05?'▼':'—';
+  const trendText=diff>0.05?`최근 1개월 평점이 전체 대비 <strong>+${diffAbs.toFixed(1)}점 상승</strong>했습니다. 코스 컨디션이 개선되고 있어요!`
+    :diff<-0.05?`최근 1개월 평점이 전체 대비 <strong>-${diffAbs.toFixed(1)}점 하락</strong>했습니다. 코스 관리 상태를 확인해보세요.`
+    :`최근 1개월 평점이 전체기간과 <strong>비슷한 수준</strong>을 유지하고 있습니다.`;
+  // 종합 통합 원형 게이지 (arc=전체, needle=최근)
+  const totalRow=`<div class="cmp-total-wrap">
+    ${buildCombinedGaugeSVG(allAvg,allCol,recentAvg)}
+    <div class="cmp-total-scores">
+      <span class="cmp-total-score-item"><span class="dot" style="background:${allCol}"></span>전체 ${f1(allAvg)}</span>
+      <span class="cmp-total-score-item"><span class="dot recent" style="background:#E4005A"></span>1개월 ${f1(recentAvg)}</span>
+      <span class="cmp-total-diff ${diffBadgeCls}">${diffArrow} ${diff>0?'+':''}${diff.toFixed(1)}</span>
+    </div>
+  </div>`;
+  const rows=allMetrics.map(([label,allVal,recentVal],i)=>{
+    const d=recentVal-allVal;
+    const arrow=d>0.05?'▲':d<-0.05?'▼':'—';
+    const badgeCls=d>0.05?'up':d<-0.05?'down':'same';
+    const dStr=d>0.05?`+${Math.abs(d).toFixed(1)}`:d<-0.05?`-${Math.abs(d).toFixed(1)}`:'0.0';
+    return `<div class="cmp-row">
+      <span class="cmp-label">${label}</span>
+      <div class="cmp-bar-stack">
+        <div class="cmp-bar-fill-all" id="cmpbar-all-${i}" style="width:0%;background:${scoreColor(allVal)}"></div>
+        <div class="cmp-bar-marker" id="cmpbar-rec-${i}" style="left:0%"></div>
+      </div>
+      <div class="cmp-vals">
+        <span class="cmp-val-all" style="color:${scoreColor(allVal)}">${f1(allVal)}</span>
+        <span class="cmp-val-rec">${f1(recentVal)}</span>
+      </div>
+      <span class="cmp-trend"><span class="cmp-trend-badge ${badgeCls}">${arrow} ${dStr}</span></span>
+    </div>`;
+  }).join('');
+  return `
+    <div class="cmp-legend">
+      <span class="cmp-legend-item"><span class="cmp-legend-dot" style="background:linear-gradient(135deg,#00E4C9,#22c55e,#f59e0b);opacity:.7;"></span>전체기간</span>
+      <span class="cmp-legend-item"><span class="cmp-legend-dot" style="background:#E4005A;border-radius:1px;width:4px;"></span>최근 1개월</span>
+    </div>
+    ${totalRow}
+    ${rows}
+    <div class="cmp-radar-wrap">
+      ${buildDualRadarSVG(c)}
+    </div>
+    <div class="cmp-summary ${trendClass}">
+      <span class="cmp-summary-icon">${trendIcon}</span>
+      <span>${trendText}</span>
+    </div>`;
+}
+function animateComparisonBars(c){
+  const rm=getRecentMonth(c);
+  const vals=[[c.tee,rm.tee],[c.fairway,rm.fairway],[c.green,rm.green],[c.pace,rm.pace],[c.caddie,rm.caddie],[clubhouseOf(c),rm.clubhouse]];
+  const allAvg=vals.reduce((s,v)=>s+v[0],0)/6;
+  const recAvg=vals.reduce((s,v)=>s+v[1],0)/6;
+  // 종합 통합 게이지
+  animateCombinedGauge(allAvg,scoreColor(allAvg),recAvg);
+  // 항목별
+  vals.forEach(([allVal,recentVal],i)=>{
+    const elAll=document.getElementById(`cmpbar-all-${i}`);
+    const elRec=document.getElementById(`cmpbar-rec-${i}`);
+    if(elAll)elAll.style.width=`${allVal/5*100}%`;
+    if(elRec)elRec.style.left=`calc(${recentVal/5*100}% - 1.5px)`;
+  });
+}
+
+/* ═══════════════════════════════════════
    MAP
 ═══════════════════════════════════════ */
 function initMap(){
@@ -2112,7 +2459,6 @@ function openDetail(id){
     {icon:'⛳',label:'그린',         grad:`linear-gradient(150deg,#1b4332,#40916c)`},
     {icon:'🏛️',label:'클럽하우스',  grad:`linear-gradient(150deg,#264653,#3a8f8a)`},
   ];
-  const metrics=[['티박스',c.tee],['페어웨이',c.fairway],['그린',c.green],['페이스',c.pace],['캐디',c.caddie],['클럽하우스',clubhouseOf(c)]];
   const galEmojis=['🌄','⛳','🌿','🏌️','🏆','🌳'];
   const galGrads=[`linear-gradient(135deg,${col}cc,${col})`,`linear-gradient(135deg,#0a6e6a,#00E4C9)`,`linear-gradient(135deg,#100443,#1c0d68)`,`linear-gradient(135deg,#6b4226,#c08040)`,`linear-gradient(135deg,#100443,#E40054)`,`linear-gradient(135deg,#023e8a,#0096c7)`];
   const galLabels=['파노라마','페어웨이','그린','클럽하우스','홀 전경','석양'];
@@ -2120,17 +2466,11 @@ function openDetail(id){
   /* ── 코스상태 탭 콘텐츠 ── */
   const statusTabHtml=`
     <div class="dp-status-block">
-      <div class="dp-sub-heading">📊 항목별 상태</div>
-      <div class="dp-status-inner">
-        <div class="dp-gauge-wrap">${buildGaugeSVG(a,col)}</div>
-        <div class="dp-bar-section">
-          ${metrics.map(([l,v],i)=>`<div class="dp-bar-row"><span class="dp-bar-lbl">${l}</span><div class="dp-bar-track"><div class="dp-bar-fill" id="dpbar-${i}" style="width:0%;background:${scoreColor(v)}"></div></div><span class="dp-bar-num" style="color:${scoreColor(v)}">${f1(v)}</span></div>`).join('')}
-        </div>
-      </div>
+      ${buildWeatherCardHtml(c)}
     </div>
     <div class="dp-status-block">
-      <div class="dp-sub-heading">🎯 코스 상태 분석</div>
-      <div class="dp-radar-wrap">${buildRadarSVG(c,col)}</div>
+      <div class="dp-sub-heading">📊 코스 상태 · 전체기간 vs 최근 1개월</div>
+      ${buildComparisonHtml(c)}
     </div>
     <div class="dp-status-block">
       <div class="dp-sub-heading">⛳ 난이도</div>
@@ -2164,7 +2504,7 @@ function openDetail(id){
       <div class="dp-name-row">
         <div class="dp-name">${c.name}${c.country==='일본'?' <span class="jp-flag">🇯🇵 일본</span>':''}</div>
       </div>
-      <div class="dp-sub-info">📍 ${c.addr} &nbsp;·&nbsp; ${c.holes}홀 par${c.par}<br>${c.weather} &nbsp;·&nbsp; ${c.updated}에 마지막 평가가 있습니다.</div>
+      <div class="dp-sub-info">📍 ${c.addr} &nbsp;·&nbsp; ${c.holes}홀 par${c.par} &nbsp;·&nbsp; ${c.updated}에 마지막 평가가 있습니다.</div>
     </div>
     <div class="dp-tabs">
       <button class="dp-tab active" onclick="dpTab(this,'status')">📊 코스상태</button>
@@ -2185,8 +2525,7 @@ function openDetail(id){
   };
   document.getElementById('dp-tab-body').innerHTML=_dpTabs.status;
   setTimeout(()=>{
-    metrics.forEach(([,v],i)=>{const el=document.getElementById(`dpbar-${i}`);if(el)el.style.width=`${v/5*100}%`;});
-    animateGauge(a,col);
+    animateComparisonBars(c);
   },120);
   document.getElementById('detail-panel').classList.add('open');
   document.getElementById('detail-overlay').classList.add('active');
@@ -2228,7 +2567,7 @@ function buildReviewTabHtml(c){
       ${r.body?`<div class="rv-text" style="white-space:pre-wrap;">${r.body}</div>`:''}</div>`).join('');
   const total=dynPosts.length+c.reviews.length;
   if(total===0)return`<div style="padding:24px 0;text-align:center;color:var(--gray);font-size:13px;">아직 리뷰가 없습니다.</div>`;
-  return`<div style="font-size:11px;color:var(--gray);margin-bottom:6px;">총 ${total}개의 리뷰</div>${dynHtml}${staticHtml}`;
+  return`<div style="font-size:11px;color:var(--gray);margin-bottom:10px;font-weight:700;">총 ${total}개의 리뷰</div>${dynHtml}${staticHtml}`;
 }
 function dpTab(btn,tab){
   document.querySelectorAll('.dp-tab').forEach(b=>b.classList.remove('active'));
@@ -2239,12 +2578,8 @@ function dpTab(btn,tab){
   } else {
     body.innerHTML=_dpTabs[tab]||'';
     if(tab==='status'&&_currentCourse){
-      const c=_currentCourse;
-      const metrics=[['티박스',c.tee],['페어웨이',c.fairway],['그린',c.green],['페이스',c.pace],['캐디',c.caddie],['클럽하우스',clubhouseOf(c)]];
-      const a=avg(c),col=colorOf(c);
       setTimeout(()=>{
-        metrics.forEach(([,v],i)=>{const el=document.getElementById(`dpbar-${i}`);if(el)el.style.width=`${v/5*100}%`;});
-        animateGauge(a,col);
+        animateComparisonBars(_currentCourse);
       },80);
     }
   }

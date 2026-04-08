@@ -40,7 +40,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 }
 .tb-logo{
   width:var(--nav);flex-shrink:0;height:100%;
-  display:flex;align-items:center;gap:8px;padding:0 18px;
+  display:flex;align-items:center;gap:8px;padding:0 18px 0 12px;
   border-right:1px solid rgba(255,255,255,.12);
   cursor:pointer;user-select:none;transition:opacity .18s;
 }
@@ -63,6 +63,34 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 }
 .tb-ticker-track:hover{animation-play-state:paused;}
 @keyframes ticker-roll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.7);}}
+
+/* ── 모바일 티커바 ── */
+#mob-ticker-bar{
+  display:none;
+  background:var(--lg);height:30px;flex-shrink:0;
+  align-items:center;overflow:hidden;
+  border-top:1px solid rgba(255,255,255,.1);
+}
+.mob-ticker-label{
+  flex-shrink:0;display:flex;align-items:center;
+  gap:5px;padding:0 10px;height:100%;
+  border-right:1px solid rgba(255,255,255,.15);
+}
+.mob-ticker-inner{
+  flex:1;overflow:hidden;position:relative;height:100%;
+  display:flex;align-items:center;
+}
+.mob-ticker-inner::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:20px;
+  background:linear-gradient(to right,var(--lg),transparent);
+  pointer-events:none;z-index:2;
+}
+.mob-ticker-inner::after{
+  content:'';position:absolute;right:0;top:0;bottom:0;width:20px;
+  background:linear-gradient(to left,var(--lg),transparent);
+  pointer-events:none;z-index:2;
+}
 .tb-ticker-item{
   display:inline-flex;align-items:center;gap:7px;padding:0 22px;
   font-size:11.5px;font-weight:600;color:rgba(255,255,255,.88);cursor:pointer;
@@ -127,6 +155,148 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
   white-space:nowrap;
 }
 .tb-login-btn:hover{background:#00cdb6;box-shadow:0 3px 14px rgba(0,228,201,.4);transform:translateY(-1px);}
+/* 회원가입 버튼 (아웃라인) */
+.tb-signup-btn{
+  padding:7px 15px;border-radius:9px;
+  background:transparent;color:rgba(255,255,255,.88);
+  border:1.5px solid rgba(255,255,255,.3);font-size:12px;font-weight:700;
+  cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap;
+}
+.tb-signup-btn:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.55);}
+/* 마이페이지 버튼 */
+.tb-mypage-btn{
+  padding:7px 15px;border-radius:9px;
+  background:rgba(255,255,255,.1);color:rgba(255,255,255,.9);
+  border:1.5px solid rgba(255,255,255,.2);font-size:12px;font-weight:700;
+  cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap;
+}
+.tb-mypage-btn:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.45);}
+
+/* ── 회원가입 스텝 인디케이터 ── */
+.signup-steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:22px;}
+.signup-step{
+  display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;position:relative;
+}
+.signup-step:not(:last-child)::after{
+  content:'';position:absolute;top:13px;left:calc(50% + 14px);right:calc(-50% + 14px);
+  height:2px;background:var(--border);z-index:0;
+}
+.signup-step.done:not(:last-child)::after{background:var(--accent);}
+.signup-step-circle{
+  width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;z-index:1;
+  background:var(--border);color:var(--gray);transition:all .3s;
+}
+.signup-step.active .signup-step-circle{background:var(--accent);color:var(--green);}
+.signup-step.done .signup-step-circle{background:var(--green);color:white;}
+.signup-step-label{font-size:9.5px;color:var(--gray);font-weight:600;white-space:nowrap;}
+.signup-step.active .signup-step-label{color:var(--accent);font-weight:800;}
+
+/* ── 소셜 로그인 버튼 (카카오/네이버 large) ── */
+.social-login-kakao{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:14px 18px;border-radius:12px;
+  background:#FEE500;color:#191919;
+  border:none;font-size:14px;font-weight:800;cursor:pointer;
+  font-family:inherit;transition:all .2s;margin-bottom:10px;
+}
+.social-login-kakao:hover{background:#f0d800;transform:translateY(-1px);box-shadow:0 3px 12px rgba(254,229,0,.4);}
+.social-login-naver{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:14px 18px;border-radius:12px;
+  background:#03C75A;color:white;
+  border:none;font-size:14px;font-weight:800;cursor:pointer;
+  font-family:inherit;transition:all .2s;margin-bottom:10px;
+}
+.social-login-naver:hover{background:#02b34f;transform:translateY(-1px);box-shadow:0 3px 12px rgba(3,199,90,.35);}
+
+/* ── 이전 로그인방식 말풍선 ── */
+.old-login-bubble{
+  position:relative;background:#f0fdf4;border:1.5px solid #a7f3d0;
+  border-radius:12px;padding:11px 14px;margin-top:14px;
+  font-size:12px;color:#065f46;line-height:1.6;
+}
+.old-login-bubble::before{
+  content:'';position:absolute;top:-8px;left:20px;
+  border-left:7px solid transparent;border-right:7px solid transparent;
+  border-bottom:8px solid #a7f3d0;
+}
+.old-login-bubble::after{
+  content:'';position:absolute;top:-6px;left:21px;
+  border-left:6px solid transparent;border-right:6px solid transparent;
+  border-bottom:7px solid #f0fdf4;
+}
+
+/* ── 인증 입력행 ── */
+.auth-input-row{display:flex;gap:8px;margin-bottom:14px;}
+.auth-input-row .login-input{flex:1;margin:0;}
+.auth-verify-btn{
+  padding:0 14px;border-radius:9px;background:var(--green);color:white;
+  border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;
+  white-space:nowrap;transition:background .2s;flex-shrink:0;
+}
+.auth-verify-btn:hover{background:var(--lg);}
+
+/* ── 약관 체크박스 ── */
+.terms-row{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);
+  margin-bottom:10px;cursor:pointer;transition:border-color .2s;
+}
+.terms-row:hover{border-color:var(--accent);}
+.terms-row input[type=checkbox]{
+  width:16px;height:16px;accent-color:var(--accent);
+  flex-shrink:0;margin-top:1px;cursor:pointer;
+}
+.terms-row-info{flex:1;}
+.terms-row-title{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:2px;}
+.terms-row-sub{font-size:11px;color:var(--gray);}
+.terms-link{color:var(--accent);text-decoration:underline;cursor:pointer;}
+
+/* ── 마이페이지 섹션 ── */
+.mp-section{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mp-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.mp-section-title{font-size:11px;font-weight:800;color:var(--gray);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px;}
+.mp-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.mp-label{font-size:13px;color:var(--dark);font-weight:600;}
+.mp-value{font-size:13px;color:var(--gray);}
+.mp-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 10px;border-radius:20px;
+  font-size:11px;font-weight:800;
+}
+.mp-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px;}
+.mp-stat-card{
+  background:var(--light);border-radius:10px;padding:10px 12px;text-align:center;
+  border:1.5px solid var(--border);
+}
+.mp-stat-num{font-size:18px;font-weight:900;color:var(--dark);}
+.mp-stat-lbl{font-size:10px;color:var(--gray);margin-top:2px;font-weight:600;}
+.mp-level-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin:8px 0 4px;}
+.mp-level-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),#00c46a);transition:width .5s;}
+.mp-terms-link{
+  display:block;font-size:12px;color:var(--gray);padding:8px 0;
+  border-bottom:1px solid var(--border);cursor:pointer;transition:color .15s;
+}
+.mp-terms-link:hover{color:var(--accent);}
+.mp-terms-link:last-child{border-bottom:none;}
+.mp-logout-btn{
+  width:100%;padding:11px;border-radius:10px;
+  background:#fff0f3;color:var(--pink);
+  border:1.5px solid #fecdd3;font-size:13px;font-weight:700;
+  cursor:pointer;font-family:inherit;transition:all .2s;margin-top:4px;
+}
+.mp-logout-btn:hover{background:#ffe4e8;}
+
+/* ── 완료 화면 ── */
+.signup-done-icon{
+  width:72px;height:72px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),#00c46a);
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;margin:0 auto 16px;
+  box-shadow:0 6px 24px rgba(0,228,201,.35);
+}
 
 /* ═══════════════════════════════════════
    LEFT NAV
@@ -740,25 +910,30 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 ═══════════════════════════════════════ */
 @media(max-width:768px){
   /* top bar */
-  #top-bar{padding:0 12px;gap:8px;}
+  #top-bar{padding:0 10px 0 0;gap:8px;}
+  .tb-logo{width:auto;padding:0 12px 0 10px;border-right:none;}
   .tb-hamburger{display:flex;}
   .tb-ticker{display:none;}
+  #tb-update-label{display:none;}
+  #mob-ticker-bar{display:flex;}
   .tb-pts-chip{display:none;}
   .tb-login-btn{display:none;}
+  .tb-signup-btn{display:none;}
+  .tb-mypage-btn{display:none;}
   .tb-logo-sub{display:none;}
   .tb-logo-text{font-size:15px;}
   .tb-logo-icon{font-size:18px;}
   .tb-notif{width:30px;height:30px;font-size:14px;}
   .tb-user-name{display:none;}
   .tb-user-chip{padding:4px;border-radius:50%;gap:0;min-width:32px;justify-content:center;}
-  .tb-right{gap:6px;}
+  .tb-right{gap:6px;margin-left:auto;}
 
   /* left nav: fixed drawer */
   #left-nav{
     position:fixed;
     left:calc(-1 * var(--nav) - 10px);
-    top:var(--topbar);
-    height:calc(100% - var(--topbar));
+    top:calc(var(--topbar) + 30px);
+    height:calc(100% - var(--topbar) - 30px);
     z-index:400;
     transition:left .3s cubic-bezier(.4,0,.2,1);
     box-shadow:4px 0 24px rgba(0,0,0,.25);
@@ -786,11 +961,11 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
   /* detail panel: full-screen slide */
   #detail-panel{
     position:fixed !important;
-    top:var(--topbar) !important;
+    top:calc(var(--topbar) + 30px) !important;
     left:0 !important; right:0 !important;
     bottom:58px !important;
     width:100% !important; min-width:unset !important;
-    height:calc(100dvh - var(--topbar) - 58px) !important;
+    height:calc(100dvh - var(--topbar) - 30px - 58px) !important;
     transform:translateX(110%);
     transition:transform .38s cubic-bezier(.4,0,.2,1);
     border-left:none !important;
@@ -848,21 +1023,42 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
   <div class="tb-ticker">
     <div class="tb-ticker-track" id="tb-ticker-track"><!-- JS로 채움 --></div>
   </div>
-  <div class="tb-right">
-    <div class="tb-notif" title="알림">🔔</div>
-    <div class="tb-pts-chip" title="활동 포인트">
-      <span class="tb-pts-icon">⭐</span>
-      <div class="tb-pts-info">
-        <div class="tb-pts-val">340 / 500 P</div>
-        <div class="tb-pts-bar"><div class="tb-pts-fill"></div></div>
+  <div class="tb-right" id="tb-right">
+    <!-- 비로그인 상태 -->
+    <div id="tb-auth-guest" style="display:flex;align-items:center;gap:8px;">
+      <button class="tb-login-btn" onclick="openLoginModal()">🔐 로그인</button>
+      <button class="tb-signup-btn" onclick="openSignupModal()">회원가입</button>
+    </div>
+    <!-- 로그인 상태 -->
+    <div id="tb-auth-user" style="display:none;align-items:center;gap:8px;">
+      <div class="tb-pts-chip" id="tb-pts-chip-user" title="활동 포인트">
+        <span class="tb-pts-icon">⭐</span>
+        <div class="tb-pts-info">
+          <div class="tb-pts-val" id="tb-pts-val">0 / 500 P</div>
+          <div class="tb-pts-bar"><div class="tb-pts-fill" id="tb-pts-fill"></div></div>
+        </div>
       </div>
+      <div class="tb-user-chip" onclick="openMypageModal()" id="tb-user-chip">
+        <div class="tb-user-av" id="tb-user-av">😊</div>
+        <span class="tb-user-name" id="tb-user-name">닉네임</span>
+      </div>
+      <button class="tb-mypage-btn" onclick="openMypageModal()">마이페이지</button>
     </div>
-    <div class="tb-user-chip" onclick="openLoginModal()">
-      <div class="tb-user-av">⛳</div>
-      <span class="tb-user-name">아마추어 Lv.1</span>
-    </div>
-    <button class="tb-login-btn" onclick="openLoginModal()">🔐 로그인</button>
+    <div class="tb-notif" title="알림" id="tb-notif" style="display:none;">🔔</div>
     <button class="tb-hamburger" onclick="toggleMobNav()">☰</button>
+  </div>
+</div>
+
+<!-- ════════════════════════
+     MOBILE TICKER BAR
+════════════════════════ -->
+<div id="mob-ticker-bar">
+  <div class="mob-ticker-label">
+    <span style="width:5px;height:5px;border-radius:50%;background:var(--accent);display:inline-block;animation:pulse-dot 1.8s ease-in-out infinite;"></span>
+    <span style="font-size:9.5px;font-weight:800;color:var(--accent);letter-spacing:.5px;white-space:nowrap;">최근업데이트</span>
+  </div>
+  <div class="mob-ticker-inner">
+    <div class="tb-ticker-track" id="mob-ticker-track"></div>
   </div>
 </div>
 
@@ -965,7 +1161,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
       <div class="sort-row">
         <button class="sort-btn active" onclick="setSort(this,'recent')">최근업데이트</button>
         <button class="sort-btn" onclick="setSort(this,'condition')">상태좋은순</button>
-        <button class="sort-btn" onclick="setSort(this,'crowd')">페이스좋은순</button>
+        <button class="sort-btn" onclick="setSort(this,'alpha')">가나다순</button>
       </div>
     </div>
     <div id="course-list"></div>
@@ -1093,7 +1289,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
     </span><span>커뮤니티</span>
   </button>
-  <button class="mob-tab" id="mobtab-mypage" onclick="openLoginModal()">
+  <button class="mob-tab" id="mobtab-mypage" onclick="_currentUser?openMypageModal():openLoginModal()">
     <span class="mob-tab-icon">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
     </span><span>마이페이지</span>
@@ -1282,41 +1478,261 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
   </div>
 
   <!-- ── 로그인 ── -->
-  <div class="modal-box" id="modal-login" onclick="event.stopPropagation()" style="display:none;width:380px;">
+  <div class="modal-box" id="modal-login" onclick="event.stopPropagation()" style="display:none;width:360px;">
     <div class="modal-header">
       <div>
         <div class="modal-title">🔐 로그인</div>
-        <div class="modal-subtitle">GolfNow 커뮤니티에 오신 것을 환영합니다</div>
+        <div class="modal-subtitle">소셜 계정으로 간편하게 로그인하세요</div>
       </div>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
-    <div class="modal-body">
-      <button class="social-btn" onclick="socialLogin('카카오')">
-        <span style="font-size:18px;">💛</span><span>카카오로 시작하기</span>
+    <div class="modal-body" style="padding-bottom:10px;">
+      <!-- 소셜 로그인 버튼 -->
+      <button class="social-login-kakao" onclick="socialLogin('카카오')">
+        <span style="font-size:20px;line-height:1;">💛</span>
+        <span>카카오로 로그인</span>
       </button>
-      <button class="social-btn" onclick="socialLogin('네이버')" style="color:#03c75a;">
-        <span style="font-size:16px;font-weight:900;color:#03c75a;">N</span><span>네이버로 시작하기</span>
+      <button class="social-login-naver" onclick="socialLogin('네이버')">
+        <span style="font-size:15px;font-weight:900;letter-spacing:-.5px;line-height:1;">N</span>
+        <span>네이버로 로그인</span>
       </button>
-      <button class="social-btn" onclick="socialLogin('구글')">
-        <span style="font-size:16px;">G</span><span>구글로 시작하기</span>
-      </button>
-      <div class="login-divider">또는 이메일로 로그인</div>
-      <div class="login-form-row">
-        <label>이메일</label>
-        <input class="login-input" type="email" placeholder="golfer@example.com"/>
+      <!-- 이전 로그인방식 알림 말풍선 -->
+      <div class="old-login-bubble">
+        <div style="font-weight:800;margin-bottom:4px;font-size:12.5px;">💡 이전에 이메일로 가입하셨나요?</div>
+        <div>이메일·비밀번호 로그인은 <strong>소셜 계정으로 통합</strong>되었습니다.<br>가입 시 사용한 이메일과 동일한 소셜 계정으로 로그인하시면 기존 정보를 그대로 이용하실 수 있어요.</div>
       </div>
-      <div class="login-form-row">
-        <label>비밀번호</label>
-        <input class="login-input" type="password" placeholder="••••••••"/>
+    </div>
+    <div style="text-align:center;padding:12px 22px 18px;font-size:12px;color:var(--gray);">
+      아직 회원이 아니신가요?
+      <span style="color:var(--accent);font-weight:800;cursor:pointer;margin-left:4px;" onclick="closeModal();setTimeout(()=>openSignupModal(),200)">회원가입 →</span>
+    </div>
+  </div>
+
+  <!-- ── 회원가입 (4단계) ── -->
+  <div class="modal-box" id="modal-signup" onclick="event.stopPropagation()" style="display:none;width:400px;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">✨ 회원가입</div>
+        <div class="modal-subtitle" id="signup-subtitle">GolfNow 커뮤니티에 함께하세요</div>
       </div>
-      <div style="text-align:right;font-size:11px;color:var(--accent);cursor:pointer;margin-top:-6px;margin-bottom:2px;">비밀번호 찾기</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
-    <div class="modal-footer">
-      <button class="modal-cancel-btn" onclick="closeModal()">취소</button>
-      <button class="modal-submit-btn" onclick="loginSubmit()" style="background:var(--green);">로그인</button>
+    <div class="modal-body" style="padding-top:14px;">
+      <!-- 스텝 인디케이터 -->
+      <div class="signup-steps" id="signup-steps">
+        <div class="signup-step active" id="su-step-1">
+          <div class="signup-step-circle">1</div>
+          <div class="signup-step-label">소셜가입</div>
+        </div>
+        <div class="signup-step" id="su-step-2">
+          <div class="signup-step-circle">2</div>
+          <div class="signup-step-label">정보입력</div>
+        </div>
+        <div class="signup-step" id="su-step-3">
+          <div class="signup-step-circle">3</div>
+          <div class="signup-step-label">약관동의</div>
+        </div>
+        <div class="signup-step" id="su-step-4">
+          <div class="signup-step-circle">4</div>
+          <div class="signup-step-label">완료</div>
+        </div>
+      </div>
+
+      <!-- 1단계: 소셜가입 선택 -->
+      <div id="su-panel-1">
+        <div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:14px;text-align:center;">소셜 계정으로 간편하게 시작하세요</div>
+        <button class="social-login-kakao" onclick="signupSelectSocial('카카오')">
+          <span style="font-size:20px;line-height:1;">💛</span>
+          <span>카카오로 가입하기</span>
+        </button>
+        <button class="social-login-naver" onclick="signupSelectSocial('네이버')">
+          <span style="font-size:15px;font-weight:900;letter-spacing:-.5px;line-height:1;">N</span>
+          <span>네이버로 가입하기</span>
+        </button>
+        <div style="font-size:11px;color:var(--gray);text-align:center;margin-top:10px;line-height:1.6;">소셜 계정 정보는 로그인 확인 목적으로만 활용됩니다</div>
+      </div>
+
+      <!-- 2단계: 정보입력 -->
+      <div id="su-panel-2" style="display:none;">
+        <div id="su-social-badge" style="display:flex;align-items:center;gap:8px;background:#f8f7ff;border-radius:10px;padding:10px 13px;margin-bottom:16px;border:1.5px solid var(--border);">
+          <span id="su-social-icon" style="font-size:18px;">💛</span>
+          <div>
+            <div style="font-size:11px;color:var(--gray);font-weight:600;">선택한 소셜 계정</div>
+            <div id="su-social-name" style="font-size:13px;font-weight:800;color:var(--dark);">카카오</div>
+          </div>
+        </div>
+        <div class="login-form-row">
+          <label>휴대폰 번호 <span style="color:var(--pink);">*</span></label>
+          <div class="auth-input-row">
+            <input class="login-input" id="su-phone" type="tel" placeholder="010-0000-0000" oninput="this.value=this.value.replace(/[^0-9-]/g,'')"/>
+            <button class="auth-verify-btn" onclick="suSendPhone()">인증</button>
+          </div>
+          <div id="su-phone-verify-row" style="display:none;">
+            <div class="auth-input-row" style="margin-bottom:0;">
+              <input class="login-input" id="su-phone-code" type="text" placeholder="인증번호 6자리" maxlength="6"/>
+              <button class="auth-verify-btn" onclick="suVerifyPhone()">확인</button>
+            </div>
+            <div id="su-phone-ok" style="display:none;font-size:11px;color:#059669;font-weight:700;margin-top:5px;">✅ 인증 완료</div>
+          </div>
+        </div>
+        <div class="login-form-row" style="margin-bottom:0;">
+          <label>닉네임 <span style="color:var(--pink);">*</span></label>
+          <div class="auth-input-row">
+            <input class="login-input" id="su-nick" type="text" placeholder="한글/영문 2~12자" maxlength="12"/>
+            <button class="auth-verify-btn" onclick="suCheckNick()">중복확인</button>
+          </div>
+          <div id="su-nick-ok" style="display:none;font-size:11px;color:#059669;font-weight:700;margin-top:5px;">✅ 사용 가능한 닉네임입니다</div>
+          <div id="su-nick-err" style="display:none;font-size:11px;color:var(--pink);font-weight:700;margin-top:5px;">이미 사용 중인 닉네임입니다</div>
+        </div>
+      </div>
+
+      <!-- 3단계: 약관동의 -->
+      <div id="su-panel-3" style="display:none;">
+        <div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:14px;">서비스 이용 약관에 동의해 주세요</div>
+        <!-- 전체동의 -->
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--light);border-radius:10px;margin-bottom:12px;cursor:pointer;" onclick="suToggleAll()">
+          <input type="checkbox" id="su-all" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer;" onclick="event.stopPropagation();suToggleAll()"/>
+          <span style="font-size:14px;font-weight:800;color:var(--dark);">전체 동의</span>
+        </div>
+        <div class="terms-row" onclick="suToggleTerm('su-terms1')">
+          <input type="checkbox" id="su-terms1" onclick="event.stopPropagation();suToggleTerm('su-terms1')"/>
+          <div class="terms-row-info">
+            <div class="terms-row-title">이용약관 동의 <span style="color:var(--pink);font-size:11px;">(필수)</span></div>
+            <div class="terms-row-sub"><span class="terms-link" onclick="event.stopPropagation();showToast('📄 이용약관 페이지 — 준비 중')">약관 보기 →</span></div>
+          </div>
+        </div>
+        <div class="terms-row" onclick="suToggleTerm('su-terms2')">
+          <input type="checkbox" id="su-terms2" onclick="event.stopPropagation();suToggleTerm('su-terms2')"/>
+          <div class="terms-row-info">
+            <div class="terms-row-title">개인정보 보호정책 동의 <span style="color:var(--pink);font-size:11px;">(필수)</span></div>
+            <div class="terms-row-sub"><span class="terms-link" onclick="event.stopPropagation();showToast('🔒 개인정보보호정책 페이지 — 준비 중')">약관 보기 →</span></div>
+          </div>
+        </div>
+        <div class="terms-row" onclick="suToggleTerm('su-terms3')">
+          <input type="checkbox" id="su-terms3" onclick="event.stopPropagation();suToggleTerm('su-terms3')"/>
+          <div class="terms-row-info">
+            <div class="terms-row-title">마케팅 정보 수신 동의 <span style="color:var(--gray);font-size:11px;">(선택)</span></div>
+            <div class="terms-row-sub">라운딩 알림, 이벤트 소식을 받아보세요</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4단계: 완료 -->
+      <div id="su-panel-4" style="display:none;text-align:center;padding:10px 0 6px;">
+        <div class="signup-done-icon">⛳</div>
+        <div style="font-size:18px;font-weight:900;color:var(--dark);margin-bottom:8px;">가입 완료!</div>
+        <div id="su-done-msg" style="font-size:13px;color:var(--gray);line-height:1.7;margin-bottom:20px;">GolfNow 커뮤니티에 오신 것을 환영합니다.<br>다양한 코스 정보와 라운딩 후기를 즐겨보세요 🏌️</div>
+        <button onclick="finishSignup()" style="width:100%;padding:13px;border-radius:12px;background:var(--accent);color:var(--green);border:none;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .2s;" onmouseover="this.style.background='#00cdb6'" onmouseout="this.style.background='var(--accent)'">
+          골프 코스 탐색 시작하기 →
+        </button>
+      </div>
     </div>
-    <div style="text-align:center;padding-bottom:16px;font-size:12px;color:var(--gray);">
-      아직 회원이 아니신가요? <span style="color:var(--accent);font-weight:700;cursor:pointer;" onclick="showToast('회원가입 기능 — 어드민 개발 후 오픈 예정!')">회원가입</span>
+
+    <!-- 하단 버튼 (4단계 제외) -->
+    <div class="modal-footer" id="su-footer">
+      <button class="modal-cancel-btn" id="su-back-btn" onclick="signupBack()" style="display:none;">← 이전</button>
+      <div style="flex:1;"></div>
+      <button class="modal-submit-btn" id="su-next-btn" onclick="signupNext()" style="display:none;">다음 →</button>
+    </div>
+  </div>
+
+  <!-- ── 마이페이지 ── -->
+  <div class="modal-box" id="modal-mypage" onclick="event.stopPropagation()" style="display:none;width:400px;max-height:88vh;overflow-y:auto;">
+    <div class="modal-header" style="position:sticky;top:0;background:white;z-index:2;border-bottom:1px solid var(--border);">
+      <div>
+        <div class="modal-title">👤 마이페이지</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:16px 22px;">
+
+      <!-- 프로필 헤더 -->
+      <div style="display:flex;align-items:center;gap:14px;padding:14px;background:linear-gradient(135deg,var(--green),var(--lg));border-radius:14px;margin-bottom:18px;">
+        <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#00c46a);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">
+          <span id="mp-avatar">😊</span>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:16px;font-weight:900;color:white;" id="mp-nickname">닉네임</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:2px;" id="mp-email">소셜 계정</div>
+          <div style="margin-top:6px;" id="mp-level-badge"></div>
+        </div>
+      </div>
+
+      <!-- 계정 정보 -->
+      <div class="mp-section">
+        <div class="mp-section-title">계정 정보</div>
+        <div class="mp-row">
+          <span class="mp-label">이메일</span>
+          <span class="mp-value" id="mp-email-val">—</span>
+        </div>
+        <div class="mp-row">
+          <span class="mp-label">로그인 방식</span>
+          <span class="mp-value" id="mp-social-val">—</span>
+        </div>
+        <div class="mp-row" style="align-items:flex-start;">
+          <span class="mp-label">휴대폰 번호</span>
+          <div style="text-align:right;">
+            <div class="mp-value" id="mp-phone-val">—</div>
+            <div style="margin-top:6px;display:flex;gap:6px;justify-content:flex-end;" id="mp-phone-change-area">
+              <input id="mp-new-phone" type="tel" placeholder="새 번호 입력" style="width:130px;padding:6px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"/>
+              <button class="auth-verify-btn" onclick="mpSendPhone()">인증</button>
+            </div>
+            <div id="mp-phone-verify-row" style="display:none;margin-top:6px;display:none;">
+              <div style="display:flex;gap:6px;justify-content:flex-end;">
+                <input id="mp-phone-code" type="text" placeholder="인증번호" maxlength="6" style="width:100px;padding:6px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"/>
+                <button class="auth-verify-btn" onclick="mpVerifyPhone()">확인</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 나의 활동 -->
+      <div class="mp-section">
+        <div class="mp-section-title">나의 활동</div>
+        <div class="mp-stat-grid">
+          <div class="mp-stat-card">
+            <div class="mp-stat-num" id="mp-post-cnt">0</div>
+            <div class="mp-stat-lbl">게시글</div>
+          </div>
+          <div class="mp-stat-card">
+            <div class="mp-stat-num" id="mp-comment-cnt">0</div>
+            <div class="mp-stat-lbl">댓글</div>
+          </div>
+          <div class="mp-stat-card">
+            <div class="mp-stat-num" id="mp-pts-val">0P</div>
+            <div class="mp-stat-lbl">활동포인트</div>
+          </div>
+        </div>
+        <!-- 레벨 -->
+        <div style="margin-top:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:12px;font-weight:800;color:var(--dark);" id="mp-level-label">아마추어 Lv.1</span>
+            <span style="font-size:11px;color:var(--gray);" id="mp-pts-next">0 / 500P</span>
+          </div>
+          <div class="mp-level-bar">
+            <div class="mp-level-fill" id="mp-level-fill" style="width:0%;"></div>
+          </div>
+          <div style="font-size:10.5px;color:var(--gray);" id="mp-level-next-txt">다음 레벨까지 500P 필요</div>
+        </div>
+      </div>
+
+      <!-- 레벨 뱃지 -->
+      <div class="mp-section">
+        <div class="mp-section-title">활동 레벨 뱃지</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;" id="mp-badge-grid"></div>
+      </div>
+
+      <!-- 약관 -->
+      <div class="mp-section">
+        <div class="mp-section-title">약관 및 정책</div>
+        <div class="mp-terms-link" onclick="showToast('📄 이용약관 페이지 — 준비 중')">이용약관 보기</div>
+        <div class="mp-terms-link" onclick="showToast('🔒 개인정보보호정책 — 준비 중')">개인정보보호정책 보기</div>
+        <div class="mp-terms-link" onclick="showToast('📋 마케팅 수신 설정 — 준비 중')">마케팅 정보 수신 설정</div>
+      </div>
+
+      <!-- 로그아웃 -->
+      <button class="mp-logout-btn" onclick="doLogout()">로그아웃</button>
     </div>
   </div>
 
@@ -1866,7 +2282,7 @@ function applyFilters(){
     return rm&&sm;
   });
   if(currentSort==='condition') filteredCourses.sort((a,b)=>avg(b)-avg(a));
-  else if(currentSort==='crowd') filteredCourses.sort((a,b)=>b.pace-a.pace);
+  else if(currentSort==='alpha') filteredCourses.sort((a,b)=>a.name.localeCompare(b.name,'ko'));
   const labels={'전체':'전국','일본전체':'🇯🇵 일본','간토':'🇯🇵 간토','간사이':'🇯🇵 간사이','큐슈':'🇯🇵 큐슈','오키나와':'🇯🇵 오키나와'};
   document.getElementById('region-label').textContent=labels[currentRegion]||currentRegion;
   // update nav group counts
@@ -1885,7 +2301,7 @@ function updateStatBar(){
 ═══════════════════════════════════════ */
 function goHome(){
   if(document.getElementById('detail-panel').classList.contains('open'))closeDetail();
-  if(isMobile()){mobSwitch('list');}else{switchView('map');}
+  if(isMobile()){mobSwitch('map');}else{switchView('map');}
   currentRegion='전체';
   currentSort='recent';
   document.getElementById('search-input').value='';
@@ -2190,14 +2606,291 @@ function submitPost(){
   showToast('📝 게시글이 등록되었습니다! +20 포인트 적립');
 }
 
-/* LOGIN MODAL */
+/* ═══════════════════════════════════════
+   AUTH / LOGIN / SIGNUP / MYPAGE
+═══════════════════════════════════════ */
+
+/* 더미 유저 데이터 (로그인 시뮬레이션) */
+let _userProfile = {
+  nickname: '',
+  email: '',
+  social: '',
+  phone: '',
+  points: 340,
+  posts: 7,
+  comments: 23,
+};
+
+/* 레벨 정의 */
+const LEVELS = [
+  {min:0,    max:500,  label:'아마추어 Lv.1', color:'#6b7280', icon:'🥉'},
+  {min:500,  max:1500, label:'싱글 Lv.2',     color:'#059669', icon:'🥈'},
+  {min:1500, max:3000, label:'버디왕 Lv.3',   color:'#d97706', icon:'🥇'},
+  {min:3000, max:6000, label:'이글러 Lv.4',   color:'#7c3aed', icon:'💎'},
+  {min:6000, max:99999,label:'그랜드마스터',  color:'#e40054', icon:'👑'},
+];
+
+function getLevel(pts){
+  for(let i=LEVELS.length-1;i>=0;i--){if(pts>=LEVELS[i].min)return LEVELS[i];}
+  return LEVELS[0];
+}
+
+/* 상단바 / UI 갱신 */
+function updateAuthUI(){
+  const guest = document.getElementById('tb-auth-guest');
+  const user  = document.getElementById('tb-auth-user');
+  const notif = document.getElementById('tb-notif');
+  if(_currentUser){
+    guest.style.display='none';
+    user.style.display='flex';
+    if(notif) notif.style.display='flex';
+    const lv = getLevel(_userProfile.points);
+    document.getElementById('tb-user-name').textContent = _currentUser;
+    document.getElementById('tb-user-av').textContent   = lv.icon;
+    document.getElementById('tb-pts-val').textContent   = `${_userProfile.points} / ${LEVELS.find(l=>l.min>_userProfile.points)||LEVELS[LEVELS.length-1]} P`;
+    // 포인트바
+    const lv2 = getLevel(_userProfile.points);
+    const pct = Math.min(100, ((_userProfile.points - lv2.min)/(lv2.max - lv2.min))*100);
+    const fill = document.getElementById('tb-pts-fill');
+    if(fill) fill.style.width = pct+'%';
+    const ptsNext = LEVELS.find(l=>l.min>_userProfile.points);
+    document.getElementById('tb-pts-val').textContent = `${_userProfile.points} / ${ptsNext?ptsNext.min:_userProfile.points} P`;
+  } else {
+    guest.style.display='flex';
+    user.style.display='none';
+    if(notif) notif.style.display='none';
+  }
+}
+
 function openLoginModal(){
   showModal('modal-login');
 }
 
+function openSignupModal(){
+  // 스텝 초기화
+  _signupStep = 1;
+  _signupSocial = '';
+  _phoneVerified = false;
+  _nickChecked = false;
+  renderSignupStep();
+  showModal('modal-signup');
+}
+
+function openMypageModal(){
+  if(!_currentUser){openLoginModal();return;}
+  // 마이페이지 데이터 채우기
+  const lv = getLevel(_userProfile.points);
+  const ptsNext = LEVELS.find(l=>l.min>_userProfile.points);
+  const pct = Math.min(100,((_userProfile.points-lv.min)/(lv.max-lv.min))*100);
+  document.getElementById('mp-avatar').textContent    = lv.icon;
+  document.getElementById('mp-nickname').textContent  = _currentUser;
+  document.getElementById('mp-email').textContent     = _userProfile.social+' 계정';
+  document.getElementById('mp-email-val').textContent = _userProfile.email||'—';
+  document.getElementById('mp-social-val').innerHTML  = `<span style="font-weight:800;color:${_userProfile.social==='카카오'?'#9c6500':'#059669'}">${_userProfile.social==='카카오'?'💛':'<span style=font-weight:900;>N</span>'} ${_userProfile.social}</span>`;
+  document.getElementById('mp-phone-val').textContent = _userProfile.phone||'미등록';
+  document.getElementById('mp-post-cnt').textContent  = _userProfile.posts;
+  document.getElementById('mp-comment-cnt').textContent = _userProfile.comments;
+  document.getElementById('mp-pts-val').textContent   = _userProfile.points+'P';
+  document.getElementById('mp-level-label').textContent = lv.label;
+  document.getElementById('mp-pts-next').textContent  = `${_userProfile.points} / ${ptsNext?ptsNext.min:_userProfile.points}P`;
+  document.getElementById('mp-level-fill').style.width = pct+'%';
+  document.getElementById('mp-level-next-txt').textContent = ptsNext?`다음 레벨까지 ${ptsNext.min-_userProfile.points}P 필요`:'최고 레벨 달성! 🎉';
+  // 레벨 배지 그리드
+  const grid = document.getElementById('mp-badge-grid');
+  if(grid) grid.innerHTML = LEVELS.map(l=>{
+    const earned = _userProfile.points >= l.min;
+    return `<div style="text-align:center;padding:10px 6px;border-radius:10px;border:1.5px solid ${earned?l.color:'var(--border)'};background:${earned?l.color+'18':'#fafafa'};opacity:${earned?1:.45};">
+      <div style="font-size:22px;margin-bottom:4px;">${l.icon}</div>
+      <div style="font-size:9.5px;font-weight:700;color:${earned?l.color:'var(--gray)'};">${l.label}</div>
+    </div>`;
+  }).join('');
+  // 레벨 배지 in header
+  document.getElementById('mp-level-badge').innerHTML=`<span style="font-size:10px;padding:3px 9px;border-radius:20px;background:${lv.color}22;color:${lv.color};font-weight:800;border:1px solid ${lv.color}44;">${lv.icon} ${lv.label}</span>`;
+  showModal('modal-mypage');
+}
+
+function doLogout(){
+  _currentUser = null;
+  _userProfile = {nickname:'',email:'',social:'',phone:'',points:340,posts:7,comments:23};
+  closeModal();
+  updateAuthUI();
+  setTimeout(()=>showToast('👋 로그아웃되었습니다'),250);
+}
+
+/* 소셜 로그인 실행 (시뮬레이션) */
 function socialLogin(provider){
   closeModal();
-  setTimeout(()=>showToast(`🔐 ${provider} 로그인 — 어드민 개발 후 연동 예정!`),250);
+  setTimeout(()=>{
+    _currentUser = provider==='카카오' ? '카카오골퍼' : '네이버골퍼';
+    _userProfile.social = provider;
+    _userProfile.email  = provider==='카카오' ? 'golfer@kakao.com' : 'golfer@naver.com';
+    _userProfile.nickname = _currentUser;
+    updateAuthUI();
+    showToast(`${provider==='카카오'?'💛':'🟢'} ${provider} 계정으로 로그인되었습니다!`);
+  },350);
+}
+
+/* ── 회원가입 스텝 로직 ── */
+let _signupStep   = 1;
+let _signupSocial = '';
+let _phoneVerified = false;
+let _nickChecked   = false;
+
+function renderSignupStep(){
+  // 패널 토글
+  [1,2,3,4].forEach(i=>{
+    const p = document.getElementById('su-panel-'+i);
+    if(p) p.style.display = i===_signupStep?'block':'none';
+  });
+  // 스텝 인디케이터
+  [1,2,3,4].forEach(i=>{
+    const el = document.getElementById('su-step-'+i);
+    if(!el)return;
+    el.classList.remove('active','done');
+    if(i < _signupStep) el.classList.add('done');
+    else if(i === _signupStep) el.classList.add('active');
+    // 체크 아이콘 on done
+    el.querySelector('.signup-step-circle').textContent = i < _signupStep ? '✓' : i;
+  });
+  // 서브타이틀
+  const subtitles = ['','소셜 계정 선택','기본 정보 입력','약관 동의','가입 완료'];
+  const el = document.getElementById('signup-subtitle');
+  if(el) el.textContent = subtitles[_signupStep]||'';
+  // 하단 버튼
+  const footer = document.getElementById('su-footer');
+  const backBtn = document.getElementById('su-back-btn');
+  const nextBtn = document.getElementById('su-next-btn');
+  if(!footer) return;
+  if(_signupStep === 1){ footer.style.display='none'; }
+  else if(_signupStep === 4){ footer.style.display='none'; }
+  else {
+    footer.style.display='flex';
+    if(backBtn) backBtn.style.display='flex';
+    if(nextBtn){ nextBtn.style.display='flex'; nextBtn.textContent = _signupStep===3?'가입 완료':'다음 →'; }
+  }
+}
+
+function signupSelectSocial(provider){
+  _signupSocial = provider;
+  // 2단계로 이동
+  _signupStep = 2;
+  const icon  = document.getElementById('su-social-icon');
+  const name  = document.getElementById('su-social-name');
+  if(icon) icon.textContent = provider==='카카오'?'💛':'🟢';
+  if(name) name.textContent = provider+' 계정으로 가입 진행 중';
+  renderSignupStep();
+}
+
+function signupNext(){
+  if(_signupStep===2){
+    // 검증
+    if(!_phoneVerified){
+      document.getElementById('su-phone').style.borderColor='var(--red)';
+      showToast('📱 휴대폰 번호 인증을 완료해주세요');
+      setTimeout(()=>{document.getElementById('su-phone').style.borderColor='var(--border)';},1500);
+      return;
+    }
+    if(!_nickChecked){
+      document.getElementById('su-nick').style.borderColor='var(--red)';
+      showToast('✏️ 닉네임 중복 확인을 해주세요');
+      setTimeout(()=>{document.getElementById('su-nick').style.borderColor='var(--border)';},1500);
+      return;
+    }
+  }
+  if(_signupStep===3){
+    // 필수 약관 체크
+    if(!document.getElementById('su-terms1').checked||!document.getElementById('su-terms2').checked){
+      showToast('📋 필수 약관에 동의해주세요');return;
+    }
+    // 가입 완료 처리
+    const nick = document.getElementById('su-nick').value.trim();
+    _currentUser = nick;
+    _userProfile.nickname = nick;
+    _userProfile.social   = _signupSocial;
+    _userProfile.phone    = document.getElementById('su-phone').value;
+    _userProfile.email    = _signupSocial==='카카오'?'golfer@kakao.com':'golfer@naver.com';
+    document.getElementById('su-done-msg').innerHTML = `<strong>${nick}</strong>님, GolfNow 커뮤니티에 오신 것을 환영합니다!<br>다양한 코스 정보와 라운딩 후기를 즐겨보세요 🏌️`;
+    _signupStep=4;
+    renderSignupStep();
+    updateAuthUI();
+    return;
+  }
+  _signupStep = Math.min(4, _signupStep+1);
+  renderSignupStep();
+}
+
+function signupBack(){
+  _signupStep = Math.max(1, _signupStep-1);
+  renderSignupStep();
+}
+
+function suSendPhone(){
+  const phone = document.getElementById('su-phone').value.trim();
+  if(!phone){showToast('📱 휴대폰 번호를 입력해주세요');return;}
+  document.getElementById('su-phone-verify-row').style.display='block';
+  showToast('📱 인증번호가 발송되었습니다 (테스트: 123456)');
+}
+
+function suVerifyPhone(){
+  const code = document.getElementById('su-phone-code').value.trim();
+  if(code==='123456'||code.length===6){
+    _phoneVerified = true;
+    document.getElementById('su-phone-ok').style.display='block';
+    document.getElementById('su-phone-verify-row').style.display='none';
+    showToast('✅ 휴대폰 번호가 인증되었습니다');
+  } else {
+    showToast('❌ 인증번호가 올바르지 않습니다 (테스트: 123456)');
+  }
+}
+
+function suCheckNick(){
+  const nick = document.getElementById('su-nick').value.trim();
+  if(!nick||nick.length<2){showToast('✏️ 닉네임을 2자 이상 입력해주세요');return;}
+  const taken = ['어드민','관리자','테스터','admin'];
+  const dup = taken.includes(nick.toLowerCase());
+  document.getElementById('su-nick-ok').style.display = dup?'none':'block';
+  document.getElementById('su-nick-err').style.display= dup?'block':'none';
+  if(!dup){_nickChecked=true;showToast('✅ 사용 가능한 닉네임입니다!');}
+}
+
+function suToggleAll(){
+  const allBox = document.getElementById('su-all');
+  const newVal = allBox.checked;
+  ['su-terms1','su-terms2','su-terms3'].forEach(id=>{
+    document.getElementById(id).checked = newVal;
+  });
+}
+
+function suToggleTerm(id){
+  // 전체동의 체크박스 상태 갱신
+  const all3 = ['su-terms1','su-terms2','su-terms3'].every(i=>document.getElementById(i).checked);
+  document.getElementById('su-all').checked = all3;
+}
+
+function finishSignup(){
+  closeModal();
+  setTimeout(()=>showToast(`🎉 ${_currentUser}님 환영합니다! +50 가입 포인트 적립`),250);
+}
+
+/* 마이페이지 휴대폰 변경 */
+function mpSendPhone(){
+  const phone = document.getElementById('mp-new-phone').value.trim();
+  if(!phone){showToast('📱 새 휴대폰 번호를 입력해주세요');return;}
+  const row = document.getElementById('mp-phone-verify-row');
+  if(row){row.style.display='block';}
+  showToast('📱 인증번호 발송 (테스트: 654321)');
+}
+function mpVerifyPhone(){
+  const code = document.getElementById('mp-phone-code').value.trim();
+  if(code==='654321'||code.length===6){
+    _userProfile.phone = document.getElementById('mp-new-phone').value;
+    document.getElementById('mp-phone-val').textContent = _userProfile.phone;
+    document.getElementById('mp-phone-verify-row').style.display='none';
+    document.getElementById('mp-new-phone').value='';
+    showToast('✅ 휴대폰 번호가 변경되었습니다');
+  } else {
+    showToast('❌ 인증번호가 올바르지 않습니다 (테스트: 654321)');
+  }
 }
 
 function loginSubmit(){
@@ -2308,7 +3001,7 @@ function initTicker(){
     .filter(c=>/\d+분\s*전/.test(c.updated)&&c.reviews.length)
     .forEach(c=>{
       const r=c.reviews[0];
-      items.push({icon:'💬',text:`<strong>${c.short}</strong> 새 리뷰: "${r.text.slice(0,22)}..."`,time:r.time,id:c.id});
+      items.push({icon:'💬',text:`<strong>${c.short}</strong> 새 리뷰: "${(r.title||r.text||'').slice(0,22)}..."`,time:r.time,id:c.id});
     });
   // 충분한 아이템 없으면 전체 상위 코스도 추가
   if(items.length<5){
@@ -2325,16 +3018,17 @@ function initTicker(){
       <span class="tb-ticker-time">${it.time}</span>
     </span><span class="tb-ticker-sep">◆</span>`
   ).join('');
+  const dur=Math.max(30,items.length*8)+'s';
   const track=document.getElementById('tb-ticker-track');
-  if(track)track.innerHTML=html;
-  // 아이템 수에 따라 스피드 조정
-  const dur=Math.max(30,items.length*8);
-  if(track)track.style.animationDuration=dur+'s';
+  if(track){track.innerHTML=html;track.style.animationDuration=dur;}
+  const mobTrack=document.getElementById('mob-ticker-track');
+  if(mobTrack){mobTrack.innerHTML=html;mobTrack.style.animationDuration=dur;}
 }
 
 window.onload=()=>{
   renderSidebar();initMap();initTicker();initMobile();
   [0,1,2,3,4,5].forEach(i=>updateSlider(i,document.getElementById('si-'+i).value));
+  updateAuthUI();
 };
 </script>
 </body>

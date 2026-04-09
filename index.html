@@ -317,14 +317,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 }
 .nav-logo{font-size:18px;font-weight:900;color:#fff;letter-spacing:-.5px;display:flex;align-items:center;gap:6px;}
 .nav-logo span{color:var(--accent);}
-.nav-tagline{font-size:10px;color:rgba(255,255,255,.3);margin-top:3px;letter-spacing:.4px;}
 .nav-version{display:none;}
-.nav-logo-img{
-  height:26px;width:auto;
-  filter:brightness(0) invert(1);
-  opacity:.85;
-  display:block;
-}
 
 /* Section label */
 .nav-section{padding:14px 0 6px;}
@@ -388,9 +381,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
   border-right:1px solid var(--border);flex-shrink:0;overflow:hidden;
 }
 .sb-head{padding:10px 0 8px;}
-.sb-view-row{padding:0 12px;}
-.sb-view-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-.sb-view-toggle{display:flex;background:#F3F7FA;border-radius:7px;overflow:hidden;padding:2px;gap:2px;}
+.sb-view-row{padding:0 12px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
 .sv-btn{
   padding:5px 11px;border:none;background:none;
   color:var(--gray);cursor:pointer;font-size:11px;font-weight:600;
@@ -426,9 +417,6 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 .s-good{background:#e8f5e9;color:#2e7d32;}
 .s-ok{background:#fff8e1;color:#e65100;}
 /* 총점 강조 배지 */
-.cc-score-badge{flex-shrink:0;border-radius:10px;padding:5px 8px;text-align:center;min-width:46px;}
-.cc-score-big{font-size:19px;font-weight:900;line-height:1.1;}
-.cc-score-of{font-size:8px;font-weight:600;opacity:.65;margin-top:1px;}
 /* 방금업데이트 배지 */
 .badge-live{background:#E40054;color:white;font-size:8px;font-weight:800;
   padding:2px 7px;border-radius:8px;display:inline-flex;align-items:center;gap:3px;
@@ -443,12 +431,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 .cc-total-bar-track{height:7px;background:rgba(0,0,0,.07);border-radius:4px;overflow:hidden;position:relative;}
 .cc-total-bar-fill{height:100%;border-radius:4px;transition:width .5s cubic-bezier(.4,0,.2,1);}
 /* 5열 스코어 그리드 */
-.cc-scores{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin-top:0;}
 .score-box{border-radius:6px;padding:4px 2px;text-align:center;background:#F3F7FA;}
-.score-box.sc-top{background:rgba(0,228,201,.13);}
-.sc-label{font-size:7.5px;color:var(--gray);font-weight:600;}
-.sc-val{font-size:12px;font-weight:900;margin-top:1px;}
-.cc-avg{font-size:11px;font-weight:800;}
 .fav-btn{background:none;border:none;cursor:pointer;font-size:14px;color:#ccc;transition:all .2s;padding:0;line-height:1;flex-shrink:0;}
 .fav-btn.on{color:#f4a261;}
 .cc-name-row{display:flex;align-items:center;gap:4px;min-width:0;}
@@ -629,10 +612,10 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 #dp-content::-webkit-scrollbar{width:4px;}
 #dp-content::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px;}
 .dp-tab-body{padding:12px;}
-.dp-head{padding:36px 14px 13px;background:white;border-radius:0 0 16px 16px;box-shadow:0 2px 8px rgba(0,0,0,.05);position:relative;z-index:2;}
+.dp-head{padding:18px 14px 13px;background:white;border-radius:0 0 16px 16px;box-shadow:0 2px 8px rgba(0,0,0,.05);position:relative;z-index:2;}
 
 /* Carousel */
-.dp-carousel{position:relative;height:210px;overflow:hidden;flex-shrink:0;background:#1a1a2e;border-radius:0 0 20px 20px;z-index:3;}
+.dp-carousel{position:relative;height:210px;overflow:hidden;flex-shrink:0;background:#1a1a2e;border-radius:0;z-index:3;}
 .dp-slides{display:flex;height:100%;transition:transform .55s cubic-bezier(.4,0,.2,1);}
 .dp-slide{
   min-width:100%;height:100%;
@@ -674,21 +657,12 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 .dp-sub-info{font-size:11px;color:var(--gray);margin-top:5px;line-height:1.7;}
 
 /* Gauge + bars */
-.dp-metrics-row{display:flex;align-items:center;gap:12px;padding:15px 16px 13px;}
 .dp-gauge-wrap{flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 .dp-gauge-wrap svg{display:block;}
-.dp-bar-section{flex:1;}
-.dp-bar-title{font-size:9.5px;font-weight:700;color:var(--gray);margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px;}
 .dp-bar-row{display:flex;align-items:center;gap:6px;margin-bottom:7px;}
 .dp-bar-row:last-child{margin-bottom:0;}
-.dp-bar-lbl{width:58px;white-space:nowrap;color:var(--gray);flex-shrink:0;font-size:10px;font-weight:600;}
-.dp-bar-track{flex:1;height:8px;background:#f0f4f0;border-radius:5px;overflow:hidden;}
-.dp-bar-fill{height:100%;border-radius:5px;width:0%;transition:width 1.1s cubic-bezier(.4,0,.2,1);}
-.dp-bar-num{width:28px;text-align:right;font-weight:800;font-size:11px;}
 
 /* Radar */
-.dp-radar-section{padding:13px 16px 8px;display:flex;flex-direction:column;align-items:center;}
-.dp-section-title{font-size:9.5px;font-weight:700;color:var(--gray);margin-bottom:8px;text-transform:uppercase;letter-spacing:.6px;align-self:flex-start;}
 
 /* Tabs — pill style */
 .dp-tabs{display:flex;gap:6px;padding:10px 12px 6px;background:#F0F2F5;flex-shrink:0;}
@@ -712,11 +686,8 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 /* Course info */
 .ci-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f5f5f5;font-size:12px;}
 .ci-row:last-child{border:none;}
-.ci-label{color:var(--gray);}
-.ci-value{font-weight:700;}
 
 /* Gallery */
-.gal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
 .gal-thumb{
   height:88px;border-radius:12px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -763,7 +734,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 .wx-desc-row{display:flex;align-items:center;gap:5px;margin-top:2px;}
 .wx-desc{font-size:10px;font-weight:700;color:#555;}
 .wx-feel{font-size:9px;font-weight:600;color:var(--gray);}
-.wx-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:8px 0 4px;border-top:1px solid #eee;}
+.wx-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:8px 0 4px;}
 .wx-cell{text-align:center;padding:4px 2px;background:#f7f8fb;border-radius:6px;}
 .wx-cell-icon{font-size:12px;margin-bottom:1px;}
 .wx-cell-val{font-size:10.5px;font-weight:800;color:var(--dark);}
@@ -788,7 +759,6 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 .cmp-trend-badge.same{background:#f3f4f6;color:#9ca3af;}
 
 /* 듀얼 레이더 */
-.cmp-radar-wrap{display:flex;flex-direction:column;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid #eee;}
 
 /* 요약 */
 .cmp-summary{margin-top:14px;padding:10px 12px;border-radius:10px;display:flex;align-items:center;gap:10px;font-size:12px;font-weight:700;line-height:1.5;}
@@ -803,8 +773,6 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
   border:1px solid rgba(0,0,0,.04);
 }
 .dp-status-block:last-child{margin-bottom:0;}
-.dp-status-inner{display:flex;align-items:center;gap:12px;}
-.dp-radar-wrap{display:flex;flex-direction:column;align-items:center;padding:4px 0;}
 
 /* Difficulty section */
 .diff-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:800;margin-bottom:13px;}
@@ -880,12 +848,6 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
   display:flex;justify-content:space-between;align-items:center;
   position:sticky;top:0;background:white;z-index:1;
 }
-.modal-header-no-logo{
-  padding:20px 22px 16px;
-  border-bottom:1px solid var(--border);
-  display:flex;justify-content:space-between;align-items:center;
-  position:sticky;top:0;background:white;z-index:1;
-}
 .modal-title{font-size:16px;font-weight:800;line-height:1.3;}
 .modal-subtitle{font-size:11px;color:var(--gray);margin-top:3px;}
 .modal-close{
@@ -917,9 +879,6 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 .modal-submit-btn:disabled{background:#aaa;cursor:not-allowed;}
 
 /* Score slider rows */
-.si-row{margin-bottom:18px;}
-.si-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-.si-label{font-size:13px;font-weight:700;}
 .si-val{font-size:22px;font-weight:900;line-height:1;}
 .si-slider{
   width:100%;-webkit-appearance:none;appearance:none;
@@ -932,7 +891,6 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
   box-shadow:0 2px 8px rgba(0,228,201,.3);transition:transform .15s;
 }
 .si-slider::-webkit-slider-thumb:hover{transform:scale(1.2);}
-.si-scale{display:flex;justify-content:space-between;font-size:9px;color:#bbb;padding:3px 2px 0;}
 
 /* Write cat buttons */
 .wcat-btn{
@@ -964,7 +922,6 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
   font-size:14px;font-family:inherit;outline:none;transition:border-color .2s;
 }
 .login-input:focus{border-color:var(--accent);}
-.login-divider{text-align:center;font-size:11px;color:#bbb;margin:14px 0;}
 .social-btn{
   width:100%;padding:11px;border-radius:10px;border:1.5px solid var(--border);
   background:white;font-size:13px;font-weight:700;cursor:pointer;
@@ -1234,7 +1191,6 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
     <button class="nav-item nav-item-top" data-region="comm-partner" onclick="navCommunity(this,'partner')">동반자모집</button>
     <button class="nav-item nav-item-top" data-region="comm-free" onclick="navCommunity(this,'free')">자유게시판</button>
   </div>
-
 
 </nav>
 
@@ -1559,6 +1515,13 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
             </div>
           </div>
         </div>
+      </div>
+      <!-- 제목 -->
+      <div style="margin-bottom:10px;">
+        <div style="font-size:10px;font-weight:700;color:var(--gray);margin-bottom:5px;letter-spacing:.4px;text-transform:uppercase;">제목</div>
+        <input id="write-title" type="text" placeholder="제목을 입력하세요..."
+          style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:inherit;outline:none;transition:border-color .2s;box-sizing:border-box;"
+          onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"/>
       </div>
       <!-- 본문 -->
       <div style="margin-bottom:8px;">
@@ -1945,58 +1908,6 @@ const f1=n=>Number(n).toFixed(1);
 function statusOf(c){const a=avg(c);return a>=4.2?{cls:'s-excellent',label:'✨ 최상'}:a>=3.0?{cls:'s-good',label:'🟢 좋음'}:{cls:'s-ok',label:'🟡 보통'};}
 function colorOf(c){const a=avg(c);return a>=4.0?'#00E4C9':a>=3.0?'#22c55e':a>=2.0?'#f59e0b':'#E40054';}
 function scoreColor(n){return n>=4.0?'#00E4C9':n>=3.0?'#22c55e':n>=2.0?'#f59e0b':'#E40054';}
-function dotBar(n,max=5){const f=Math.floor(n),fr=n-f;return '●'.repeat(f)+(fr>=.5?'◐':'')+'○'.repeat(max-f-(fr>=.5?1:0));}
-
-/* ═══════════════════════════════════════
-   SVG BUILDERS
-═══════════════════════════════════════ */
-function buildGaugeSVG(score,col){
-  const r=40,cx=56,cy=56,sz=112,circ=2*Math.PI*r,offset=circ/4;
-  return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}">
-    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#f0f4f0" stroke-width="10"/>
-    <circle id="gauge-arc" cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${col}" stroke-width="10"
-      stroke-dasharray="0 ${circ}" stroke-dashoffset="${offset}" stroke-linecap="round"/>
-    <text x="${cx}" y="${cy+2}" text-anchor="middle" dominant-baseline="middle"
-      font-size="18" font-weight="900" fill="${col}" font-family="'Noto Sans KR',sans-serif">${f1(score)}</text>
-    <text x="${cx}" y="${cy+16}" text-anchor="middle" font-size="9" fill="#aaa" font-family="'Noto Sans KR',sans-serif">/ 5.0</text>
-    <text x="${cx}" y="${cy-14}" text-anchor="middle" font-size="8" fill="#bbb" font-family="'Noto Sans KR',sans-serif">종합</text>
-  </svg>`;
-}
-function animateGauge(score,col){
-  const r=40,circ=2*Math.PI*r,offset=circ/4,target=(score/5)*circ;
-  const el=document.getElementById('gauge-arc');if(!el)return;
-  let t0=null;
-  (function step(ts){if(!t0)t0=ts;const p=Math.min((ts-t0)/1100,1),e=1-Math.pow(1-p,3),d=e*target;
-    el.setAttribute('stroke-dasharray',`${d} ${circ-d}`);if(p<1)requestAnimationFrame(step);})(performance.now());
-}
-function buildRadarSVG(c,col){
-  const cx=115,cy=110,R=56,w=230,h=220;
-  const step=2*Math.PI/6,base=-Math.PI/2;
-  const axes=[
-    {label:'티박스',    val:c.tee,          a:base},
-    {label:'페어웨이',  val:c.fairway,      a:base+step},
-    {label:'그린',      val:c.green,        a:base+step*2},
-    {label:'페이스',    val:c.pace,         a:base+step*3},
-    {label:'캐디',      val:c.caddie,       a:base+step*4},
-    {label:'클럽하우스',val:clubhouseOf(c), a:base+step*5},
-  ];
-  const pt=(r,a)=>({x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)});
-  const grids=[.25,.5,.75,1].map(p=>{
-    const pts=axes.map(ax=>pt(R*p,ax.a));
-    return `<polygon points="${pts.map(q=>`${q.x},${q.y}`).join(' ')}" fill="${p===1?col+'0c':'none'}" stroke="${p===1?col+'3a':'#e8ecef'}" stroke-width="${p===1?1.5:1}"/>`;
-  }).join('');
-  const axLines=axes.map(ax=>{const e=pt(R,ax.a);return `<line x1="${cx}" y1="${cy}" x2="${e.x}" y2="${e.y}" stroke="#dde3ea" stroke-width="1.5" stroke-dasharray="4,3"/>`;}).join('');
-  const dataPts=axes.map(ax=>{const p=pt(R*(ax.val/5),ax.a);return `${p.x},${p.y}`;}).join(' ');
-  const dots=axes.map(ax=>{const p=pt(R*(ax.val/5),ax.a);return `<circle cx="${p.x}" cy="${p.y}" r="4" fill="${scoreColor(ax.val)}" stroke="white" stroke-width="1.5"/>`;}).join('');
-  const labels=axes.map(ax=>{
-    const lp=pt(R+17,ax.a);
-    const anchor=Math.cos(ax.a)>0.3?'start':Math.cos(ax.a)<-0.3?'end':'middle';
-    const sc=scoreColor(ax.val);
-    return `<text x="${lp.x}" y="${lp.y}" text-anchor="${anchor}" font-size="9" fill="#666" font-weight="700" font-family="'Noto Sans KR',sans-serif">${ax.label}</text>
-      <text x="${lp.x}" y="${lp.y+11}" text-anchor="${anchor}" font-size="10" fill="${sc}" font-weight="900" font-family="'Noto Sans KR',sans-serif">${f1(ax.val)}</text>`;
-  }).join('');
-  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${grids}${axLines}<polygon points="${dataPts}" fill="${col}26" stroke="${col}" stroke-width="2.5" stroke-linejoin="round"/>${dots}${labels}</svg>`;
-}
 
 /* ═══════════════════════════════════════
    RECENT-MONTH DATA & COMPARISON CHART
@@ -2150,52 +2061,6 @@ function buildWeatherCardHtml(c){
     </div>
   </div>`;
 }
-function buildDualRadarSVG(c){
-  const rm=getRecentMonth(c);
-  const cx=130,cy=115,R=60,w=260,h=248;
-  const step=2*Math.PI/6,base=-Math.PI/2;
-  const allAxes=[
-    {label:'티박스',    allV:c.tee,       recV:rm.tee,      a:base},
-    {label:'페어웨이',  allV:c.fairway,   recV:rm.fairway,  a:base+step},
-    {label:'그린',      allV:c.green,     recV:rm.green,    a:base+step*2},
-    {label:'페이스',    allV:c.pace,      recV:rm.pace,     a:base+step*3},
-    {label:'캐디',      allV:c.caddie,    recV:rm.caddie,   a:base+step*4},
-    {label:'클럽하우스',allV:clubhouseOf(c),recV:rm.clubhouse,a:base+step*5},
-  ];
-  const pt=(r,a)=>({x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)});
-  // grids
-  const grids=[.25,.5,.75,1].map(p=>{
-    const pts=allAxes.map(ax=>pt(R*p,ax.a));
-    return `<polygon points="${pts.map(q=>`${q.x},${q.y}`).join(' ')}" fill="none" stroke="${p===1?'#d1d5db':'#e8ecef'}" stroke-width="${p===1?1.2:0.8}"/>`;
-  }).join('');
-  // axis lines
-  const axLines=allAxes.map(ax=>{const e=pt(R,ax.a);return `<line x1="${cx}" y1="${cy}" x2="${e.x}" y2="${e.y}" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="3,3"/>`;}).join('');
-  // all-time polygon
-  const allPts=allAxes.map(ax=>pt(R*(ax.allV/5),ax.a));
-  const allPoly=`<polygon points="${allPts.map(q=>`${q.x},${q.y}`).join(' ')}" fill="#9ca3af20" stroke="#9ca3af" stroke-width="2" stroke-linejoin="round" stroke-dasharray="5,4"/>`;
-  // recent polygon
-  const recPts=allAxes.map(ax=>pt(R*(ax.recV/5),ax.a));
-  const recPoly=`<polygon points="${recPts.map(q=>`${q.x},${q.y}`).join(' ')}" fill="#00E4C926" stroke="#00E4C9" stroke-width="2.5" stroke-linejoin="round"/>`;
-  // dots
-  const allDots=allPts.map(q=>`<circle cx="${q.x}" cy="${q.y}" r="3" fill="#9ca3af" stroke="white" stroke-width="1.5"/>`).join('');
-  const recDots=recPts.map(q=>`<circle cx="${q.x}" cy="${q.y}" r="3.5" fill="#00E4C9" stroke="white" stroke-width="1.5"/>`).join('');
-  // labels with both scores
-  const labels=allAxes.map(ax=>{
-    const lp=pt(R+20,ax.a);
-    const anchor=Math.cos(ax.a)>0.3?'start':Math.cos(ax.a)<-0.3?'end':'middle';
-    const d=ax.recV-ax.allV;
-    const dCol=d>0.05?'#059669':d<-0.05?'#dc2626':'#9ca3af';
-    const arrow=d>0.05?'▲':d<-0.05?'▼':'';
-    return `<text x="${lp.x}" y="${lp.y-2}" text-anchor="${anchor}" font-size="9" fill="#888" font-weight="700" font-family="'Noto Sans KR',sans-serif">${ax.label}</text>
-      <text x="${lp.x}" y="${lp.y+10}" text-anchor="${anchor}" font-size="9" font-weight="800" font-family="'Noto Sans KR',sans-serif">
-        <tspan fill="#9ca3af">${f1(ax.allV)}</tspan>
-        <tspan fill="#bbb"> → </tspan>
-        <tspan fill="${scoreColor(ax.recV)}" font-weight="900">${f1(ax.recV)}</tspan>
-        <tspan fill="${dCol}" font-size="7.5"> ${arrow}</tspan>
-      </text>`;
-  }).join('');
-  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${grids}${axLines}${allPoly}${recPoly}${allDots}${recDots}${labels}</svg>`;
-}
 function buildComparisonHtml(c){
   const rm=getRecentMonth(c);
   const allMetrics=[['티박스',c.tee,rm.tee],['페어웨이',c.fairway,rm.fairway],['그린',c.green,rm.green],['페이스',c.pace,rm.pace],['캐디',c.caddie,rm.caddie],['클럽하우스',clubhouseOf(c),rm.clubhouse]];
@@ -2245,9 +2110,6 @@ function buildComparisonHtml(c){
     </div>
     ${totalRow}
     ${rows}
-    <div class="cmp-radar-wrap">
-      ${buildDualRadarSVG(c)}
-    </div>
     <div class="cmp-summary ${trendClass}">
       <span class="cmp-summary-icon">${trendIcon}</span>
       <span>${trendText}</span>
@@ -2625,6 +2487,10 @@ function navCommunity(btn,cat){
   // sync cat-tabs
   document.querySelectorAll('.cat-tab').forEach(b=>b.classList.toggle('active',b.dataset.cat===cat));
   document.getElementById('comm-title').textContent=commTitles[cat]||'💬 커뮤니티';
+  // 코스리뷰 골프장 필터 표시/숨김
+  const rcf=document.getElementById('review-course-filter');
+  if(rcf)rcf.style.display=cat==='review'?'block':'none';
+  if(cat!=='review'){_reviewCourseFilter=null;}
   switchView('community');
   renderPosts(cat);
 }
@@ -2881,6 +2747,7 @@ function _resetWriteSliders(){
   }
 }
 function openWriteModal(){
+  document.getElementById('write-title').value='';
   document.getElementById('write-body').value='';
   document.querySelectorAll('.wcat-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
   _selectedWriteCourse=null;
@@ -2929,15 +2796,21 @@ function updateWriteSlider(idx,val){
 }
 
 function submitPost(){
+  const writeTitle=document.getElementById('write-title').value.trim();
   const writeBody=document.getElementById('write-body').value.trim();
+  if(!writeTitle){
+    document.getElementById('write-title').style.borderColor='var(--red)';
+    document.getElementById('write-title').focus();
+    setTimeout(()=>{document.getElementById('write-title').style.borderColor='var(--border)';},1500);
+    return;
+  }
   if(!writeBody){
     document.getElementById('write-body').style.borderColor='var(--red)';
     document.getElementById('write-body').focus();
     setTimeout(()=>{document.getElementById('write-body').style.borderColor='var(--border)';},1500);
     return;
   }
-  const firstLine=writeBody.split('\n')[0].trim();
-  const title=firstLine.length>60?firstLine.slice(0,60)+'…':firstLine;
+  const title=writeTitle.length>60?writeTitle.slice(0,60)+'…':writeTitle;
   // 코스리뷰 + 골프장 선택 + 평가 슬라이더가 열려있으면 myRatings 수집
   let myRatings=null;
   if(_selectedWriteCourse&&document.getElementById('write-rating-section').style.display!=='none'){
@@ -3260,11 +3133,6 @@ function mpVerifyPhone(){
   }
 }
 
-function loginSubmit(){
-  closeModal();
-  setTimeout(()=>showToast('🔐 로그인 — 백엔드 연동 후 활성화 예정!'),250);
-}
-
 /* POST DETAIL */
 const sampleComments=[
   {user:'golf**',time:'5분 전',text:'정보 감사합니다! 다음 주 라운딩 가는데 너무 도움돼요'},
@@ -3319,14 +3187,6 @@ function openPostDetail(postId){
       <div style="font-size:12px;color:#444;line-height:1.5;">${c.text}</div>
     </div>`).join('');
   showModal('modal-post');
-}
-
-/* GO TO REVIEWS */
-function goToReviews(courseId){
-  const c=courses.find(x=>x.id===courseId);if(!c)return;
-  closeDetail();
-  navCommunity(document.querySelector('[data-region="comm-review"]'),'review');
-  setTimeout(()=>showToast(`💬 ${c.short} 리뷰 목록`),200);
 }
 
 /* TOAST */

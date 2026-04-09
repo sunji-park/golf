@@ -742,30 +742,26 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#1e1550;backgroun
 .wx-tip{padding:6px 8px;font-size:10px;font-weight:700;line-height:1.4;display:flex;align-items:center;gap:5px;border-radius:7px;margin-top:4px;}
 
 /* 통합 바 (전체=채움바, 최근=세로라인 마커) */
-.cmp-row{display:flex;align-items:center;gap:6px;margin-bottom:7px;}
+.cmp-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
 .cmp-row:last-child{margin-bottom:0;}
-.cmp-label{width:54px;font-size:10px;font-weight:600;color:var(--gray);flex-shrink:0;}
-.cmp-bar-stack{flex:1;position:relative;height:10px;background:#f0f2f5;border-radius:5px;overflow:visible;}
-.cmp-bar-fill-all{position:absolute;top:0;left:0;height:100%;border-radius:5px;transition:width 1.1s cubic-bezier(.4,0,.2,1);opacity:.7;}
-.cmp-bar-marker{position:absolute;top:-2px;width:2.5px;height:14px;border-radius:1.5px;background:#E4005A;box-shadow:0 0 5px rgba(228,0,90,.4);z-index:3;transition:left 1.1s cubic-bezier(.4,0,.2,1);}
+.cmp-label{width:52px;font-size:11px;font-weight:700;color:#555;flex-shrink:0;line-height:1;}
+.cmp-bar-stack{flex:1;position:relative;height:8px;background:#f0f2f5;border-radius:4px;overflow:visible;}
+.cmp-bar-fill-all{position:absolute;top:0;left:0;height:100%;border-radius:4px;transition:width 1.1s cubic-bezier(.4,0,.2,1);opacity:.7;}
+.cmp-bar-marker{position:absolute;top:-3px;width:2.5px;height:14px;border-radius:1.5px;background:#E4005A;box-shadow:0 0 5px rgba(228,0,90,.4);z-index:3;transition:left 1.1s cubic-bezier(.4,0,.2,1);}
 .cmp-bar-marker::after{content:'';position:absolute;top:-2.5px;left:-2.25px;width:7px;height:7px;border-radius:50%;background:#E4005A;box-shadow:0 0 4px rgba(228,0,90,.35);}
-.cmp-vals{display:flex;flex-direction:column;align-items:flex-end;width:52px;flex-shrink:0;gap:0;}
-.cmp-val-all{font-size:9px;font-weight:700;}
-.cmp-val-rec{font-size:10px;font-weight:900;color:#E4005A;}
-.cmp-trend{width:38px;text-align:center;flex-shrink:0;}
-.cmp-trend-badge{display:inline-flex;align-items:center;gap:2px;font-size:9px;font-weight:800;padding:2px 5px;border-radius:6px;}
+.cmp-vals{display:flex;align-items:baseline;justify-content:flex-end;gap:6px;width:60px;flex-shrink:0;}
+.cmp-val-all{font-size:11px;font-weight:700;line-height:1;}
+.cmp-val-rec{font-size:11px;font-weight:900;color:#E4005A;line-height:1;}
+.cmp-trend{width:42px;text-align:right;flex-shrink:0;}
+.cmp-trend-badge{display:inline-flex;align-items:center;gap:2px;font-size:10px;font-weight:800;padding:2px 6px;border-radius:6px;}
 .cmp-trend-badge.up{background:#ecfdf5;color:#059669;}
 .cmp-trend-badge.down{background:#fef2f2;color:#dc2626;}
 .cmp-trend-badge.same{background:#f3f4f6;color:#9ca3af;}
-
-/* 듀얼 레이더 */
-
 /* 요약 */
-.cmp-summary{margin-top:14px;padding:10px 12px;border-radius:10px;display:flex;align-items:center;gap:10px;font-size:12px;font-weight:700;line-height:1.5;}
+.cmp-summary{margin-top:14px;padding:10px 12px;border-radius:10px;display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;line-height:1.5;}
 .cmp-summary.improved{background:linear-gradient(135deg,#ecfdf5,#d1fae5);color:#065f46;border:1px solid #a7f3d0;}
 .cmp-summary.declined{background:linear-gradient(135deg,#fef2f2,#fce7f3);color:#9f1239;border:1px solid #fecdd3;}
 .cmp-summary.stable{background:linear-gradient(135deg,#f9fafb,#f3f4f6);color:#4b5563;border:1px solid #e5e7eb;}
-.cmp-summary-icon{font-size:22px;}
 .dp-status-block{
   padding:16px;background:white;border-radius:14px;
   margin-bottom:10px;
@@ -2070,7 +2066,6 @@ function buildComparisonHtml(c){
   const diff=recentAvg-allAvg;
   const diffAbs=Math.abs(diff);
   const trendClass=diff>0.05?'improved':diff<-0.05?'declined':'stable';
-  const trendIcon=diff>0.05?'📈':diff<-0.05?'📉':'➡️';
   const diffBadgeCls=diff>0.05?'up':diff<-0.05?'down':'same';
   const diffArrow=diff>0.05?'▲':diff<-0.05?'▼':'—';
   const trendText=diff>0.05?`최근 1개월 평점이 전체 대비 <strong>+${diffAbs.toFixed(1)}점 상승</strong>했습니다. 코스 컨디션이 개선되고 있어요!`
@@ -2111,7 +2106,6 @@ function buildComparisonHtml(c){
     ${totalRow}
     ${rows}
     <div class="cmp-summary ${trendClass}">
-      <span class="cmp-summary-icon">${trendIcon}</span>
       <span>${trendText}</span>
     </div>`;
 }
